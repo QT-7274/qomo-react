@@ -19,7 +19,7 @@ function App() {
       <h1>Qomo</h1>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+          qomo is {count}
         </button>
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
