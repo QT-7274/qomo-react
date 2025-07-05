@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Eye, Copy, Play, Calendar } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Eye, Copy, Play, Calendar, Check } from 'lucide-react';
 import { Template } from '../../types';
 import { formatDate, cn } from '../../utils';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card';
@@ -17,6 +17,8 @@ interface TemplatePreviewProps {
 const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template, className }) => {
   const [sampleQuestion, setSampleQuestion] = useState('');
   const [generatedPrompt, setGeneratedPrompt] = useState('');
+  const [copySuccess, setCopySuccess] = useState(false);
+  const [showFireworks, setShowFireworks] = useState(false);
 
   const generatePrompt = () => {
     let prompt = '';
@@ -56,7 +58,16 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template, className }
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(generatedPrompt);
-      // TODO: Show notification
+
+      // 显示成功状态和烟花特效，状态保持到页面刷新
+      setCopySuccess(true);
+      setShowFireworks(true);
+
+      // 1秒后隐藏烟花特效，但保持复制成功状态
+      setTimeout(() => {
+        setShowFireworks(false);
+      }, 1000);
+
     } catch (err) {
       console.error('Failed to copy:', err);
     }
@@ -84,6 +95,19 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template, className }
       business: '商业',
     };
     return labels[category as keyof typeof labels] || category;
+  };
+
+  // 获取组件类型的中文标签和颜色
+  const getComponentTypeInfo = (type: string) => {
+    const typeInfo = {
+      prefix: { label: '前置说明', variant: 'primary' as const },
+      question_slot: { label: '问题插槽', variant: 'secondary' as const },
+      suffix: { label: '后置要求', variant: 'success' as const },
+      context: { label: '上下文', variant: 'warning' as const },
+      constraint: { label: '约束条件', variant: 'danger' as const },
+      example: { label: '示例', variant: 'outline' as const },
+    };
+    return typeInfo[type as keyof typeof typeInfo] || { label: type, variant: 'outline' as const };
   };
 
   return (
@@ -158,15 +182,170 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template, className }
               <Play className="w-5 h-5" />
               生成的提示词
             </CardTitle>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={copyToClipboard}
-              icon={<Copy className="w-4 h-4" />}
-              disabled={!generatedPrompt}
-            >
-              复制
-            </Button>
+            <div className="flex items-center gap-3 relative">
+              {/* 复制成功提示 */}
+              <AnimatePresence>
+                {copySuccess && (
+                  <motion.div
+                    initial={{ opacity: 0, x: 10, scale: 0.8 }}
+                    animate={{ opacity: 1, x: 0, scale: 1 }}
+                    exit={{ opacity: 0, x: 10, scale: 0.8 }}
+                    transition={{ duration: 0.3 }}
+                    className="flex items-center gap-1 text-green-600 text-sm font-medium"
+                  >
+                    <Check className="w-4 h-4" />
+                    <span>已复制</span>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* 增强烟花特效 */}
+              <AnimatePresence>
+                {showFireworks && (
+                  <div className="absolute -top-4 -right-4 pointer-events-none">
+                    {/* 第一层烟花粒子 - 主要爆炸 */}
+                    {[...Array(12)].map((_, i) => (
+                      <motion.div
+                        key={`main-${i}`}
+                        initial={{
+                          opacity: 1,
+                          scale: 0,
+                          x: 0,
+                          y: 0,
+                        }}
+                        animate={{
+                          opacity: 0,
+                          scale: [0, 1.2, 0.8, 0],
+                          x: Math.cos((i * Math.PI * 2) / 12) * (25 + Math.random() * 10),
+                          y: Math.sin((i * Math.PI * 2) / 12) * (25 + Math.random() * 10),
+                          rotate: 360,
+                        }}
+                        transition={{
+                          duration: 1.2,
+                          ease: "easeOut",
+                          delay: i * 0.02
+                        }}
+                        className="absolute w-2 h-2 rounded-full"
+                        style={{
+                          backgroundColor: ['#fbbf24', '#f59e0b', '#ef4444', '#10b981', '#3b82f6', '#8b5cf6'][i % 6],
+                          boxShadow: `0 0 8px ${['#fbbf24', '#f59e0b', '#ef4444', '#10b981', '#3b82f6', '#8b5cf6'][i % 6]}`
+                        }}
+                      />
+                    ))}
+
+                    {/* 第二层烟花粒子 - 次要爆炸 */}
+                    {[...Array(8)].map((_, i) => (
+                      <motion.div
+                        key={`secondary-${i}`}
+                        initial={{
+                          opacity: 0.8,
+                          scale: 0,
+                          x: 0,
+                          y: 0,
+                        }}
+                        animate={{
+                          opacity: 0,
+                          scale: [0, 0.8, 0],
+                          x: Math.cos((i * Math.PI * 2) / 8 + Math.PI / 8) * 15,
+                          y: Math.sin((i * Math.PI * 2) / 8 + Math.PI / 8) * 15,
+                        }}
+                        transition={{
+                          duration: 0.9,
+                          ease: "easeOut",
+                          delay: 0.2 + i * 0.03
+                        }}
+                        className="absolute w-1.5 h-1.5 bg-white rounded-full"
+                        style={{
+                          boxShadow: '0 0 4px #ffffff'
+                        }}
+                      />
+                    ))}
+
+                    {/* 星星粒子 */}
+                    {[...Array(6)].map((_, i) => (
+                      <motion.div
+                        key={`star-${i}`}
+                        initial={{
+                          opacity: 1,
+                          scale: 0,
+                          x: 0,
+                          y: 0,
+                          rotate: 0
+                        }}
+                        animate={{
+                          opacity: 0,
+                          scale: [0, 1, 0],
+                          x: Math.cos((i * Math.PI * 2) / 6) * 35,
+                          y: Math.sin((i * Math.PI * 2) / 6) * 35,
+                          rotate: 720
+                        }}
+                        transition={{
+                          duration: 1.5,
+                          ease: "easeOut",
+                          delay: 0.1
+                        }}
+                        className="absolute text-yellow-400"
+                        style={{
+                          fontSize: '8px',
+                          textShadow: '0 0 4px #fbbf24'
+                        }}
+                      >
+                        ✨
+                      </motion.div>
+                    ))}
+
+                    {/* 中心闪光 */}
+                    <motion.div
+                      initial={{ opacity: 1, scale: 0 }}
+                      animate={{
+                        opacity: [1, 0.8, 0],
+                        scale: [0, 2.5, 4]
+                      }}
+                      transition={{
+                        duration: 0.8,
+                        ease: "easeOut"
+                      }}
+                      className="absolute w-4 h-4 bg-white rounded-full -translate-x-1/2 -translate-y-1/2"
+                      style={{
+                        boxShadow: '0 0 20px #ffffff, 0 0 40px #fbbf24'
+                      }}
+                    />
+
+                    {/* 光环效果 */}
+                    <motion.div
+                      initial={{ opacity: 0.6, scale: 0 }}
+                      animate={{
+                        opacity: 0,
+                        scale: 3
+                      }}
+                      transition={{
+                        duration: 1,
+                        ease: "easeOut"
+                      }}
+                      className="absolute w-8 h-8 border-2 border-yellow-300 rounded-full -translate-x-1/2 -translate-y-1/2"
+                      style={{
+                        boxShadow: '0 0 10px #fbbf24'
+                      }}
+                    />
+                  </div>
+                )}
+              </AnimatePresence>
+
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={copyToClipboard}
+                icon={copySuccess ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                disabled={!generatedPrompt}
+                htmlType="button"
+                className={cn(
+                  "transition-all duration-300",
+                  copySuccess && "!border-green-500 !text-green-600 !bg-green-50"
+                )}
+              >
+                {copySuccess ? '已复制' : '复制'}
+              </Button>
+            </div>
           </div>
         </CardHeader>
         <CardContent>
@@ -230,8 +409,8 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template, className }
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <Badge variant="outline" size="sm">
-                        {component.type}
+                      <Badge variant={getComponentTypeInfo(component.type).variant} size="sm">
+                        {getComponentTypeInfo(component.type).label}
                       </Badge>
                       {component.isRequired && (
                         <Badge variant="danger" size="sm">

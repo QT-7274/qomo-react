@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  GripVertical, 
-  Edit, 
-  Trash2, 
-  FileText, 
-  MessageSquare, 
-  Target, 
-  BookOpen, 
+import { useDrag, useDrop } from 'react-dnd';
+import {
+  GripVertical,
+  Edit,
+  Trash2,
+  FileText,
+  MessageSquare,
+  Target,
+  BookOpen,
   Lightbulb,
   Check,
   X
 } from 'lucide-react';
-import { TemplateComponent, ComponentType } from '../../types';
+import { TemplateComponent, ComponentType, DragItem } from '../../types';
 import { cn } from '../../utils';
 import { Card, CardContent } from '../ui/Card';
 import { Textarea } from '../ui/Input';
@@ -36,9 +37,75 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(component.content);
+  const ref = useRef<HTMLDivElement>(null);
 
-  // Temporarily disable drag functionality
-  const isDragging = false;
+  // 拖拽源配置
+  const [{ isDragging }, drag] = useDrag({
+    type: 'component',
+    item: (): DragItem => ({
+      id: component.id,
+      type: 'component',
+      content: component.content,
+      index,
+    }),
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
+
+  // 放置目标配置
+  const [, drop] = useDrop({
+    accept: 'component',
+    hover: (item: DragItem, monitor) => {
+      if (!ref.current) {
+        return;
+      }
+
+      const dragIndex = item.index;
+      const hoverIndex = index;
+
+      // 如果拖拽的是同一个元素，不做任何操作
+      if (dragIndex === hoverIndex) {
+        return;
+      }
+
+      // 获取悬停区域的边界矩形
+      const hoverBoundingRect = ref.current.getBoundingClientRect();
+
+      // 获取悬停区域的中点
+      const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+
+      // 获取鼠标位置
+      const clientOffset = monitor.getClientOffset();
+
+      if (!clientOffset) {
+        return;
+      }
+
+      // 获取鼠标相对于悬停区域顶部的位置
+      const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+
+      // 只有当鼠标越过悬停区域的一半时才执行移动
+      // 向下拖拽时，只有当鼠标越过下半部分时才移动
+      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+        return;
+      }
+
+      // 向上拖拽时，只有当鼠标越过上半部分时才移动
+      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+        return;
+      }
+
+      // 执行移动
+      onMove(dragIndex, hoverIndex);
+
+      // 更新拖拽项的索引，避免重复触发
+      item.index = hoverIndex;
+    },
+  });
+
+  // 连接拖拽和放置的引用
+  drag(drop(ref));
 
   const getComponentIcon = (type: ComponentType) => {
     const icons = {
@@ -93,7 +160,7 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
   const Icon = getComponentIcon(component.type);
 
   return (
-    <div>
+    <div ref={ref}>
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -105,15 +172,25 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
           padding="none"
           className={cn(
             'transition-all duration-200 p-0',
-            isDragging && 'opacity-50 rotate-1 scale-105',
+            isDragging && 'opacity-50 rotate-1 scale-105 shadow-xl',
             'hover:shadow-lg'
           )}
         >
           <CardContent className="p-4">
             <div className="flex items-start gap-3">
               {/* Drag Handle */}
-              <div className="mt-1 p-1 rounded hover:bg-gray-100 cursor-grab active:cursor-grabbing transition-colors">
-                <GripVertical className="w-4 h-4 text-gray-400" />
+              <div
+                className={cn(
+                  "mt-1 p-1 rounded transition-colors",
+                  isDragging
+                    ? "cursor-grabbing bg-blue-100"
+                    : "cursor-grab hover:bg-gray-100"
+                )}
+              >
+                <GripVertical className={cn(
+                  "w-4 h-4",
+                  isDragging ? "text-blue-500" : "text-gray-400"
+                )} />
               </div>
 
               {/* Component Icon */}

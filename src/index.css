@@ -67,3 +67,31 @@ body {
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
+
+/* 烟花特效增强样式 */
+@keyframes sparkle {
+  0%, 100% { opacity: 0; transform: scale(0); }
+  50% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes firework-glow {
+  0%, 100% { box-shadow: 0 0 5px currentColor; }
+  50% { box-shadow: 0 0 20px currentColor, 0 0 30px currentColor; }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+.firework-particle {
+  animation: sparkle 0.8s ease-out forwards;
+}
+
+.firework-glow {
+  animation: firework-glow 0.5s ease-out;
+}
+
+.firework-twinkle {
+  animation: twinkle 1s ease-in-out infinite;
+}

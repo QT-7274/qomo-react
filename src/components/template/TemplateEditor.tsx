@@ -202,6 +202,8 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
               variant="outline"
               onClick={() => setShowPreview(!showPreview)}
               icon={<Eye className="w-4 h-4" />}
+              htmlType="button"
+              className="active:scale-95 transition-all duration-150"
             >
               {showPreview ? '隐藏预览' : '预览'}
             </Button>
@@ -209,7 +211,8 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
               variant="primary"
               onClick={handleSave}
               icon={<Save className="w-4 h-4" />}
-              className="bg-blue-600 text-white hover:bg-blue-700 border-blue-600"
+              htmlType="button"
+              className="bg-blue-600 text-white hover:bg-blue-700 border-blue-600 active:scale-95 transition-all duration-150"
             >
               保存模板
             </Button>
@@ -312,7 +315,8 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
                         size="sm"
                         onClick={() => addComponent(type)}
                         icon={<Icon className="w-4 h-4" />}
-                        className="hover:bg-gray-50"
+                        htmlType="button"
+                        className="hover:bg-gray-50 active:bg-gray-100 active:scale-95 transition-all duration-150"
                       >
                         {label}
                       </Button>

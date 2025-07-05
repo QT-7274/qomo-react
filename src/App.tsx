@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ConfigProvider } from 'tea-component';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import Toast from '@/components/ui/Toast';
 import Sidebar, { TopBar } from '@/components/layout/Sidebar';
@@ -14,41 +16,43 @@ function App() {
 
   return (
     <ConfigProvider>
-      <Router>
-        <div className='min-h-screen bg-white'>
-          <div className='flex h-screen'>
-            {/* Sidebar */}
-            <Sidebar
-              isOpen={sidebarOpen}
-              onClose={() => setSidebarOpen(false)}
-            />
-
-            {/* Main Content */}
-            <div className='flex-1 flex flex-col overflow-hidden'>
-              {/* Top Bar */}
-              <TopBar
-                sidebarOpen={sidebarOpen}
-                onToggleSidebar={() => setSidebarOpen(true)}
+      <DndProvider backend={HTML5Backend}>
+        <Router>
+          <div className='min-h-screen bg-white'>
+            <div className='flex h-screen'>
+              {/* Sidebar */}
+              <Sidebar
+                isOpen={sidebarOpen}
+                onClose={() => setSidebarOpen(false)}
               />
 
-              {/* Content Area */}
-              <div className='flex-1 overflow-auto p-6 bg-gray-50'>
-                <div className='h-full'>
-                  <Routes>
-                    <Route path="/" element={<Navigate to="/editor" replace />} />
-                    <Route path="/editor" element={<EditorPage />} />
-                    <Route path="/library" element={<LibraryPage />} />
-                    <Route path="/sessions" element={<SessionsPage />} />
-                  </Routes>
+              {/* Main Content */}
+              <div className='flex-1 flex flex-col overflow-hidden'>
+                {/* Top Bar */}
+                <TopBar
+                  sidebarOpen={sidebarOpen}
+                  onToggleSidebar={() => setSidebarOpen(true)}
+                />
+
+                {/* Content Area */}
+                <div className='flex-1 overflow-auto p-6 bg-gray-50'>
+                  <div className='h-full'>
+                    <Routes>
+                      <Route path="/" element={<Navigate to="/editor" replace />} />
+                      <Route path="/editor" element={<EditorPage />} />
+                      <Route path="/library" element={<LibraryPage />} />
+                      <Route path="/sessions" element={<SessionsPage />} />
+                    </Routes>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Toast Notifications */}
-          <Toast />
-        </div>
-      </Router>
+            {/* Toast Notifications */}
+            <Toast />
+          </div>
+        </Router>
+      </DndProvider>
     </ConfigProvider>
   );
 }
