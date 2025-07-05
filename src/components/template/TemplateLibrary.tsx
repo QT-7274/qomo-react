@@ -134,9 +134,7 @@ const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ className }) => {
         <Input
           placeholder="搜索模板或标签..."
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          icon={<Search className="w-4 h-4" />}
-          variant="default"
+          onChange={(value) => setSearchTerm(value)}
         />
 
         {/* Category Filter */}

@@ -161,7 +161,7 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
           label="问题内容"
           placeholder="请输入您的问题..."
           value={formData.content}
-          onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
+          onChange={(value) => setFormData(prev => ({ ...prev, content: value }))}
           error={errors.content}
           rows={4}
           className="resize-none"
@@ -204,7 +204,7 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
             <Input
               placeholder="添加标签..."
               value={newTag}
-              onChange={(e) => setNewTag(e.target.value)}
+              onChange={(value) => setNewTag(value)}
               onKeyPress={(e) => e.key === 'Enter' && handleAddTag()}
               className="flex-1"
             />
@@ -242,7 +242,7 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
             label="领域 (可选)"
             placeholder="如: 人工智能"
             value={formData.domain}
-            onChange={(e) => setFormData(prev => ({ ...prev, domain: e.target.value }))}
+            onChange={(value) => setFormData(prev => ({ ...prev, domain: value }))}
           />
 
           {/* Complexity */}

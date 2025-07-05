@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Save,
-  Plus,
   Eye,
   Settings,
   Wand2,
@@ -12,15 +11,16 @@ import {
   BookOpen,
   Lightbulb
 } from 'lucide-react';
-import { Template, TemplateComponent, ComponentType } from '../../types';
-import { useAppStore } from '../../store/useAppStore';
-import { generateId, cn } from '../../utils';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card';
-import Button from '../ui/Button';
-import { Input, Textarea } from '../ui/Input';
-import Badge from '../ui/Badge';
-import TemplateComponentCard from './TemplateComponentCard';
-import TemplatePreview from './TemplatePreview';
+import { Template, TemplateComponent, ComponentType } from '@/types';
+import { useAppStore } from '@/store/useAppStore';
+import { generateId, cn } from '@/utils';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import Button from '@/components/ui/Button';
+import { Input, Textarea } from '@/components/ui/Input';
+import { Select } from '@/components/common/TeaSelect';
+import { TagSelect } from '@/components/common/TeaTagSelect';
+import TemplateComponentCard from '@/components/template/TemplateComponentCard';
+import TemplatePreview from '@/components/template/TemplatePreview';
 
 interface TemplateEditorProps {
   template?: Template | null;
@@ -37,11 +37,9 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
     updateEditorFormData,
     updateEditorComponents,
     setShowPreview,
-    setNewTag,
-    saveEditorAsTemplate
   } = useAppStore();
 
-  const { formData, components, showPreview, newTag } = editor;
+  const { formData, components, showPreview } = editor;
 
   // Initialize form data
   useEffect(() => {
@@ -178,20 +176,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
     }
   };
 
-  const handleAddTag = () => {
-    if (newTag.trim() && !formData.tags.includes(newTag.trim())) {
-      updateEditorFormData({
-        tags: [...formData.tags, newTag.trim()]
-      });
-      setNewTag('');
-    }
-  };
 
-  const handleRemoveTag = (tagToRemove: string) => {
-    updateEditorFormData({
-      tags: formData.tags.filter(tag => tag !== tagToRemove)
-    });
-  };
 
   const componentTypes = [
     { type: 'prefix' as ComponentType, label: '前置说明', icon: FileText, color: 'primary' },
@@ -224,16 +209,9 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
               variant="primary"
               onClick={handleSave}
               icon={<Save className="w-4 h-4" />}
+              className="bg-blue-600 text-white hover:bg-blue-700 border-blue-600"
             >
               保存模板
-            </Button>
-            <Button
-              variant="outline"
-              onClick={saveEditorAsTemplate}
-              disabled={!formData.name.trim()}
-              icon={<BookOpen className="w-4 h-4" />}
-            >
-              保存到模板库
             </Button>
           </div>
         </div>
@@ -254,93 +232,63 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
                   label="模板名称"
                   placeholder="输入模板名称..."
                   value={formData.name}
-                  onChange={(e) => updateEditorFormData({ name: e.target.value })}
-                  variant="default"
+                  onChange={(value) => updateEditorFormData({ name: value })}
                 />
 
                 <Textarea
                   label="模板描述"
                   placeholder="描述这个模板的用途和特点..."
                   value={formData.description}
-                  onChange={(e) => updateEditorFormData({ description: e.target.value })}
-                  variant="default"
-                  rows={3}
+                  onChange={(value) => updateEditorFormData({ description: value })}
+                  rows={4}
+                  className="w-full min-h-[100px]"
                 />
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700">
-                      分类
-                    </label>
-                    <select
+                {/* Category and Tags in one row */}
+                <div className="flex gap-6 items-start">
+                  {/* Category */}
+                  <div className="space-y-2 w-[140px] flex-shrink-0">
+                    <Select
+                      label="分类"
                       value={formData.category}
-                      onChange={(e) => updateEditorFormData({
-                        category: e.target.value as Template['category']
+                      onChange={(value) => updateEditorFormData({
+                        category: value as Template['category']
                       })}
-                      className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                      <option value="productivity">生产力</option>
-                      <option value="creative">创意</option>
-                      <option value="technical">技术</option>
-                      <option value="research">研究</option>
-                      <option value="education">教育</option>
-                      <option value="business">商业</option>
-                    </select>
-                  </div>
-
-                  <div className="flex items-center space-x-2">
-                    <input
-                      type="checkbox"
-                      id="isPublic"
-                      checked={formData.isPublic}
-                      onChange={(e) => updateEditorFormData({ isPublic: e.target.checked })}
-                      className="rounded border-gray-300 bg-white text-blue-600 focus:ring-blue-500"
+                      options={[
+                        { value: 'productivity', text: '生产力' },
+                        { value: 'creative', text: '创意' },
+                        { value: 'technical', text: '技术' },
+                        { value: 'research', text: '研究' },
+                        { value: 'education', text: '教育' },
+                        { value: 'business', text: '商业' },
+                      ]}
+                      placeholder="请选择分类"
+                      size="s"
+                      className="w-full"
                     />
-                    <label htmlFor="isPublic" className="text-sm text-gray-700">
-                      公开模板
-                    </label>
                   </div>
-                </div>
 
-                {/* Tags */}
-                <div className="space-y-3">
-                  <label className="block text-sm font-medium text-gray-700">
-                    标签
-                  </label>
-
-                  <div className="flex gap-2">
-                    <Input
+                  {/* Tags */}
+                  <div className="flex-1 space-y-3">
+                    <TagSelect
+                      label="标签"
+                      value={formData.tags}
+                      onChange={(tags) => updateEditorFormData({ tags })}
                       placeholder="添加标签..."
-                      value={newTag}
-                      onChange={(e) => setNewTag(e.target.value)}
-                      onKeyDown={(e) => e.key === 'Enter' && handleAddTag()}
-                      variant="default"
-                      className="flex-1"
+                      options={[
+                        // 预设一些常用标签选项
+                        { value: 'AI', text: 'AI' },
+                        { value: '写作', text: '写作' },
+                        { value: '编程', text: '编程' },
+                        { value: '设计', text: '设计' },
+                        { value: '营销', text: '营销' },
+                        { value: '教育', text: '教育' },
+                        { value: '商业', text: '商业' },
+                        { value: '创意', text: '创意' },
+                      ]}
+                      optionsOnly={false} // 允许用户输入自定义标签
                     />
-                    <Button
-                      variant="outline"
-                      onClick={handleAddTag}
-                      icon={<Plus className="w-4 h-4" />}
-                      disabled={!newTag.trim()}
-                    >
-                      添加
-                    </Button>
                   </div>
-                  
-                  {formData.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
-                      {formData.tags.map(tag => (
-                        <Badge
-                          key={tag}
-                          variant="primary"
-                          removable
-                          onRemove={() => handleRemoveTag(tag)}
-                        >
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-                  )}
                 </div>
               </CardContent>
             </Card>
@@ -356,7 +304,6 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
               <CardContent>
                 {/* Add Component Buttons */}
                 <div className="mb-6">
-                  <p className="text-sm text-gray-600 mb-3">添加组件:</p>
                   <div className="flex flex-wrap gap-2">
                     {componentTypes.map(({ type, label, icon: Icon }) => (
                       <Button

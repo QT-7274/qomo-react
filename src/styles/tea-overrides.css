@@ -1,0 +1,98 @@
+/* Tea Component 样式覆盖 */
+
+/* Card 组件样式优化 */
+.tea-card {
+  border-radius: 12px !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Card Header 移除下边框 */
+.tea-card .tea-card-header {
+  border-bottom: none !important;
+  padding-bottom: 16px !important;
+}
+
+/* Card Body 调整间距 */
+.tea-card .tea-card-body {
+  padding-top: 0 !important;
+}
+
+/* Select 组件尺寸控制 */
+.tea-select {
+  min-width: 0 !important;
+}
+
+.tea-select.tea-select-s {
+  width: auto !important;
+  min-width: 120px !important;
+}
+
+/* TagSelect 组件样式优化 */
+.tea-tag-select {
+  min-height: 40px !important;
+}
+
+/* Button 组件确保 primary 样式正确 */
+.tea-button.tea-button-primary {
+  background-color: #3b82f6 !important;
+  border-color: #3b82f6 !important;
+  color: white !important;
+}
+
+.tea-button.tea-button-primary:hover {
+  background-color: #2563eb !important;
+  border-color: #2563eb !important;
+}
+
+.tea-button.tea-button-primary:active {
+  background-color: #1d4ed8 !important;
+  border-color: #1d4ed8 !important;
+  transform: scale(0.98) !important;
+}
+
+/* 改善所有按钮的 hover 和 active 样式 */
+.tea-button:hover {
+  background-color: #f3f4f6 !important; /* 加重 hover 颜色 */
+}
+
+.tea-button:active {
+  transform: scale(0.98) !important;
+  background-color: #e5e7eb !important; /* 添加点击样式 */
+}
+
+/* Ghost 按钮样式优化 */
+.tea-button.tea-button-text:hover {
+  background-color: #f3f4f6 !important;
+}
+
+.tea-button.tea-button-text:active {
+  background-color: #e5e7eb !important;
+  transform: scale(0.98) !important;
+}
+
+/* Input 和 Textarea 样式优化 */
+.tea-input,
+.tea-textarea {
+  border-radius: 8px !important;
+  border-color: #d1d5db !important;
+}
+
+.tea-input:focus,
+.tea-textarea:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: none !important; /* 移除焦点光圈 */
+  outline: none !important;
+}
+
+/* TagSelect 焦点样式优化 */
+.tea-tag-select:focus,
+.tea-tag-select .tea-input:focus {
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* 确保 Textarea 有合适的最小高度 */
+.tea-textarea {
+  min-height: 100px !important;
+  resize: vertical !important;
+}

@@ -52,8 +52,8 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
     return icons[type] || FileText;
   };
 
-  const getComponentColor = (type: ComponentType) => {
-    const colors = {
+  const getComponentColor = (type: ComponentType): 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'outline' | 'default' => {
+    const colors: Record<ComponentType, 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'outline' | 'default'> = {
       prefix: 'primary',
       question_slot: 'secondary',
       suffix: 'danger',
@@ -104,7 +104,7 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
           variant="default"
           padding="none"
           className={cn(
-            'transition-all duration-200',
+            'transition-all duration-200 p-0',
             isDragging && 'opacity-50 rotate-1 scale-105',
             'hover:shadow-lg'
           )}
@@ -192,7 +192,7 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
 
                     <Textarea
                       value={editContent}
-                      onChange={(e) => setEditContent(e.target.value)}
+                      onChange={(value) => setEditContent(value)}
                       placeholder={component.placeholder || '输入内容...'}
                       rows={4}
                       className="resize-none border-blue-200 focus:border-blue-400"
@@ -231,11 +231,7 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
                       </p>
                     </div>
 
-                    {component.type === 'question_slot' && (
-                      <div className="text-xs text-gray-600">
-                        💡 提示: 从模板库拖拽模板到此处，或手动编辑问题内容
-                      </div>
-                    )}
+
                   </div>
                 )}
 

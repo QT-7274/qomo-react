@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Eye, Copy, Play, Star, Users, Calendar } from 'lucide-react';
+import { Eye, Copy, Play, Calendar } from 'lucide-react';
 import { Template } from '../../types';
 import { formatDate, cn } from '../../utils';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card';
 import { Textarea } from '../ui/Input';
 import Button from '../ui/Button';
 import Badge from '../ui/Badge';
+import Label from '../common/Label';
 
 interface TemplatePreviewProps {
   template: Template;
@@ -61,8 +62,8 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template, className }
     }
   };
 
-  const getCategoryColor = (category: string) => {
-    const colors = {
+  const getCategoryColor = (category: string): 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'outline' | 'default' => {
+    const colors: Record<string, 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'outline' | 'default'> = {
       productivity: 'primary',
       creative: 'secondary',
       technical: 'success',
@@ -70,7 +71,7 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template, className }
       education: 'danger',
       business: 'outline',
     };
-    return colors[category as keyof typeof colors] || 'default';
+    return colors[category] || 'default';
   };
 
   const getCategoryLabel = (category: string) => {
@@ -120,16 +121,8 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template, className }
               ))}
             </div>
 
-            {/* Stats */}
+            {/* Stats - 只保留更新时间和组件数量 */}
             <div className="grid grid-cols-2 gap-4 text-sm text-gray-600">
-              <div className="flex items-center gap-2">
-                <Star className="w-4 h-4" />
-                <span>{template.rating.toFixed(1)} 评分</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Users className="w-4 h-4" />
-                <span>{template.usageCount} 使用</span>
-              </div>
               <div className="flex items-center gap-2">
                 <Calendar className="w-4 h-4" />
                 <span>{formatDate(template.updatedAt)}</span>
@@ -146,15 +139,13 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template, className }
       {/* Sample Question Input */}
       <Card variant="default" padding="md">
         <CardContent className="space-y-3">
-          <label className="block text-sm font-medium text-gray-700">
-            示例问题 (用于预览)
-          </label>
+          <Label className='mb-2'>示例问题 (用于预览)</Label>
           <Textarea
             placeholder="输入一个示例问题来预览最终效果..."
             value={sampleQuestion}
-            onChange={(e) => setSampleQuestion(e.target.value)}
+            onChange={(value) => setSampleQuestion(value)}
             rows={3}
-            className="resize-none"
+            className="resize-none w-full"
           />
         </CardContent>
       </Card>
