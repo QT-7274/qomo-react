@@ -8,6 +8,7 @@ import { Textarea } from '../ui/Input';
 import Button from '../ui/Button';
 import Badge from '../ui/Badge';
 import Label from '../common/Label';
+import { TEMPLATE_CATEGORIES, COMPONENT_DISPLAY_CONFIG, UI_TEXT } from '../../config/appConfig';
 
 interface TemplatePreviewProps {
   template: Template;
@@ -48,7 +49,15 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template, className }
         }
       });
 
-    setGeneratedPrompt(prompt.trim());
+    const newPrompt = prompt.trim();
+
+    // 如果生成的提示词发生变化，重置复制状态
+    if (newPrompt !== generatedPrompt && copySuccess) {
+      setCopySuccess(false);
+      setShowFireworks(false);
+    }
+
+    setGeneratedPrompt(newPrompt);
   };
 
   React.useEffect(() => {
@@ -74,40 +83,18 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template, className }
   };
 
   const getCategoryColor = (category: string): 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'outline' | 'default' => {
-    const colors: Record<string, 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'outline' | 'default'> = {
-      productivity: 'primary',
-      creative: 'secondary',
-      technical: 'success',
-      research: 'warning',
-      education: 'danger',
-      business: 'outline',
-    };
-    return colors[category] || 'default';
+    const config = TEMPLATE_CATEGORIES.find(c => c.key === category);
+    return config?.color || 'default';
   };
 
   const getCategoryLabel = (category: string) => {
-    const labels = {
-      productivity: '生产力',
-      creative: '创意',
-      technical: '技术',
-      research: '研究',
-      education: '教育',
-      business: '商业',
-    };
-    return labels[category as keyof typeof labels] || category;
+    const config = TEMPLATE_CATEGORIES.find(c => c.key === category);
+    return config?.label || category;
   };
 
   // 获取组件类型的中文标签和颜色
   const getComponentTypeInfo = (type: string) => {
-    const typeInfo = {
-      prefix: { label: '前置说明', variant: 'primary' as const },
-      question_slot: { label: '问题插槽', variant: 'secondary' as const },
-      suffix: { label: '后置要求', variant: 'success' as const },
-      context: { label: '上下文', variant: 'warning' as const },
-      constraint: { label: '约束条件', variant: 'danger' as const },
-      example: { label: '示例', variant: 'outline' as const },
-    };
-    return typeInfo[type as keyof typeof typeInfo] || { label: type, variant: 'outline' as const };
+    return COMPONENT_DISPLAY_CONFIG[type] || { label: type, variant: 'outline' as const };
   };
 
   return (
@@ -407,7 +394,7 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template, className }
                   <div className="w-6 h-6 rounded bg-gray-200 flex items-center justify-center text-xs text-gray-600">
                     {index + 1}
                   </div>
-                  <div className="flex-1">
+                  <div className="flex-1 overflow-hidden">
                     <div className="flex items-center gap-2">
                       <Badge variant={getComponentTypeInfo(component.type).variant} size="sm">
                         {getComponentTypeInfo(component.type).label}
@@ -418,11 +405,8 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template, className }
                         </Badge>
                       )}
                     </div>
-                    <p className="text-xs text-gray-600 mt-1 truncate">
-                      {component.content.length > 50
-                        ? component.content.substring(0, 50) + '...'
-                        : component.content
-                      }
+                    <p className="text-xs text-gray-600 mt-1 truncate overflow-hidden whitespace-nowrap text-ellipsis max-w-full">
+                      {component.content}
                     </p>
                   </div>
                 </motion.div>

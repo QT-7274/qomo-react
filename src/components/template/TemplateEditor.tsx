@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { PopConfirm, Tooltip } from 'tea-component';
 import {
   Save,
   Eye,
@@ -9,7 +10,8 @@ import {
   MessageSquare,
   Target,
   BookOpen,
-  Lightbulb
+  Lightbulb,
+  RotateCcw
 } from 'lucide-react';
 import { Template, TemplateComponent, ComponentType } from '@/types';
 import { useAppStore } from '@/store/useAppStore';
@@ -21,6 +23,7 @@ import { Select } from '@/components/common/TeaSelect';
 import { TagSelect } from '@/components/common/TeaTagSelect';
 import TemplateComponentCard from '@/components/template/TemplateComponentCard';
 import TemplatePreview from '@/components/template/TemplatePreview';
+import { COMPONENT_TYPES, UI_TEXT, ANIMATION_CONFIG, TEMPLATE_CATEGORIES, COMMON_TAGS, DEFAULT_TEMPLATE_CONFIG, COMPONENT_BUTTON_COLORS } from '@/config/appConfig';
 
 interface TemplateEditorProps {
   template?: Template | null;
@@ -37,6 +40,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
     updateEditorFormData,
     updateEditorComponents,
     setShowPreview,
+    resetEditor,
   } = useAppStore();
 
   const { formData, components, showPreview } = editor;
@@ -82,28 +86,34 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
   };
 
   const addComponent = (type: ComponentType) => {
+    const config = COMPONENT_TYPES.find(c => c.type === type);
     const newComponent: TemplateComponent = {
       id: generateId(),
       type,
       content: getDefaultContent(type),
       position: components.length,
-      isRequired: type === 'question_slot',
-      placeholder: type === 'question_slot' ? '在此输入您的问题...' : undefined,
+      isRequired: DEFAULT_TEMPLATE_CONFIG.requiredComponentTypes.includes(type),
+      placeholder: config?.placeholder,
+      isDefault: false, // 用户添加的组件标记为非默认
     };
 
     updateEditorComponents([...components, newComponent]);
+
+    // 滚动到新添加的组件位置
+    setTimeout(() => {
+      const dropZone = document.querySelector('[data-testid="drop-zone"]');
+      if (dropZone) {
+        const lastComponent = dropZone.lastElementChild;
+        if (lastComponent) {
+          lastComponent.scrollIntoView(ANIMATION_CONFIG.scrollBehavior);
+        }
+      }
+    }, 100); // 等待DOM更新后再滚动
   };
 
   const getDefaultContent = (type: ComponentType): string => {
-    const defaults = {
-      prefix: '请注意以下要求：',
-      question_slot: '[用户问题将插入此处]',
-      suffix: '请提供详细的回答。',
-      context: '背景信息：',
-      constraint: '约束条件：',
-      example: '示例：',
-    };
-    return defaults[type] || '';
+    const config = COMPONENT_TYPES.find(c => c.type === type);
+    return config?.defaultContent || '';
   };
 
   const updateComponent = (id: string, updates: Partial<TemplateComponent>) => {
@@ -176,15 +186,25 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
     }
   };
 
+  const handleReset = () => {
+    resetEditor();
+  };
 
+  // 图标映射
+  const iconMap = {
+    FileText,
+    BookOpen,
+    MessageSquare,
+    Target,
+    Lightbulb,
+  };
 
-  const componentTypes = [
-    { type: 'prefix' as ComponentType, label: '前置说明', icon: FileText, color: 'primary' },
-    { type: 'context' as ComponentType, label: '上下文', icon: BookOpen, color: 'secondary' },
-    { type: 'constraint' as ComponentType, label: '约束条件', icon: Target, color: 'warning' },
-    { type: 'example' as ComponentType, label: '示例', icon: Lightbulb, color: 'success' },
-    { type: 'suffix' as ComponentType, label: '后置要求', icon: MessageSquare, color: 'danger' },
-  ];
+  // 从配置文件获取组件类型，并映射图标
+  const componentTypes = COMPONENT_TYPES.map(config => ({
+    type: config.type as ComponentType,
+    label: config.label,
+    icon: iconMap[config.icon as keyof typeof iconMap] || FileText,
+  }));
 
   return (
     <div className={cn('space-y-6', className)}>
@@ -195,7 +215,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
             animate={{ opacity: 1, x: 0 }}
             className="text-2xl font-bold text-gray-800"
           >
-            {template ? '编辑模板' : '创建模板'}
+{template ? UI_TEXT.titles.editTemplate : UI_TEXT.titles.createTemplate}
           </motion.h2>
           <div className="flex items-center gap-3">
             <Button
@@ -205,8 +225,34 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
               htmlType="button"
               className="active:scale-95 transition-all duration-150"
             >
-              {showPreview ? '隐藏预览' : '预览'}
+{showPreview ? UI_TEXT.buttons.hidePreview : UI_TEXT.buttons.preview}
             </Button>
+            <PopConfirm
+              title="确定要重置模板到默认状态吗？"
+              message="这将清除所有当前的修改。"
+              footer={(close) => (
+                <div className="flex gap-2 justify-end">
+                  <Button variant="outline" onClick={close}>取消</Button>
+                  <Button
+                    variant="primary"
+                    onClick={() => { handleReset(); close(); }}
+                    className="bg-blue-600 text-white hover:bg-blue-700 border-blue-600"
+                  >
+                    确认
+                  </Button>
+                </div>
+              )}
+            >
+              <Button
+                variant="outline"
+                icon={<RotateCcw className="w-4 h-4" />}
+                htmlType="button"
+                className="text-orange-600 border-orange-200 hover:bg-orange-50 hover:border-orange-300 active:scale-95 transition-all duration-150"
+                title="重置到默认状态"
+              >
+                重置
+              </Button>
+            </PopConfirm>
             <Button
               variant="primary"
               onClick={handleSave}
@@ -214,7 +260,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
               htmlType="button"
               className="bg-blue-600 text-white hover:bg-blue-700 border-blue-600 active:scale-95 transition-all duration-150"
             >
-              保存模板
+{UI_TEXT.buttons.save}
             </Button>
           </div>
         </div>
@@ -227,20 +273,20 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
               <CardHeader>
                 <CardTitle className="text-gray-800 flex items-center gap-2">
                   <Settings className="w-5 h-5" />
-                  基本信息
+{UI_TEXT.titles.basicInfo}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <Input
-                  label="模板名称"
-                  placeholder="输入模板名称..."
+                  label={UI_TEXT.labels.templateName}
+                  placeholder={UI_TEXT.placeholders.templateName}
                   value={formData.name}
                   onChange={(value) => updateEditorFormData({ name: value })}
                 />
 
                 <Textarea
-                  label="模板描述"
-                  placeholder="描述这个模板的用途和特点..."
+                  label={UI_TEXT.labels.templateDescription}
+                  placeholder={UI_TEXT.placeholders.templateDescription}
                   value={formData.description}
                   onChange={(value) => updateEditorFormData({ description: value })}
                   rows={4}
@@ -252,19 +298,15 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
                   {/* Category */}
                   <div className="space-y-2 w-[140px] flex-shrink-0">
                     <Select
-                      label="分类"
+                      label={UI_TEXT.labels.category}
                       value={formData.category}
                       onChange={(value) => updateEditorFormData({
                         category: value as Template['category']
                       })}
-                      options={[
-                        { value: 'productivity', text: '生产力' },
-                        { value: 'creative', text: '创意' },
-                        { value: 'technical', text: '技术' },
-                        { value: 'research', text: '研究' },
-                        { value: 'education', text: '教育' },
-                        { value: 'business', text: '商业' },
-                      ]}
+                      options={TEMPLATE_CATEGORIES.map(cat => ({
+                        value: cat.key,
+                        text: cat.label
+                      }))}
                       placeholder="请选择分类"
                       size="s"
                       className="w-full"
@@ -274,21 +316,14 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
                   {/* Tags */}
                   <div className="flex-1 space-y-3">
                     <TagSelect
-                      label="标签"
+                      label={UI_TEXT.labels.tags}
                       value={formData.tags}
                       onChange={(tags) => updateEditorFormData({ tags })}
-                      placeholder="添加标签..."
-                      options={[
-                        // 预设一些常用标签选项
-                        { value: 'AI', text: 'AI' },
-                        { value: '写作', text: '写作' },
-                        { value: '编程', text: '编程' },
-                        { value: '设计', text: '设计' },
-                        { value: '营销', text: '营销' },
-                        { value: '教育', text: '教育' },
-                        { value: '商业', text: '商业' },
-                        { value: '创意', text: '创意' },
-                      ]}
+                      placeholder={UI_TEXT.placeholders.addTag}
+                      options={COMMON_TAGS.map(tag => ({
+                        value: tag,
+                        text: tag
+                      }))}
                       optionsOnly={false} // 允许用户输入自定义标签
                     />
                   </div>
@@ -301,31 +336,39 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
               <CardHeader>
                 <CardTitle className="text-gray-800 flex items-center gap-2">
                   <Wand2 className="w-5 h-5" />
-                  模板组件
+{UI_TEXT.titles.templateComponents}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 {/* Add Component Buttons */}
                 <div className="mb-6">
                   <div className="flex flex-wrap gap-2">
-                    {componentTypes.map(({ type, label, icon: Icon }) => (
-                      <Button
-                        key={type}
-                        variant="outline"
-                        size="sm"
-                        onClick={() => addComponent(type)}
-                        icon={<Icon className="w-4 h-4" />}
-                        htmlType="button"
-                        className="hover:bg-gray-50 active:bg-gray-100 active:scale-95 transition-all duration-150"
-                      >
-                        {label}
-                      </Button>
-                    ))}
+                    {componentTypes.map(({ type, label, icon: Icon }) => {
+                      const colors = COMPONENT_BUTTON_COLORS[type] || COMPONENT_BUTTON_COLORS.example;
+                      const config = COMPONENT_TYPES.find(c => c.type === type);
+                      const tips = config?.tips || '';
+
+                      return (
+                        <Tooltip key={type} title={tips}>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => addComponent(type)}
+                            icon={<Icon className="w-4 h-4" />}
+                            htmlType="button"
+                            className={`${colors.bg} ${colors.hover} ${colors.border} ${colors.text} active:scale-95 transition-all duration-150`}
+                          >
+                            {label}
+                          </Button>
+                        </Tooltip>
+                      );
+                    })}
                   </div>
                 </div>
 
                 {/* Drop Zone */}
                 <div
+                  data-testid="drop-zone"
                   className={cn(
                     'min-h-[200px] border-2 border-dashed rounded-lg p-4 transition-all',
                     'border-gray-300 space-y-3'
@@ -353,6 +396,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
                         onUpdate={updateComponent}
                         onRemove={removeComponent}
                         onMove={moveComponent}
+                        allComponents={components}
                       />
                     ))}
                   </AnimatePresence>

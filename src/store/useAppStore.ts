@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { AppStore, User, Template, Question, Session, Notification, UIState, EditorState } from '../types';
 import { mockTemplates, mockQuestions } from '../data/mockData';
 import { generateId } from '../utils';
+import { COMPONENT_TYPES, TEMPLATE_CATEGORIES, DEFAULT_TEMPLATE_CONFIG } from '../config/appConfig';
 
 const initialUIState: UIState = {
   activeTab: 'editor',
@@ -11,40 +12,33 @@ const initialUIState: UIState = {
   notifications: [],
 };
 
+// 从配置文件生成初始组件
+const generateInitialComponents = () => {
+  return DEFAULT_TEMPLATE_CONFIG.defaultComponentTypes.map((type, index) => {
+    const config = COMPONENT_TYPES.find(c => c.type === type);
+    return {
+      id: generateId(),
+      type: type as any,
+      content: config?.defaultContent || '',
+      position: index,
+      isRequired: DEFAULT_TEMPLATE_CONFIG.requiredComponentTypes.includes(type),
+      placeholder: config?.placeholder,
+      isDefault: true, // 标记为默认组件
+    };
+  });
+};
+
 const initialEditorState: EditorState = {
   currentTemplate: null,
   formData: {
     name: '',
     description: '',
-    category: 'productivity',
+    category: TEMPLATE_CATEGORIES[0]?.key as any || DEFAULT_TEMPLATE_CONFIG.defaultCategory,
     tags: [],
-    isPublic: true,
+    isPublic: DEFAULT_TEMPLATE_CONFIG.defaultIsPublic,
   },
-  components: [
-    {
-      id: generateId(),
-      type: 'prefix',
-      content: '请以专业、准确的方式回答以下问题：',
-      position: 0,
-      isRequired: true,
-    },
-    {
-      id: generateId(),
-      type: 'question_slot',
-      content: '[用户问题将插入此处]',
-      position: 1,
-      isRequired: true,
-      placeholder: '在此输入您的问题...',
-    },
-    {
-      id: generateId(),
-      type: 'suffix',
-      content: '请提供详细的解释和实用的建议。',
-      position: 2,
-      isRequired: false,
-    },
-  ],
-  showPreview: false,
+  components: generateInitialComponents(),
+  showPreview: true,
   newTag: '',
 };
 

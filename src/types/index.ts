@@ -71,6 +71,7 @@ export interface TemplateComponent {
   isRequired: boolean;
   placeholder?: string;
   validation?: ValidationRule[];
+  isDefault?: boolean; // 标记是否为默认组件
 }
 
 export type ComponentType = 
