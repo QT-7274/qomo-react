@@ -57,7 +57,7 @@ function App() {
                 <div className='flex-1 overflow-auto p-6 bg-gray-50'>
                   <div className='h-full'>
                     <Routes>
-                      <Route path="/" element={<Navigate to="/editor" replace />} />
+                      <Route path="/" element={<Navigate to="/editor?mode=use" replace />} />
                       <Route path="/editor" element={<EditorPage />} />
                       <Route path="/library" element={<LibraryPage />} />
                       <Route path="/components" element={<ComponentsPage />} />
