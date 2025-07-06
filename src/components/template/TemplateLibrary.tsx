@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { Plus, Search, Filter, SortAsc, Download, Upload } from 'lucide-react';
 import { Template, TemplateCategory } from '../../types';
 import { useAppStore } from '../../store/useAppStore';
@@ -14,6 +15,7 @@ interface TemplateLibraryProps {
 }
 
 const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ className }) => {
+  const navigate = useNavigate();
   const {
     templates,
     deleteTemplate,
@@ -67,46 +69,69 @@ const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ className }) => {
       isPublic: template.isPublic
     });
     updateEditorComponents(template.components);
-    setActiveTab('editor');
-    
+
+    // 跳转到模板工作台（编辑模式）
+    navigate('/editor?mode=create');
+
     showNotification({
       type: 'success',
       title: '模板已加载',
-      message: '模板已加载到编辑器中',
+      message: '模板已加载到编辑器中，已跳转到模板工作台',
       duration: 2000,
     });
   };
 
-  const handleDeleteTemplate = (templateId: string) => {
-    deleteTemplate(templateId);
-    showNotification({
-      type: 'success',
-      title: '模板已删除',
-      message: '模板已成功删除',
-      duration: 2000,
-    });
+  const handleDeleteTemplate = async (templateId: string) => {
+    try {
+      await deleteTemplate(templateId);
+      showNotification({
+        type: 'success',
+        title: '模板已删除',
+        message: '模板已成功删除',
+        duration: 2000,
+      });
+    } catch (error) {
+      console.error('删除模板失败:', error);
+      showNotification({
+        type: 'error',
+        title: '删除失败',
+        message: '无法删除模板',
+        duration: 2000,
+      });
+    }
   };
 
   const handleApplyTemplate = (template: Template) => {
-    // Apply template components to current editor
+    // Apply template components to current editor and switch to use mode
     updateEditorComponents([...template.components]);
-    setActiveTab('editor');
-    
+
+    // 清空表单数据，因为我们要进入使用模板模式
+    updateEditorFormData({
+      name: '',
+      description: '',
+      category: 'productivity',
+      tags: [],
+      isPublic: false
+    });
+
+    // 跳转到模板工作台（使用模式）
+    navigate('/editor?mode=use');
+
     showNotification({
       type: 'success',
       title: '模板已应用',
-      message: '模板组件已添加到编辑器中',
-      duration: 2000,
+      message: `模板"${template.name}"已应用，已跳转到模板工作台使用模式`,
+      duration: 3000,
     });
   };
 
   const templateCategories: { value: TemplateCategory | 'all'; label: string; icon: string }[] = [
     { value: 'all', label: '全部', icon: '📋' },
-    { value: 'general', label: '通用', icon: '💬' },
+    { value: 'productivity', label: '效率', icon: '💬' },
     { value: 'creative', label: '创意', icon: '🎨' },
     { value: 'technical', label: '技术', icon: '⚙️' },
-    { value: 'business', label: '商务', icon: '💼' },
-    { value: 'educational', label: '教育', icon: '📚' },
+    { value: 'research', label: '研究', icon: '💼' },
+    { value: 'education', label: '教育', icon: '📚' },
   ];
 
   return (
@@ -122,8 +147,9 @@ const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ className }) => {
         </motion.h2>
         <Button
           variant="primary"
-          onClick={() => setActiveTab('editor')}
+          onClick={() => navigate('/editor?mode=create')}
           icon={<Plus className="w-4 h-4" />}
+          className='bg-blue-600 text-white hover:bg-blue-700 border-blue-600 shadow-sm'
         >
           新建模板
         </Button>
@@ -219,8 +245,9 @@ const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ className }) => {
           {!searchTerm && (
             <Button
               variant="primary"
-              onClick={() => setActiveTab('editor')}
+              onClick={() => navigate('/editor?mode=create')}
               icon={<Plus className="w-4 h-4" />}
+              className='bg-blue-600 text-white hover:bg-blue-700 border-blue-600 shadow-sm'
             >
               创建模板
             </Button>

@@ -14,19 +14,20 @@ import {
   Check,
   X,
 } from 'lucide-react';
-import { TemplateComponent, ComponentType, DragItem } from '../../types';
-import { cn } from '../../utils';
-import { Card, CardContent } from '../ui/Card';
-import { Textarea } from '../ui/Input';
-import Button from '../ui/Button';
-import Badge from '../ui/Badge';
+import { TemplateComponent, ComponentType, DragItem } from '@/types';
+import { cn } from '@/utils';
+import { Card, CardContent } from '@/components/ui/Card';
+import { Textarea } from '@/components/ui/Input';
+import Button from '@/components/ui/Button';
+import Badge from '@/components/ui/Badge';
 import {
   COMPONENT_DISPLAY_CONFIG,
   COMPONENT_COLOR_CONFIG,
   DEFAULT_TEMPLATE_CONFIG,
   COMPONENT_TYPES,
   COMPONENT_ICON_COLORS,
-} from '../../config/appConfig';
+  UI_TEXT,
+} from '@/config/appConfig';
 
 interface TemplateComponentCardProps {
   component: TemplateComponent;
@@ -35,6 +36,7 @@ interface TemplateComponentCardProps {
   onRemove: (id: string) => void;
   onMove: (dragIndex: number, hoverIndex: number) => void;
   allComponents: TemplateComponent[]; // 添加所有组件的引用，用于判断删除逻辑
+  mode?: 'create' | 'use'; // 添加模式参数
 }
 
 const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
@@ -44,6 +46,7 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
   onRemove,
   onMove,
   allComponents,
+  mode = 'create',
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(component.content);
@@ -191,9 +194,15 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
 
   const handleStartEdit = () => {
     setIsEditing(true);
-    // 使用setTimeout确保DOM更新后再聚焦
+    // 使用setTimeout确保DOM更新后再聚焦，并将光标移动到内容末尾
     setTimeout(() => {
-      textareaRef.current?.focus();
+      const textarea = textareaRef.current;
+      if (textarea) {
+        textarea.focus();
+        // 将光标移动到内容末尾
+        const length = textarea.value.length;
+        textarea.setSelectionRange(length, length);
+      }
     }, 0);
   };
 
@@ -265,12 +274,14 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
                 {/* Header */}
                 <div className='flex items-center justify-between'>
                   <div className='flex items-center gap-2'>
-                    <Badge
-                      variant={getComponentColor(component.type)}
-                      size='sm'
-                    >
-                      {getComponentLabel(component.type)}
-                    </Badge>
+                    <Tooltip title={getComponentTips(component.type)}>
+                      <Badge
+                        variant={getComponentColor(component.type)}
+                        size='sm'
+                      >
+                        {getComponentLabel(component.type)}
+                      </Badge>
+                    </Tooltip>
                     {component.isRequired && (
                       <Badge variant='danger' size='sm'>
                         必需
@@ -278,14 +289,17 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
                     )}
                   </div>
                   <div className='flex items-center gap-1'>
-                    <Button
-                      variant='ghost'
-                      size='sm'
-                      onClick={handleStartEdit}
-                      icon={<Edit className='w-4 h-4' />}
-                      className='p-2 hover:bg-blue-100 text-blue-600 hover:text-blue-700 border border-blue-200 hover:border-blue-300'
-                      title='编辑组件'
-                    />
+                    {/* 在使用模式下，question_slot组件不显示编辑按钮 */}
+                    {!(mode === 'use' && component.type === 'question_slot') && (
+                      <Button
+                        variant='ghost'
+                        size='sm'
+                        onClick={handleStartEdit}
+                        icon={<Edit className='w-4 h-4' />}
+                        className='p-2 hover:bg-blue-100 text-blue-600 hover:text-blue-700 border border-blue-200 hover:border-blue-300'
+                        title='编辑组件'
+                      />
+                    )}
                     {/* 根据删除逻辑显示删除按钮 */}
                     {canDelete() && (
                       <Button
@@ -364,10 +378,17 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
                       )}
                     >
                       <p className='text-gray-800 text-sm leading-relaxed whitespace-pre-wrap'>
-                        {component.content || (
-                          <span className='text-gray-400 italic'>
-                            {component.placeholder || '点击编辑添加内容...'}
+                        {/* 在使用模式下，question_slot组件显示特殊的placeholder */}
+                        {mode === 'use' && component.type === 'question_slot' ? (
+                          <span className='text-blue-600 italic font-medium'>
+                            {UI_TEXT.placeholders.questionSlotInUseMode}
                           </span>
+                        ) : (
+                          component.content || (
+                            <span className='text-gray-400 italic'>
+                              {component.placeholder || '点击编辑添加内容...'}
+                            </span>
+                          )
                         )}
                       </p>
                     </div>

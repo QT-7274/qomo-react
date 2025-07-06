@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Eye, Copy, Play, Calendar, Check } from 'lucide-react';
-import { Template } from '../../types';
-import { formatDate, cn } from '../../utils';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card';
-import { Textarea } from '../ui/Input';
-import Button from '../ui/Button';
-import Badge from '../ui/Badge';
-import Label from '../common/Label';
-import { TEMPLATE_CATEGORIES, COMPONENT_DISPLAY_CONFIG, UI_TEXT } from '../../config/appConfig';
+import { Template } from '@/types';
+import { formatDate, cn } from '@/utils';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { Textarea } from '@/components/ui/Input';
+import Button from '@/components/ui/Button';
+import Badge from '@/components/ui/Badge';
+import Label from '@/components/common/Label';
+import { TEMPLATE_CATEGORIES, COMPONENT_DISPLAY_CONFIG, UI_TEXT } from '@/config/appConfig';
 
 interface TemplatePreviewProps {
   template: Template;

@@ -1,8 +1,9 @@
 import { create } from 'zustand';
-import { AppStore, User, Template, Question, Session, Notification, UIState, EditorState } from '../types';
+import { AppStore, User, Template, Question, Session, Notification, UIState, EditorState, StoredComponent } from '../types';
 import { mockTemplates, mockQuestions } from '../data/mockData';
 import { generateId } from '../utils';
 import { COMPONENT_TYPES, TEMPLATE_CATEGORIES, DEFAULT_TEMPLATE_CONFIG } from '../config/appConfig';
+import { storageManager } from '../utils/storage';
 
 const initialUIState: UIState = {
   activeTab: 'editor',
@@ -54,11 +55,12 @@ export const useAppStore = create<AppStore>((set, get) => ({
           showTips: true,
         },
       },
-      templates: mockTemplates,
+      templates: [],
       questions: mockQuestions,
       sessions: [],
       ui: initialUIState,
       editor: initialEditorState,
+      storedComponents: [],
 
       // User actions
       setUser: (user: User) => set({ user }),
@@ -94,6 +96,37 @@ export const useAppStore = create<AppStore>((set, get) => ({
         set((state) => ({
           templates: [...state.templates, newTemplate],
         }));
+
+        // 异步保存到IndexedDB
+        storageManager.saveTemplate(newTemplate).catch(console.error);
+
+        // 同时保存模板中的组件到组件库
+        newTemplate.components.forEach(async (component) => {
+          const storedComponent: StoredComponent = {
+            id: generateId(),
+            name: `${newTemplate.name} - ${component.type}`,
+            description: `来自模板"${newTemplate.name}"的${component.type}组件`,
+            category: newTemplate.category,
+            type: component.type,
+            content: component.content,
+            isRequired: component.isRequired,
+            placeholder: component.placeholder,
+            validation: component.validation,
+            usageCount: 0,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            tags: newTemplate.tags,
+          };
+          try {
+            await storageManager.saveComponent(storedComponent);
+            // 更新本地状态
+            set((state) => ({
+              storedComponents: [...state.storedComponents, storedComponent],
+            }));
+          } catch (error) {
+            console.error('保存组件失败:', error);
+          }
+        });
       },
 
       updateTemplate: (id: string, updates: Partial<Template>) =>
@@ -105,10 +138,20 @@ export const useAppStore = create<AppStore>((set, get) => ({
           ),
         })),
 
-      deleteTemplate: (id: string) =>
+      deleteTemplate: async (id: string) => {
+        // 从内存状态中删除
         set((state) => ({
           templates: state.templates.filter((template) => template.id !== id),
-        })),
+        }));
+
+        // 从IndexedDB中删除
+        try {
+          await storageManager.deleteTemplate(id);
+          console.log('模板已从数据库中删除:', id);
+        } catch (error) {
+          console.error('从数据库删除模板失败:', error);
+        }
+      },
 
       // Save current editor state as template
       saveEditorAsTemplate: () => {
@@ -203,7 +246,66 @@ export const useAppStore = create<AppStore>((set, get) => ({
         })),
 
       resetEditor: () =>
-        set((state) => ({
+        set(() => ({
           editor: initialEditorState,
         })),
+
+      // Storage actions
+      initStorage: async () => {
+        try {
+          await storageManager.init();
+          console.log('存储初始化成功');
+        } catch (error) {
+          console.error('存储初始化失败:', error);
+        }
+      },
+
+      loadTemplatesFromStorage: async () => {
+        try {
+          const templates = await storageManager.getAllTemplates();
+          set({ templates });
+          console.log('模板加载成功:', templates.length);
+        } catch (error) {
+          console.error('模板加载失败:', error);
+        }
+      },
+
+      loadComponentsFromStorage: async () => {
+        try {
+          const storedComponents = await storageManager.getAllComponents();
+          set({ storedComponents });
+          console.log('组件加载成功:', storedComponents.length);
+        } catch (error) {
+          console.error('组件加载失败:', error);
+        }
+      },
+
+      saveComponentToStorage: async (component: StoredComponent) => {
+        try {
+          await storageManager.saveComponent(component);
+          set((state) => ({
+            storedComponents: [...state.storedComponents, component],
+          }));
+          console.log('组件保存成功:', component.name);
+        } catch (error) {
+          console.error('组件保存失败:', error);
+        }
+      },
+
+      deleteComponentFromStorage: async (id: string) => {
+        try {
+          await storageManager.deleteComponent(id);
+          set((state) => ({
+            storedComponents: state.storedComponents.filter(c => c.id !== id),
+          }));
+          console.log('组件删除成功:', id);
+        } catch (error) {
+          console.error('组件删除失败:', error);
+        }
+      },
+
+      unlockTalent: (talentId: string) => {
+        console.log('解锁天赋:', talentId);
+        // 这里可以添加天赋解锁逻辑
+      },
     }));

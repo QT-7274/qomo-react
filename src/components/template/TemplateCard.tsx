@@ -75,36 +75,36 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
             </div>
             <div className="flex items-center gap-1">
               <Button
-                variant="ghost"
+                variant="text"
                 size="sm"
                 onClick={(e) => {
-                  e.stopPropagation();
+                  e?.stopPropagation();
                   onApply(template);
                 }}
                 icon={<Download className="w-3 h-3" />}
-                className="p-1.5 hover:bg-blue-100 text-blue-600"
+                className="apply-template-btn"
                 title="应用模板"
               />
               <Button
-                variant="ghost"
+                variant="text"
                 size="sm"
                 onClick={(e) => {
-                  e.stopPropagation();
+                  e?.stopPropagation();
                   onEdit(template);
                 }}
                 icon={<Edit className="w-3 h-3" />}
-                className="p-1.5 hover:bg-gray-100"
+                className="edit-template-btn"
                 title="编辑模板"
               />
               <Button
-                variant="ghost"
+                variant="text"
                 size="sm"
                 onClick={(e) => {
-                  e.stopPropagation();
+                  e?.stopPropagation();
                   onDelete(template.id);
                 }}
                 icon={<Trash2 className="w-3 h-3" />}
-                className="p-1.5 hover:bg-red-100 text-red-500 hover:text-red-600"
+                className="delete-btn"
                 title="删除模板"
               />
             </div>

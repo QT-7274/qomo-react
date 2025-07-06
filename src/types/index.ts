@@ -175,6 +175,18 @@ export interface NotificationAction {
   style?: 'primary' | 'secondary';
 }
 
+// Storage types
+export interface StoredComponent extends Omit<TemplateComponent, 'id' | 'position'> {
+  id: string;
+  name: string; // 组件名称，用于用户识别
+  description?: string; // 组件描述
+  category: string; // 组件分类
+  usageCount: number; // 使用次数
+  createdAt: Date;
+  updatedAt: Date;
+  tags: string[]; // 标签
+}
+
 // Store types
 export interface AppStore {
   user: User | null;
@@ -183,12 +195,13 @@ export interface AppStore {
   sessions: Session[];
   ui: UIState;
   editor: EditorState;
-  
+  storedComponents: StoredComponent[]; // 存储的组件库
+
   // Actions
   setUser: (user: User) => void;
   addTemplate: (template: Template) => void;
   updateTemplate: (id: string, updates: Partial<Template>) => void;
-  deleteTemplate: (id: string) => void;
+  deleteTemplate: (id: string) => Promise<void>;
   addQuestion: (question: Question) => void;
   updateQuestion: (id: string, updates: Partial<Question>) => void;
   deleteQuestion: (id: string) => void;
@@ -203,6 +216,13 @@ export interface AppStore {
   setShowPreview: (show: boolean) => void;
   setNewTag: (tag: string) => void;
   resetEditor: () => void;
+
+  // Storage actions
+  initStorage: () => Promise<void>;
+  loadTemplatesFromStorage: () => Promise<void>;
+  loadComponentsFromStorage: () => Promise<void>;
+  saveComponentToStorage: (component: StoredComponent) => Promise<void>;
+  deleteComponentFromStorage: (id: string) => Promise<void>;
 }
 
 // API types

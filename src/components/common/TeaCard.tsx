@@ -37,12 +37,14 @@ interface CardTitleProps {
 }
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ children, className, bordered = false, full = false, ...props }, ref) => {
+  ({ children, className, bordered = false, full = false, hover, animate, ...props }, ref) => {
     return (
       <TeaCard
         ref={ref}
         className={cn(
           'p-6 rounded-xl shadow-sm border border-gray-200', // 恢复默认内边距 p-6
+          hover && 'hover:shadow-md transition-shadow duration-200',
+          animate && 'transition-all duration-200',
           className
         )}
         bordered={bordered}

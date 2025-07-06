@@ -24,6 +24,7 @@
     "react-hot-toast": "^2.5.2",
     "react-router-dom": "^7.6.3",
     "tailwind-merge": "^3.3.1",
+    "tailwind-scrollbar": "^3.1.0",
     "tea-component": "^2.8.0",
     "zustand": "^5.0.6"
   },

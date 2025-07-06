@@ -4,7 +4,8 @@ import {
   Wand2,
   BookOpen,
   MessageSquare,
-  Sparkles
+  Sparkles,
+  Package
 } from 'lucide-react';
 import { cn } from '@/utils';
 import { useAppStore } from '@/store/useAppStore';
@@ -75,7 +76,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         <nav className='space-y-2'>
           <NavLink
             path='/editor'
-            label='模板编辑器'
+            label='模板工作台'
             icon={Wand2}
             color='primary'
           />
@@ -84,6 +85,12 @@ const Sidebar: React.FC<SidebarProps> = ({
             label='模板库'
             icon={BookOpen}
             color='success'
+          />
+          <NavLink
+            path='/components'
+            label='组件库'
+            icon={Package}
+            color='primary'
           />
           <NavLink
             path='/sessions'
@@ -130,9 +137,10 @@ export const TopBar: React.FC<TopBarProps> = ({
 
   const getPageInfo = (pathname: string) => {
     const pageMap = {
-      '/': { title: '模板编辑器', description: '创建和编辑AI提示模板' },
-      '/editor': { title: '模板编辑器', description: '创建和编辑AI提示模板' },
+      '/': { title: '模板工作台', description: '创建和编辑AI提示模板' },
+      '/editor': { title: '模板工作台', description: '创建和编辑AI提示模板' },
       '/library': { title: '模板库', description: '管理您的模板库' },
+      '/components': { title: '组件库', description: '管理您的组件库' },
       '/sessions': { title: '会话记录', description: '查看历史会话记录' }
     };
     return pageMap[pathname as keyof typeof pageMap] || { title: '未知页面', description: '' };

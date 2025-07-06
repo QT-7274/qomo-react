@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useSearchParams } from 'react-router-dom';
 import { PopConfirm, Tooltip } from 'tea-component';
 import {
   Save,
@@ -11,7 +12,10 @@ import {
   Target,
   BookOpen,
   Lightbulb,
-  RotateCcw
+  RotateCcw,
+  Play,
+  Copy,
+  Check
 } from 'lucide-react';
 import { Template, TemplateComponent, ComponentType } from '@/types';
 import { useAppStore } from '@/store/useAppStore';
@@ -21,6 +25,7 @@ import Button from '@/components/ui/Button';
 import { Input, Textarea } from '@/components/ui/Input';
 import { Select } from '@/components/common/TeaSelect';
 import { TagSelect } from '@/components/common/TeaTagSelect';
+
 import TemplateComponentCard from '@/components/template/TemplateComponentCard';
 import TemplatePreview from '@/components/template/TemplatePreview';
 import { COMPONENT_TYPES, UI_TEXT, ANIMATION_CONFIG, TEMPLATE_CATEGORIES, COMMON_TAGS, DEFAULT_TEMPLATE_CONFIG, COMPONENT_BUTTON_COLORS } from '@/config/appConfig';
@@ -31,19 +36,116 @@ interface TemplateEditorProps {
 }
 
 const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const {
     addTemplate,
     updateTemplate,
-    questions,
+
     showNotification,
     editor,
     updateEditorFormData,
     updateEditorComponents,
     setShowPreview,
     resetEditor,
+
   } = useAppStore();
 
   const { formData, components, showPreview } = editor;
+
+  // 直接从URL参数读取模式，作为唯一状态源
+  const mode = (searchParams.get('mode') as 'create' | 'use') || 'create';
+
+  // 使用模板模式的状态
+  const [userQuestion, setUserQuestion] = useState('');
+  const [generatedPrompt, setGeneratedPrompt] = useState('');
+  const [copySuccess, setCopySuccess] = useState(false);
+
+  // 生成最终提示词的函数
+  const generateFinalPrompt = () => {
+    if (mode !== 'use' || !userQuestion.trim()) {
+      return '';
+    }
+
+    let prompt = '';
+    let hasQuestionSlot = false;
+
+    // 按位置排序处理组件
+    components
+      .sort((a, b) => a.position - b.position)
+      .forEach(component => {
+        switch (component.type) {
+          case 'prefix':
+          case 'context':
+          case 'constraint':
+          case 'example':
+          case 'suffix':
+            if (component.content.trim()) {
+              prompt += component.content + '\n\n';
+            }
+            break;
+          case 'question_slot':
+            hasQuestionSlot = true;
+            if (userQuestion.trim()) {
+              prompt += userQuestion + '\n\n';
+            }
+            break;
+        }
+      });
+
+    // 如果没有question_slot组件，将用户问题添加到末尾
+    if (!hasQuestionSlot && userQuestion.trim()) {
+      prompt += userQuestion + '\n\n';
+    }
+
+    return prompt.trim();
+  };
+
+  // 复制提示词的函数
+  const handleCopyPrompt = async () => {
+    if (!generatedPrompt) return;
+
+    try {
+      await navigator.clipboard.writeText(generatedPrompt);
+      setCopySuccess(true);
+      showNotification({
+        type: 'success',
+        title: '复制成功',
+        message: '提示词已复制到剪贴板',
+        duration: 2000,
+      });
+      // 移除自动重置，只在内容变化时重置
+    } catch (error) {
+      console.error('复制失败:', error);
+      showNotification({
+        type: 'error',
+        title: '复制失败',
+        message: '无法复制到剪贴板',
+        duration: 2000,
+      });
+    }
+  };
+
+  // 当问题或组件改变时重新生成提示词
+  useEffect(() => {
+    if (mode === 'use') {
+      const newPrompt = generateFinalPrompt();
+
+      // 如果生成的提示词发生变化，重置复制状态
+      if (newPrompt !== generatedPrompt && copySuccess) {
+        setCopySuccess(false);
+      }
+
+      setGeneratedPrompt(newPrompt);
+    }
+  }, [userQuestion, components, mode]);
+
+  // 处理模式切换
+  const handleModeSwitch = (newMode: 'create' | 'use') => {
+    // 只更新URL参数，让URL成为唯一状态源
+    setSearchParams({ mode: newMode });
+    // 不再自动移除question_slot组件，让用户手动控制问题在提示词中的位置
+  };
 
   // Initialize form data
   useEffect(() => {
@@ -61,29 +163,6 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
 
   // Temporarily disable drop functionality
   const isOver = false;
-
-  const handleDropQuestion = (questionItem: { id: string; content: string }) => {
-    const question = questions.find(q => q.id === questionItem.id);
-    if (!question) return;
-
-    // Find question slot and insert question
-    const questionSlotIndex = components.findIndex(c => c.type === 'question_slot');
-    if (questionSlotIndex !== -1) {
-      const newComponents = [...components];
-      newComponents[questionSlotIndex] = {
-        ...newComponents[questionSlotIndex],
-        content: question.content,
-      };
-      updateEditorComponents(newComponents);
-
-      showNotification({
-        type: 'success',
-        title: '问题已插入',
-        message: '问题已成功插入到模板中',
-        duration: 2000,
-      });
-    }
-  };
 
   const addComponent = (type: ComponentType) => {
     const config = COMPONENT_TYPES.find(c => c.type === type);
@@ -141,7 +220,20 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
   };
 
   const handleSave = () => {
-    if (!formData.name.trim()) {
+    // 在使用模板模式下，如果没有模板名称，自动生成一个
+    let templateName = formData.name.trim();
+    let templateDescription = formData.description;
+
+    if (mode === 'use' && !templateName) {
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('zh-CN', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      }).replace(/\//g, '-');
+      templateName = `${dateStr}-创建的模板`;
+      templateDescription = templateDescription || '基于问题输入创建的模板';
+    } else if (mode === 'create' && !templateName) {
       showNotification({
         type: 'error',
         title: '保存失败',
@@ -153,8 +245,8 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
 
     const templateData: Template = {
       id: template?.id || generateId(),
-      name: formData.name,
-      description: formData.description,
+      name: templateName,
+      description: templateDescription,
       category: formData.category,
       components: components.map((comp, index) => ({ ...comp, position: index })),
       rating: template?.rating || 0,
@@ -172,7 +264,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
       showNotification({
         type: 'success',
         title: '模板已更新',
-        message: '模板已成功保存',
+        message: mode === 'use' ? `模板"${templateName}"已成功保存` : '模板已成功保存',
         duration: 2000,
       });
     } else {
@@ -180,7 +272,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
       showNotification({
         type: 'success',
         title: '模板已创建',
-        message: '新模板已成功创建',
+        message: mode === 'use' ? `模板"${templateName}"已成功创建` : '新模板已成功创建',
         duration: 2000,
       });
     }
@@ -189,6 +281,8 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
   const handleReset = () => {
     resetEditor();
   };
+
+
 
   // 图标映射
   const iconMap = {
@@ -207,26 +301,53 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
   }));
 
   return (
-    <div className={cn('space-y-6', className)}>
-        {/* Header */}
+    <div className={cn('space-y-6 p-6', className)}>
+        {/* Header with Mode Switcher */}
         <div className="flex items-center justify-between">
-          <motion.h2
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="text-2xl font-bold text-gray-800"
-          >
-{template ? UI_TEXT.titles.editTemplate : UI_TEXT.titles.createTemplate}
-          </motion.h2>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 bg-gray-100 rounded-lg p-1">
+              <Button
+                variant={mode === 'use' ? 'primary' : 'ghost'}
+                size="sm"
+                onClick={() => handleModeSwitch('use')}
+                icon={<Play className="w-4 h-4" />}
+                className={cn(
+                  'transition-all duration-200',
+                  mode === 'use'
+                    ? 'bg-blue-600 text-white hover:bg-blue-700 border-blue-600 shadow-sm'
+                    : 'text-gray-600 hover:text-gray-800 hover:bg-white'
+                )}
+              >
+                使用模板
+              </Button>
+              <Button
+                variant={mode === 'create' ? 'primary' : 'ghost'}
+                size="sm"
+                onClick={() => handleModeSwitch('create')}
+                icon={<Wand2 className="w-4 h-4" />}
+                className={cn(
+                  'transition-all duration-200',
+                  mode === 'create'
+                    ? 'bg-blue-600 text-white hover:bg-blue-700 border-blue-600 shadow-sm'
+                    : 'text-gray-600 hover:text-gray-800 hover:bg-white'
+                )}
+              >
+                创建模板
+              </Button>
+            </div>
+          </div>
           <div className="flex items-center gap-3">
-            <Button
-              variant="outline"
-              onClick={() => setShowPreview(!showPreview)}
-              icon={<Eye className="w-4 h-4" />}
-              htmlType="button"
-              className="active:scale-95 transition-all duration-150"
-            >
+            {mode === 'create' && (
+              <Button
+                variant="outline"
+                onClick={() => setShowPreview(!showPreview)}
+                icon={<Eye className="w-4 h-4" />}
+                htmlType="button"
+                className="active:scale-95 transition-all duration-150"
+              >
 {showPreview ? UI_TEXT.buttons.hidePreview : UI_TEXT.buttons.preview}
-            </Button>
+              </Button>
+            )}
             <PopConfirm
               title="确定要重置模板到默认状态吗？"
               message="这将清除所有当前的修改。"
@@ -265,69 +386,119 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
           </div>
         </div>
 
+        {/* 创建模板模式 */}
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
           {/* Main Editor */}
           <div className="xl:col-span-2 space-y-6">
-            {/* Basic Info */}
+            {/* Basic Info / Question Input */}
             <Card variant="default" padding="md">
               <CardHeader>
-                <CardTitle className="text-gray-800 flex items-center gap-2">
-                  <Settings className="w-5 h-5" />
-{UI_TEXT.titles.basicInfo}
+                <CardTitle className="text-gray-800 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    {mode === 'create' ? (
+                      <>
+                        <Settings className="w-5 h-5" />
+                        {UI_TEXT.titles.basicInfo}
+                      </>
+                    ) : (
+                      <>
+                        <MessageSquare className="w-5 h-5" />
+                        问题输入
+                      </>
+                    )}
+                  </div>
+                  {mode === 'use' && (
+                    <div className="text-sm text-gray-500">
+                      没有自己喜欢的模板？
+                      <button
+                        onClick={() => handleModeSwitch('create')}
+                        className="text-blue-600 hover:text-blue-700 underline ml-1"
+                      >
+                        去创建一个！
+                      </button>
+                    </div>
+                  )}
                 </CardTitle>
+                {mode === 'use' && (
+                  <p className="text-sm text-gray-600 mt-1">
+                    输入你的具体问题，系统将基于模板组件生成提示词
+                  </p>
+                )}
               </CardHeader>
               <CardContent className="space-y-4">
-                <Input
-                  label={UI_TEXT.labels.templateName}
-                  placeholder={UI_TEXT.placeholders.templateName}
-                  value={formData.name}
-                  onChange={(value) => updateEditorFormData({ name: value })}
-                />
+                {mode === 'create' ? (
+                  // 创建模板模式 - 显示基本信息表单
+                  <>
+                    <Input
+                      label={UI_TEXT.labels.templateName}
+                      placeholder={UI_TEXT.placeholders.templateName}
+                      value={formData.name}
+                      onChange={(value) => updateEditorFormData({ name: value })}
+                    />
 
-                <Textarea
-                  label={UI_TEXT.labels.templateDescription}
-                  placeholder={UI_TEXT.placeholders.templateDescription}
-                  value={formData.description}
-                  onChange={(value) => updateEditorFormData({ description: value })}
-                  rows={4}
-                  className="w-full min-h-[100px]"
-                />
+                    <Textarea
+                      label={UI_TEXT.labels.templateDescription}
+                      placeholder={UI_TEXT.placeholders.templateDescription}
+                      value={formData.description}
+                      onChange={(value) => updateEditorFormData({ description: value })}
+                      rows={4}
+                      className="w-full min-h-[100px]"
+                    />
 
-                {/* Category and Tags in one row */}
-                <div className="flex gap-6 items-start">
-                  {/* Category */}
-                  <div className="space-y-2 w-[140px] flex-shrink-0">
-                    <Select
-                      label={UI_TEXT.labels.category}
-                      value={formData.category}
-                      onChange={(value) => updateEditorFormData({
-                        category: value as Template['category']
-                      })}
-                      options={TEMPLATE_CATEGORIES.map(cat => ({
-                        value: cat.key,
-                        text: cat.label
-                      }))}
-                      placeholder="请选择分类"
-                      size="s"
+                    {/* Category and Tags in one row */}
+                    <div className="flex gap-6 items-start">
+                      {/* Category */}
+                      <div className="space-y-2 w-[140px] flex-shrink-0">
+                        <Select
+                          label={UI_TEXT.labels.category}
+                          value={formData.category}
+                          onChange={(value) => updateEditorFormData({
+                            category: value as Template['category']
+                          })}
+                          options={TEMPLATE_CATEGORIES.map(cat => ({
+                            value: cat.key,
+                            text: cat.label
+                          }))}
+                          placeholder="请选择分类"
+                          size="s"
+                          className="w-full"
+                        />
+                      </div>
+
+                      {/* Tags */}
+                      <div className="flex-1 space-y-3">
+                        <TagSelect
+                          label={UI_TEXT.labels.tags}
+                          value={formData.tags}
+                          onChange={(tags) => updateEditorFormData({ tags })}
+                          placeholder={UI_TEXT.placeholders.addTag}
+                          options={COMMON_TAGS.map(tag => ({
+                            value: tag,
+                            text: tag
+                          }))}
+                          optionsOnly={false} // 允许用户输入自定义标签
+                        />
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  // 使用模板模式 - 显示问题输入
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      你的问题
+                    </label>
+                    <Textarea
+                      placeholder="请输入你想要解决的问题..."
+                      value={userQuestion}
+                      onChange={(value) => setUserQuestion(value)}
+                      rows={6}
                       className="w-full"
                     />
+                    <div className="text-xs text-gray-500 mt-2">
+                      💡 输入问题后，系统会根据模板组件自动生成提示词<br/>
+                    </div>
                   </div>
-
-                  {/* Tags */}
-                  <div className="flex-1 space-y-3">
-                    <TagSelect
-                      label={UI_TEXT.labels.tags}
-                      value={formData.tags}
-                      onChange={(tags) => updateEditorFormData({ tags })}
-                      placeholder={UI_TEXT.placeholders.addTag}
-                      options={COMMON_TAGS.map(tag => ({
-                        value: tag,
-                        text: tag
-                      }))}
-                      optionsOnly={false} // 允许用户输入自定义标签
-                    />
-                  </div>
-                </div>
+                )}
               </CardContent>
             </Card>
 
@@ -354,9 +525,9 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
                             variant="outline"
                             size="sm"
                             onClick={() => addComponent(type)}
-                            icon={<Icon className="w-4 h-4" />}
+                            icon={<Icon className="w-3 h-3" />}
                             htmlType="button"
-                            className={`${colors.bg} ${colors.hover} ${colors.border} ${colors.text} active:scale-95 transition-all duration-150`}
+                            className={`${colors.bg} ${colors.hover} ${colors.border} ${colors.text} active:scale-95 transition-all duration-150 text-xs px-2 py-1`}
                           >
                             {label}
                           </Button>
@@ -397,6 +568,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
                         onRemove={removeComponent}
                         onMove={moveComponent}
                         allComponents={components}
+                        mode={mode}
                       />
                     ))}
                   </AnimatePresence>
@@ -413,26 +585,137 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
             </Card>
           </div>
 
-          {/* Preview Panel */}
-          {showPreview && (
-            <div className="xl:col-span-1">
-              <TemplatePreview
-                template={{
-                  id: 'preview',
-                  name: formData.name || '未命名模板',
-                  description: formData.description,
-                  category: formData.category,
-                  components,
-                  rating: 0,
-                  usageCount: 0,
-                  isPublic: formData.isPublic,
-                  authorId: 'current-user',
-                  createdAt: new Date(),
-                  updatedAt: new Date(),
-                  tags: formData.tags,
-                  version: '1.0.0',
-                }}
-              />
+          {/* Preview Panel / Generated Prompt Panel */}
+          {mode === 'create' ? (
+            // 创建模式显示预览面板
+            showPreview && (
+              <div className="xl:col-span-1">
+                <TemplatePreview
+                  template={{
+                    id: 'preview',
+                    name: formData.name || '未命名模板',
+                    description: formData.description,
+                    category: formData.category,
+                    components,
+                    rating: 0,
+                    usageCount: 0,
+                    isPublic: formData.isPublic,
+                    authorId: 'current-user',
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                    tags: formData.tags,
+                    version: '1.0.0',
+                  }}
+                />
+              </div>
+            )
+          ) : (
+            // 使用模式显示生成的提示词面板
+            <div className="xl:col-span-1 space-y-6">
+              {/* Generated Prompt Card */}
+              <Card variant="default" padding="md">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-gray-800 flex items-center gap-2">
+                      <Play className="w-5 h-5" />
+                      生成的提示词
+                    </CardTitle>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleCopyPrompt}
+                      icon={copySuccess ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                      disabled={!generatedPrompt}
+                      htmlType="button"
+                      className={cn(
+                        "transition-all duration-300",
+                        copySuccess && "!border-green-500 !text-green-600 !bg-green-50"
+                      )}
+                    >
+                      {copySuccess ? '已复制' : '复制'}
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className={cn(
+                    'p-4 rounded-lg border min-h-[200px] max-h-[400px] overflow-y-auto',
+                    'bg-gray-50 border-gray-300',
+                    'font-mono text-sm leading-relaxed'
+                  )}>
+                    {generatedPrompt ? (
+                      <pre className="text-gray-800 whitespace-pre-wrap">
+                        {generatedPrompt}
+                      </pre>
+                    ) : (
+                      <div className="flex items-center justify-center h-32 text-gray-500">
+                        <div className="text-center">
+                          <Play className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                          <p>
+                            {userQuestion ? '请添加模板组件以生成提示词' : '请先输入问题'}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Component Structure Card */}
+              <Card variant="default" padding="md">
+                <CardHeader>
+                  <CardTitle className="text-gray-800 text-sm">
+                    组件结构
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    {components.length > 0 ? (
+                      components
+                        .sort((a, b) => a.position - b.position)
+                        .map((component, index) => {
+                          const config = COMPONENT_TYPES.find(c => c.type === component.type);
+                          const colors = COMPONENT_BUTTON_COLORS[component.type] || COMPONENT_BUTTON_COLORS.example;
+
+                          return (
+                            <div
+                              key={component.id}
+                              className="flex items-center gap-3 p-2 rounded-lg bg-gray-50"
+                            >
+                              <div className="w-6 h-6 rounded bg-gray-200 flex items-center justify-center text-xs text-gray-600">
+                                {index + 1}
+                              </div>
+                              <div className="flex-1 overflow-hidden">
+                                <div className="flex items-center gap-2">
+                                  <span className={`text-xs px-2 py-1 rounded ${colors.bg} ${colors.text} ${colors.border} border`}>
+                                    {config?.label || component.type}
+                                  </span>
+                                  <span className="text-xs text-gray-500 truncate">
+                                    {mode === 'use' && component.type === 'question_slot' ? (
+                                      <span className="text-blue-600 italic">
+                                        {UI_TEXT.placeholders.questionSlotInUseMode}
+                                      </span>
+                                    ) : (
+                                      component.content ?
+                                        (component.content.length > 30 ?
+                                          component.content.substring(0, 30) + '...' :
+                                          component.content
+                                        ) :
+                                        '空内容'
+                                    )}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })
+                    ) : (
+                      <div className="text-center py-4 text-gray-500 text-sm">
+                        还没有添加任何组件
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           )}
         </div>

@@ -137,12 +137,15 @@ export const UI_TEXT = {
   titles: {
     createTemplate: '创建模板',
     editTemplate: '编辑模板',
+    useTemplate: '使用模板',
     templatePreview: '模板预览',
     componentStructure: '组件结构',
     templateComponents: '模板组件',
     generatedPrompt: '生成的提示词',
     templateLibrary: '模板库',
+    componentLibrary: '组件库',
     basicInfo: '基本信息',
+    questionInput: '问题输入',
   },
   
   // 表单标签
@@ -163,6 +166,7 @@ export const UI_TEXT = {
     sampleQuestion: '输入一个示例问题来预览最终效果...',
     searchTemplates: '搜索模板...',
     addTag: '添加标签...',
+    questionSlotInUseMode: '[你的问题在这个位置]',
   },
   
   // 提示信息

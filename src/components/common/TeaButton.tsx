@@ -36,10 +36,10 @@ const Button = React.forwardRef<HTMLButtonElement, TeaButtonProps>(
     const getTeaType = (variant: string) => {
       const mapping = {
         primary: 'primary',
-        secondary: 'primary', // 映射到 primary
-        outline: 'weak',      // 映射到 weak
-        ghost: 'text',        // 映射到 text
-        danger: 'error',      // 映射到 error
+        secondary: 'primary', 
+        outline: 'weak',      
+        ghost: 'text',        
+        danger: 'error',      
         weak: 'weak',
         pay: 'pay',
         error: 'error',

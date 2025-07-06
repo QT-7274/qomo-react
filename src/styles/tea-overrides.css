@@ -32,7 +32,9 @@
   min-height: 40px !important;
 }
 
-/* Button 组件确保 primary 样式正确 */
+/* Button 组件统一样式管理 */
+
+/* Primary 按钮样式 */
 .tea-button.tea-button-primary {
   background-color: #3b82f6 !important;
   border-color: #3b82f6 !important;
@@ -50,24 +52,128 @@
   transform: scale(0.98) !important;
 }
 
-/* 改善所有按钮的 hover 和 active 样式 */
-.tea-button:hover {
-  background-color: #f3f4f6 !important; /* 加重 hover 颜色 */
+/* Weak 按钮样式（默认按钮） */
+.tea-button.tea-button-weak {
+  background-color: #f9fafb !important;
+  border-color: #d1d5db !important;
+  color: #374151 !important;
 }
 
-.tea-button:active {
+.tea-button.tea-button-weak:hover {
+  background-color: #f3f4f6 !important;
+  border-color: #9ca3af !important;
+  color: #111827 !important;
+}
+
+.tea-button.tea-button-weak:active {
+  background-color: #e5e7eb !important;
+  border-color: #6b7280 !important;
   transform: scale(0.98) !important;
-  background-color: #e5e7eb !important; /* 添加点击样式 */
 }
 
-/* Ghost 按钮样式优化 */
+/* Text 按钮样式（Ghost 按钮） */
+.tea-button.tea-button-text {
+  background-color: transparent !important;
+  border-color: transparent !important;
+  color: #374151 !important;
+}
+
 .tea-button.tea-button-text:hover {
   background-color: #f3f4f6 !important;
+  color: #111827 !important;
 }
 
 .tea-button.tea-button-text:active {
   background-color: #e5e7eb !important;
   transform: scale(0.98) !important;
+}
+
+/* Outline 按钮样式 */
+.tea-button.tea-button-outline {
+  background-color: transparent !important;
+  border-color: #d1d5db !important;
+  color: #374151 !important;
+}
+
+.tea-button.tea-button-outline:hover {
+  background-color: #f9fafb !important;
+  border-color: #9ca3af !important;
+  color: #111827 !important;
+}
+
+.tea-button.tea-button-outline:active {
+  background-color: #f3f4f6 !important;
+  border-color: #6b7280 !important;
+  transform: scale(0.98) !important;
+}
+
+/* 禁用状态统一样式 */
+.tea-button:disabled,
+.tea-button.tea-button-disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+}
+
+.tea-button:disabled:hover,
+.tea-button.tea-button-disabled:hover {
+  transform: none !important;
+}
+
+/* 确保所有按钮都有基础的过渡效果 */
+.tea-button {
+  transition: all 0.2s ease-in-out !important;
+}
+
+/* 特定按钮样式 */
+/* 应用模板按钮 */
+.apply-template-btn,
+.tea-button.apply-template-btn,
+button.apply-template-btn {
+  color: #2563eb !important;
+  background-color: #f0f9ff !important;
+  border: 1px solid #bfdbfe !important;
+  font-weight: 500 !important;
+}
+
+.apply-template-btn:hover,
+.tea-button.apply-template-btn:hover,
+button.apply-template-btn:hover {
+  background-color: #dbeafe !important;
+  color: #1d4ed8 !important;
+  border-color: #93c5fd !important;
+}
+
+/* 编辑模板按钮 */
+.edit-template-btn,
+.tea-button.edit-template-btn,
+button.edit-template-btn {
+  color: #059669 !important;
+  background-color: #f0fdf4 !important;
+  border: 1px solid #bbf7d0 !important;
+  font-weight: 500 !important;
+}
+
+.edit-template-btn:hover,
+.tea-button.edit-template-btn:hover,
+button.edit-template-btn:hover {
+  background-color: #dcfce7 !important;
+  color: #047857 !important;
+  border-color: #86efac !important;
+}
+
+/* 删除按钮 */
+.delete-btn,
+.tea-button.delete-btn,
+button.delete-btn {
+  color: #dc2626 !important;
+}
+
+.delete-btn:hover,
+.tea-button.delete-btn:hover,
+button.delete-btn:hover {
+  background-color: #fef2f2 !important;
+  color: #b91c1c !important;
 }
 
 /* Input 和 Textarea 样式优化 */
