@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Copy, Sparkles, ArrowRight } from 'lucide-react';
+import { Search, Copy, Sparkles, ArrowRight, Wand2 } from 'lucide-react';
 import { useAppStore } from '@/store/useAppStore';
-import { Template, TemplateComponent } from '@/types';
+import { Template } from '@/types';
 import { cn } from '@/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Input, Textarea } from '@/components/ui/Input';
@@ -10,7 +10,7 @@ import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
 import { Select } from '@/components/common/TeaSelect';
 import TemplatePreview from '@/components/template/TemplatePreview';
-import { TEMPLATE_CATEGORIES, UI_TEXT, COMPONENT_DISPLAY_CONFIG } from '@/config/appConfig';
+import { TEMPLATE_CATEGORIES, UI_TEXT } from '@/config/appConfig';
 
 const TemplateUser: React.FC = () => {
   const { templates, showNotification } = useAppStore();
@@ -116,10 +116,7 @@ const TemplateUser: React.FC = () => {
     setGeneratedPrompt(''); // 清空之前的提示词
   };
 
-  // 获取组件类型信息
-  const getComponentTypeInfo = (type: string) => {
-    return COMPONENT_DISPLAY_CONFIG[type] || { label: type, variant: 'default' as const };
-  };
+
 
   return (
     <div className="h-full flex gap-6 p-6">
@@ -274,9 +271,8 @@ const TemplateUser: React.FC = () => {
             </Card>
 
             {/* Template Preview */}
-            <TemplatePreview 
-              template={selectedTemplate} 
-              sampleQuestion={userQuestion}
+            <TemplatePreview
+              template={selectedTemplate}
             />
           </>
         ) : (

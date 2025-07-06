@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Search, Filter, SortAsc, Download, Upload } from 'lucide-react';
+import { Plus, Search, Filter, SortAsc } from 'lucide-react';
 import { Template, TemplateCategory } from '../../types';
 import { useAppStore } from '../../store/useAppStore';
 import { cn } from '../../utils';
@@ -20,7 +20,6 @@ const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ className }) => {
     templates,
     deleteTemplate,
     showNotification,
-    setActiveTab,
     updateEditorFormData,
     updateEditorComponents
   } = useAppStore();

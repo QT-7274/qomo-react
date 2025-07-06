@@ -23,7 +23,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   onClose,
   className
 }) => {
-  const location = useLocation();
+
   const { user } = useAppStore();
 
   if (!isOpen) return null;

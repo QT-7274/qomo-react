@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PopConfirm } from 'tea-component';
-import { Search, Plus, Trash2, Copy, Filter } from 'lucide-react';
+import { Plus, Trash2, Copy } from 'lucide-react';
 import { useAppStore } from '@/store/useAppStore';
 import { StoredComponent, ComponentType } from '@/types';
 import { generateId } from '@/utils';
@@ -13,13 +13,12 @@ import { Select } from '@/components/common/TeaSelect';
 import { COMPONENT_TYPES, COMPONENT_DISPLAY_CONFIG, UI_TEXT } from '@/config/appConfig';
 
 const ComponentLibrary: React.FC = () => {
-  const { 
-    storedComponents, 
-    saveComponentToStorage, 
+  const {
+    storedComponents,
     deleteComponentFromStorage,
     updateEditorComponents,
     editor,
-    showNotification 
+    showNotification
   } = useAppStore();
   
   const [searchTerm, setSearchTerm] = useState('');

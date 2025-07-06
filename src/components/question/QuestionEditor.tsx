@@ -157,15 +157,19 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
     >
       <ModalContent className="space-y-6">
         {/* Question Content */}
-        <Textarea
-          label="问题内容"
-          placeholder="请输入您的问题..."
-          value={formData.content}
-          onChange={(value) => setFormData(prev => ({ ...prev, content: value }))}
-          error={errors.content}
-          rows={4}
-          className="resize-none"
-        />
+        <div className="space-y-2">
+          <Textarea
+            label="问题内容"
+            placeholder="请输入您的问题..."
+            value={formData.content}
+            onChange={(value) => setFormData(prev => ({ ...prev, content: value }))}
+            rows={4}
+            className="resize-none"
+          />
+          {errors.content && (
+            <p className="text-sm text-red-600">{errors.content}</p>
+          )}
+        </div>
 
         {/* Question Type */}
         <div className="space-y-2">

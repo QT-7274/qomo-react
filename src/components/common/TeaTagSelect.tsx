@@ -1,6 +1,6 @@
 import React from 'react';
 import { TagSelect as TeaTagSelect } from 'tea-component';
-import { cn } from '@/utils';
+
 import Label from './Label';
 
 interface TagOption {

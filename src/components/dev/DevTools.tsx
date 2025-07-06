@@ -1,7 +1,7 @@
 import React from 'react';
 import { Database, Download, AlertTriangle } from 'lucide-react';
 import { useAppStore } from '@/store/useAppStore';
-import { mockTemplates, mockQuestions } from '@/data/mockData';
+import { mockTemplates } from '@/data/mockData';
 import Button from '@/components/ui/Button';
 import { cn } from '@/utils';
 

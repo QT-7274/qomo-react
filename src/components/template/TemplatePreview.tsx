@@ -8,7 +8,7 @@ import { Textarea } from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
 import Label from '@/components/common/Label';
-import { TEMPLATE_CATEGORIES, COMPONENT_DISPLAY_CONFIG, UI_TEXT } from '@/config/appConfig';
+import { TEMPLATE_CATEGORIES, COMPONENT_DISPLAY_CONFIG } from '@/config/appConfig';
 
 interface TemplatePreviewProps {
   template: Template;

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
-import { AppStore, User, Template, Question, Session, Notification, UIState, EditorState, StoredComponent } from '../types';
-import { mockTemplates, mockQuestions } from '../data/mockData';
+import { AppStore, User, Template, Question, Notification, UIState, EditorState, StoredComponent } from '../types';
+import { mockQuestions } from '../data/mockData';
 import { generateId } from '../utils';
 import { COMPONENT_TYPES, TEMPLATE_CATEGORIES, DEFAULT_TEMPLATE_CONFIG } from '../config/appConfig';
 import { storageManager } from '../utils/storage';
@@ -177,7 +177,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
           rating: 0,
           usageCount: 0,
           isPublic: editor.formData.isPublic,
-          authorId: state.user.id,
+          authorId: state.user?.id || 'anonymous',
           createdAt: new Date(),
           updatedAt: new Date(),
           tags: editor.formData.tags,

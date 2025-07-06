@@ -73,6 +73,17 @@ const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
     );
 
     if (animate) {
+      // 过滤掉不兼容的props
+      const {
+        onDrag,
+        onDragStart,
+        onDragEnd,
+        onAnimationStart,
+        onAnimationEnd,
+        onAnimationIteration,
+        onTransitionEnd,
+        ...motionProps
+      } = props;
       return (
         <motion.div
           ref={ref}
@@ -82,7 +93,7 @@ const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
           exit={{ opacity: 0, scale: 0.8 }}
           whileHover={{ scale: 1.05 }}
           transition={{ duration: 0.2 }}
-          {...props}
+          {...motionProps}
         >
           {content}
         </motion.div>

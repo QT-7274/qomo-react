@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Search, Filter, SortAsc } from 'lucide-react';
+import { Plus, Filter, SortAsc } from 'lucide-react';
 import { Question, QuestionType } from '../../types';
 import { useAppStore } from '../../store/useAppStore';
 import { cn } from '../../utils';

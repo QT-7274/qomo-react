@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useDrag, useDrop } from 'react-dnd';
 import { Tooltip } from 'tea-component';
@@ -23,7 +23,6 @@ import Badge from '@/components/ui/Badge';
 import {
   COMPONENT_DISPLAY_CONFIG,
   COMPONENT_COLOR_CONFIG,
-  DEFAULT_TEMPLATE_CONFIG,
   COMPONENT_TYPES,
   COMPONENT_ICON_COLORS,
   UI_TEXT,
