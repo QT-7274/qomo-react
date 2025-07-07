@@ -24,7 +24,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   className
 }) => {
 
-  const { user } = useAppStore();
+  const { user, setCurrentTemplate } = useAppStore();
 
   if (!isOpen) return null;
 
@@ -74,12 +74,16 @@ const Sidebar: React.FC<SidebarProps> = ({
 
         {/* Navigation */}
         <nav className='space-y-2'>
-          <NavLink
-            path='/editor'
-            label='模板工作台'
-            icon={Wand2}
-            color='primary'
-          />
+          <div
+            onClick={() => setCurrentTemplate(null)}
+          >
+            <NavLink
+              path='/editor'
+              label='模板工作台'
+              icon={Wand2}
+              color='primary'
+            />
+          </div>
           <NavLink
             path='/library'
             label='模板库'

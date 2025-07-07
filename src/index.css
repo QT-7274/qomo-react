@@ -1,97 +1,153 @@
+/* 引入 Google Fonts 的 Inter 字体，包含多种字重（300-800）
+   Inter 是一款专为屏幕显示优化的现代无衬线字体 */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* 引入 tea-component 组件库的默认样式
+   tea-component 可能是项目使用的 UI 组件库 */
 @import "tea-component/dist/tea.css";
+
+/* 引入自定义的 tea 组件库样式覆盖文件
+   用于修改或覆盖 tea 组件库的默认样式 */
 @import "./styles/tea-overrides.css";
 
+/* Tailwind CSS 的三个核心层
+   base: 重置浏览器默认样式，提供一致的基础样式
+   components: 预定义的组件类（如 .btn, .card 等）
+   utilities: 实用工具类（如 .text-center, .mt-4 等） */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* CSS 自定义属性（CSS 变量）定义
+   :root 选择器定义全局 CSS 变量 */
 :root {
+  /* 设置全局默认字体族
+     优先使用 Inter，依次降级到系统字体、苹果系统字体、无衬线字体 */
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
+/* 全局 body 样式设置 */
 body {
-  margin: 0;
+  /* 设置最小高度为视口高度，确保页面至少占满整个屏幕 */
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  /* 再次设置字体族，确保整个页面使用统一字体 */
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
-/* Custom scrollbar */
+/* 自定义滚动条样式（仅 Webkit 内核浏览器支持，如 Chrome、Safari） */
+/* 设置滚动条宽度 */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
+/* 滚动条轨道（背景）样式 */
 ::-webkit-scrollbar-track {
+  /* 半透明白色背景 */
   background: rgba(255, 255, 255, 0.1);
+  /* 圆角边框 */
   border-radius: 4px;
 }
 
+/* 滚动条滑块样式 */
 ::-webkit-scrollbar-thumb {
+  /* 更不透明的白色背景 */
   background: rgba(255, 255, 255, 0.3);
   border-radius: 4px;
 }
 
+/* 滚动条滑块悬停状态 */
 ::-webkit-scrollbar-thumb:hover {
+  /* 悬停时增加不透明度 */
   background: rgba(255, 255, 255, 0.5);
 }
 
-/* Custom animations */
+/* 自定义动画定义 */
+/* 浮动动画：元素上下浮动效果 */
 @keyframes float {
+  /* 开始和结束位置：原始位置 */
   0%, 100% { transform: translateY(0px); }
+  /* 中间位置：向上移动 10px */
   50% { transform: translateY(-10px); }
 }
 
+/* 脉冲发光动画：阴影大小和强度的周期性变化 */
 @keyframes pulse-glow {
+  /* 开始和结束：较小的蓝色阴影 */
   0%, 100% { box-shadow: 0 0 5px rgba(59, 130, 246, 0.5); }
+  /* 中间：更大更亮的蓝色阴影，创造脉冲效果 */
   50% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.8), 0 0 30px rgba(59, 130, 246, 0.6); }
 }
 
+/* 应用浮动动画的工具类 */
 .float-animation {
+  /* 3秒循环，缓入缓出，无限重复 */
   animation: float 3s ease-in-out infinite;
 }
 
+/* 应用脉冲发光动画的工具类 */
 .pulse-glow {
+  /* 2秒循环，缓入缓出，无限重复 */
   animation: pulse-glow 2s ease-in-out infinite;
 }
 
-/* Glass morphism effect */
+/* 玻璃拟态效果样式 - 流行的 UI 设计趋势 */
 .glass {
+  /* 半透明白色背景 */
   background: rgba(255, 255, 255, 0.1);
+  /* 背景模糊效果，创造毛玻璃质感 */
   backdrop-filter: blur(10px);
+  /* 半透明白色边框，增强玻璃边缘效果 */
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
+/* 深色版本的玻璃拟态效果 */
 .glass-dark {
+  /* 半透明黑色背景 */
   background: rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
+  /* 更淡的白色边框 */
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* 烟花特效增强样式 */
+/* 烟花特效相关样式 */
+/* 火花动画：模拟烟花爆炸时的火花效果 */
 @keyframes sparkle {
+  /* 开始和结束：完全透明且缩小到0 */
   0%, 100% { opacity: 0; transform: scale(0); }
+  /* 中间：完全不透明且正常大小 */
   50% { opacity: 1; transform: scale(1); }
 }
 
+/* 烟花发光动画：模拟烟花的光晕效果 */
 @keyframes firework-glow {
+  /* 开始和结束：较小的光晕 */
   0%, 100% { box-shadow: 0 0 5px currentColor; }
+  /* 中间：更大更亮的光晕，currentColor 会使用元素的文字颜色 */
   50% { box-shadow: 0 0 20px currentColor, 0 0 30px currentColor; }
 }
 
+/* 闪烁动画：模拟星星闪烁效果 */
 @keyframes twinkle {
+  /* 开始和结束：较暗且略小 */
   0%, 100% { opacity: 0.3; transform: scale(0.8); }
+  /* 中间：完全不透明且略大 */
   50% { opacity: 1; transform: scale(1.2); }
 }
 
+/* 烟花粒子效果类 */
 .firework-particle {
+  /* 0.8秒执行一次，缓出效果，动画完成后保持最终状态 */
   animation: sparkle 0.8s ease-out forwards;
 }
 
+/* 烟花光晕效果类 */
 .firework-glow {
+  /* 0.5秒的快速光晕效果 */
   animation: firework-glow 0.5s ease-out;
 }
 
+/* 烟花闪烁效果类 */
 .firework-twinkle {
+  /* 1秒循环的闪烁效果，无限重复 */
   animation: twinkle 1s ease-in-out infinite;
 }

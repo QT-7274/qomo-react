@@ -41,17 +41,16 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
   const {
     addTemplate,
     updateTemplate,
-
     showNotification,
     editor,
     updateEditorFormData,
     updateEditorComponents,
     setShowPreview,
+    setCurrentTemplate,
     resetEditor,
-
   } = useAppStore();
 
-  const { formData, components, showPreview } = editor;
+  const { formData, components, showPreview, currentTemplate } = editor;
 
   // 直接从URL参数读取模式，作为唯一状态源
   const mode = (searchParams.get('mode') as 'create' | 'use') || 'create';
@@ -142,6 +141,10 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
 
   // 处理模式切换
   const handleModeSwitch = (newMode: 'create' | 'use') => {
+    // 切换到使用模式时清除当前编辑的模板
+    if (newMode === 'use') {
+      setCurrentTemplate(null);
+    }
     // 只更新URL参数，让URL成为唯一状态源
     setSearchParams({ mode: newMode });
     // 不再自动移除question_slot组件，让用户手动控制问题在提示词中的位置
@@ -244,23 +247,25 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
     }
 
     const templateData: Template = {
-      id: template?.id || generateId(),
+      id: currentTemplate?.id || generateId(),
       name: templateName,
       description: templateDescription,
       category: formData.category,
       components: components.map((comp, index) => ({ ...comp, position: index })),
-      rating: template?.rating || 0,
-      usageCount: template?.usageCount || 0,
+      rating: currentTemplate?.rating || 0,
+      usageCount: currentTemplate?.usageCount || 0,
       isPublic: formData.isPublic,
       authorId: 'current-user', // TODO: Get from auth
-      createdAt: template?.createdAt || new Date(),
+      createdAt: currentTemplate?.createdAt || new Date(),
       updatedAt: new Date(),
       tags: formData.tags,
-      version: template?.version || '1.0.0',
+      version: currentTemplate?.version || '1.0.0',
     };
 
-    if (template) {
-      updateTemplate(template.id, templateData);
+    if (currentTemplate) {
+      updateTemplate(currentTemplate.id, templateData);
+      // 更新当前编辑的模板引用
+      setCurrentTemplate(templateData);
       showNotification({
         type: 'success',
         title: '模板已更新',
@@ -279,6 +284,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
   };
 
   const handleReset = () => {
+    setCurrentTemplate(null);
     resetEditor();
   };
 

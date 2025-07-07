@@ -21,7 +21,8 @@ const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ className }) => {
     deleteTemplate,
     showNotification,
     updateEditorFormData,
-    updateEditorComponents
+    updateEditorComponents,
+    setCurrentTemplate,
   } = useAppStore();
   
   const [searchTerm, setSearchTerm] = useState('');
@@ -59,6 +60,9 @@ const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ className }) => {
   }, [templates, searchTerm, selectedCategory, sortBy]);
 
   const handleEditTemplate = (template: Template) => {
+    // 设置当前编辑的模板
+    setCurrentTemplate(template);
+
     // Load template into editor
     updateEditorFormData({
       name: template.name,
@@ -101,6 +105,9 @@ const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ className }) => {
   };
 
   const handleApplyTemplate = (template: Template) => {
+    // 清除当前编辑的模板，因为这是应用模板而不是编辑
+    setCurrentTemplate(null);
+
     // Apply template components to current editor and switch to use mode
     updateEditorComponents([...template.components]);
 
@@ -146,7 +153,10 @@ const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ className }) => {
         </motion.h2>
         <Button
           variant="primary"
-          onClick={() => navigate('/editor?mode=create')}
+          onClick={() => {
+            setCurrentTemplate(null);
+            navigate('/editor?mode=create');
+          }}
           icon={<Plus className="w-4 h-4" />}
           className='bg-blue-600 text-white hover:bg-blue-700 border-blue-600 shadow-sm'
         >
@@ -244,7 +254,10 @@ const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ className }) => {
           {!searchTerm && (
             <Button
               variant="primary"
-              onClick={() => navigate('/editor?mode=create')}
+              onClick={() => {
+                setCurrentTemplate(null);
+                navigate('/editor?mode=create');
+              }}
               icon={<Plus className="w-4 h-4" />}
               className='bg-blue-600 text-white hover:bg-blue-700 border-blue-600 shadow-sm'
             >

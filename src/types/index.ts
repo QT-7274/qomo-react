@@ -205,7 +205,6 @@ export interface AppStore {
   addQuestion: (question: Question) => void;
   updateQuestion: (id: string, updates: Partial<Question>) => void;
   deleteQuestion: (id: string) => void;
-  unlockTalent: (talentId: string) => void;
   setActiveTab: (tab: UIState['activeTab']) => void;
   showNotification: (notification: Omit<Notification, 'id'>) => void;
   dismissNotification: (id: string) => void;
@@ -215,6 +214,7 @@ export interface AppStore {
   updateEditorComponents: (components: TemplateComponent[]) => void;
   setShowPreview: (show: boolean) => void;
   setNewTag: (tag: string) => void;
+  setCurrentTemplate: (template: Template | null) => void;
   resetEditor: () => void;
 
   // Storage actions
