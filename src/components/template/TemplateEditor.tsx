@@ -29,6 +29,7 @@ import { TagSelect } from '@/components/common/TeaTagSelect';
 import TemplateComponentCard from '@/components/template/TemplateComponentCard';
 import TemplatePreview from '@/components/template/TemplatePreview';
 import { COMPONENT_TYPES, UI_TEXT, ANIMATION_CONFIG, TEMPLATE_CATEGORIES, COMMON_TAGS, DEFAULT_TEMPLATE_CONFIG, COMPONENT_BUTTON_COLORS } from '@/config/appConfig';
+import { TEST_IDS } from '@/config/constants';
 
 interface TemplateEditorProps {
   template?: Template | null;
@@ -183,7 +184,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
 
     // 滚动到新添加的组件位置
     setTimeout(() => {
-      const dropZone = document.querySelector('[data-testid="drop-zone"]');
+      const dropZone = document.querySelector(`[data-testid="${TEST_IDS.DROP_ZONE}"]`);
       if (dropZone) {
         const lastComponent = dropZone.lastElementChild;
         if (lastComponent) {
@@ -262,7 +263,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
       version: currentTemplate?.version || '1.0.0',
     };
 
-    if (currentTemplate) {
+    if (currentTemplate && currentTemplate.id) {
       updateTemplate(currentTemplate.id, templateData);
       // 更新当前编辑的模板引用
       setCurrentTemplate(templateData);
@@ -545,7 +546,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
 
                 {/* Drop Zone */}
                 <div
-                  data-testid="drop-zone"
+                  data-testid={TEST_IDS.DROP_ZONE}
                   className={cn(
                     'min-h-[200px] border-2 border-dashed rounded-lg p-4 transition-all',
                     'border-gray-300 space-y-3'
