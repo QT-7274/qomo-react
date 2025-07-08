@@ -1,0 +1,290 @@
+{
+    "type": "float-area",
+    "_widgets": [
+        [
+            {
+                "widget": {
+                    "constructionOptions": {
+                        "factoryId": "code-editor-opener",
+                        "options": {
+                            "kind": "navigatable",
+                            "uri": "src/App.tsx",
+                            "floatAreaId": "5210dba2-50f2-41f1-a099-edec36524d32"
+                        }
+                    },
+                    "innerWidgetState": {
+                        "cursorState": [
+                            {
+                                "inSelectionMode": false,
+                                "selectionStart": {
+                                    "lineNumber": 86,
+                                    "column": 16
+                                },
+                                "position": {
+                                    "lineNumber": 86,
+                                    "column": 16
+                                }
+                            }
+                        ],
+                        "viewState": {
+                            "scrollLeft": 0,
+                            "firstPosition": {
+                                "lineNumber": 60,
+                                "column": 1
+                            },
+                            "firstPositionDeltaTop": -4
+                        },
+                        "contributionsState": {
+                            "editor.contrib.folding": {
+                                "lineCount": 98,
+                                "provider": "syntax",
+                                "foldedImports": false
+                            },
+                            "editor.contrib.wordHighlighter": false
+                        }
+                    }
+                },
+                "width": 600,
+                "height": 450,
+                "spacing": 0
+            }
+        ],
+        [
+            {
+                "widget": {
+                    "constructionOptions": {
+                        "factoryId": "code-editor-opener",
+                        "options": {
+                            "kind": "navigatable",
+                            "uri": "src/components/layout/Sidebar.tsx",
+                            "floatAreaId": "5210dba2-50f2-41f1-a099-edec36524d32"
+                        }
+                    }
+                },
+                "width": 600,
+                "height": 450,
+                "spacing": 0
+            },
+            {
+                "widget": {
+                    "constructionOptions": {
+                        "factoryId": "code-editor-opener",
+                        "options": {
+                            "kind": "navigatable",
+                            "uri": "src/components/layout/TopBar.tsx",
+                            "floatAreaId": "5210dba2-50f2-41f1-a099-edec36524d32"
+                        }
+                    }
+                },
+                "width": 600,
+                "height": 450,
+                "spacing": 0
+            },
+            {
+                "widget": {
+                    "constructionOptions": {
+                        "factoryId": "code-editor-opener",
+                        "options": {
+                            "kind": "navigatable",
+                            "uri": "src/components/ui/Toast.tsx",
+                            "floatAreaId": "5210dba2-50f2-41f1-a099-edec36524d32"
+                        }
+                    },
+                    "innerWidgetState": {
+                        "cursorState": [
+                            {
+                                "inSelectionMode": false,
+                                "selectionStart": {
+                                    "lineNumber": 1,
+                                    "column": 1
+                                },
+                                "position": {
+                                    "lineNumber": 1,
+                                    "column": 1
+                                }
+                            }
+                        ],
+                        "viewState": {
+                            "scrollLeft": 0,
+                            "firstPosition": {
+                                "lineNumber": 1,
+                                "column": 1
+                            },
+                            "firstPositionDeltaTop": 0
+                        },
+                        "contributionsState": {
+                            "editor.contrib.folding": {
+                                "lineCount": 132,
+                                "foldedImports": false
+                            },
+                            "editor.contrib.wordHighlighter": false
+                        }
+                    }
+                },
+                "width": 600,
+                "height": 450,
+                "spacing": 0
+            }
+        ]
+    ],
+    "_widths": [
+        600,
+        600
+    ],
+    "_modelData": {
+        "connections": [
+            {
+                "startWord": {
+                    "uri": "src/App.tsx",
+                    "lineNumber": 55,
+                    "startColumn": 16,
+                    "endLineNumber": 55,
+                    "endColumn": 23,
+                    "word": "Sidebar",
+                    "x": 92.00000014446655,
+                    "y": 60.0000002889331,
+                    "hide": true,
+                    "height": 1,
+                    "width": 1
+                },
+                "endWord": {
+                    "uri": "src/components/layout/Sidebar.tsx",
+                    "lineNumber": 27,
+                    "startColumn": 7,
+                    "endLineNumber": 27,
+                    "endColumn": 14,
+                    "word": "",
+                    "x": 791,
+                    "y": 240,
+                    "hide": false,
+                    "height": 18,
+                    "width": 51
+                },
+                "id": "a3139b22-c2a0-4ad7-a81f-5b4553c4065f",
+                "startAnchor": {
+                    "x": 93.00000014446655,
+                    "y": 60.63017984677059
+                },
+                "endAnchor": {
+                    "x": 791,
+                    "y": 242.3608425502882
+                },
+                "startControl": {
+                    "x": 123.96761024709407,
+                    "y": 60.63017984677059
+                },
+                "endControl": {
+                    "x": 748.4195361088872,
+                    "y": 242.3608425502882
+                },
+                "arrow": {
+                    "angle": 0,
+                    "x": 779,
+                    "y": 242.3608425502882
+                }
+            },
+            {
+                "startWord": {
+                    "uri": "src/App.tsx",
+                    "lineNumber": 63,
+                    "startColumn": 18,
+                    "endLineNumber": 63,
+                    "endColumn": 24,
+                    "word": "TopBar",
+                    "x": 215.00000014446655,
+                    "y": 110.00000028893311,
+                    "hide": false,
+                    "height": 18,
+                    "width": 42.99999999999997
+                },
+                "endWord": {
+                    "uri": "src/components/layout/TopBar.tsx",
+                    "lineNumber": 19,
+                    "startColumn": 7,
+                    "endLineNumber": 19,
+                    "endColumn": 13,
+                    "word": "",
+                    "x": 791,
+                    "y": 890,
+                    "hide": false,
+                    "height": 18,
+                    "width": 44
+                },
+                "id": "5d5267e4-f28f-4d81-ae9a-b959da941793",
+                "startAnchor": {
+                    "x": 243.15192322218672,
+                    "y": 128.0000002889331
+                },
+                "endAnchor": {
+                    "x": 806.3480769222798,
+                    "y": 890
+                },
+                "startControl": {
+                    "x": 243.15192322218672,
+                    "y": 153.73397963991408
+                },
+                "endControl": {
+                    "x": 806.3480769222798,
+                    "y": 854.6157783924011
+                },
+                "arrow": {
+                    "angle": 1.5707963267948966,
+                    "x": 806.3480769222798,
+                    "y": 878
+                }
+            },
+            {
+                "startWord": {
+                    "uri": "src/App.tsx",
+                    "lineNumber": 86,
+                    "startColumn": 14,
+                    "endLineNumber": 86,
+                    "endColumn": 19,
+                    "word": "Toast",
+                    "x": 92.00000014446655,
+                    "y": 480.0000002889331,
+                    "hide": true,
+                    "height": 1,
+                    "width": 1
+                },
+                "endWord": {
+                    "uri": "src/components/ui/Toast.tsx",
+                    "lineNumber": 9,
+                    "startColumn": 7,
+                    "endLineNumber": 9,
+                    "endColumn": 12,
+                    "word": "",
+                    "x": 791.0000157158835,
+                    "y": 1216.0000299871015,
+                    "hide": false,
+                    "height": 18,
+                    "width": 36
+                },
+                "id": "4e3d752d-4198-4dd7-b92a-75e500798fd7",
+                "startAnchor": {
+                    "x": 92.98119556890589,
+                    "y": 481.0000002889331
+                },
+                "endAnchor": {
+                    "x": 800.3384980759755,
+                    "y": 1216.0000299871015
+                },
+                "startControl": {
+                    "x": 92.98119556890589,
+                    "y": 504.05683698065076
+                },
+                "endControl": {
+                    "x": 800.3384980759755,
+                    "y": 1184.2968795359898
+                },
+                "arrow": {
+                    "angle": 1.5707963267948966,
+                    "x": 800.3384980759755,
+                    "y": 1204.0000299871015
+                }
+            }
+        ],
+        "annotations": [],
+        "highlights": []
+    }
+}

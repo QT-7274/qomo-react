@@ -7,7 +7,8 @@ import { HTML5Backend } from 'react-dnd-html5-backend'; // HTML5 拖放后端实
 
 // 导入自定义组件
 import Toast from '@/components/ui/Toast'; // 提示框组件
-import Sidebar, { TopBar } from '@/components/layout/Sidebar'; // 侧边栏和顶部导航栏组件
+import Sidebar from '@/components/layout/Sidebar'; // 侧边栏组件
+import TopBar from '@/components/layout/TopBar'; // 顶部导航栏组件
 import DevTools from '@/components/dev/DevTools'; // 开发工具组件
 import { useAppStore } from '@/store/useAppStore'; // 自定义状态管理
 
@@ -16,6 +17,7 @@ import EditorPage from '@/pages/EditorPage'; // 编辑器页面
 import LibraryPage from '@/pages/LibraryPage'; // 资源库页面
 import ComponentsPage from '@/pages/ComponentsPage'; // 组件页面
 import SessionsPage from '@/pages/SessionsPage'; // 会话页面
+import { ROUTES, EDITOR_MODES } from '@/config/constants'; // 配置化的路由和编辑器模式
 
 // 主应用组件
 function App() {
@@ -67,14 +69,17 @@ function App() {
                 {/* 内容区域 */}
                 <div className='flex-1 overflow-auto p-6 bg-gray-50'> {/* 自适应布局，添加内边距和背景色 */}
                   <div className='h-full'> {/* 设置高度为 100% */}
-                    <Routes> {/* 路由配置 */}
-                      {/* 默认重定向到编辑器页面 */}
-                      <Route path="/" element={<Navigate to="/editor?mode=use" replace />} />
-                      {/* 此处的 path 逻辑以后修改 */}
-                      <Route path="/editor" element={<EditorPage />} /> {/* 编辑器页面路由 */}
-                      <Route path="/library" element={<LibraryPage />} /> {/* 资源库页面路由 */}
-                      <Route path="/components" element={<ComponentsPage />} /> {/* 组件页面路由 */}
-                      <Route path="/sessions" element={<SessionsPage />} /> {/* 会话页面路由 */}
+                    <Routes> {/* 路由配置 - 使用配置化的路由常量 */}
+                      {/* 默认重定向到编辑器页面的使用模式 */}
+                      <Route path={ROUTES.HOME} element={<Navigate to={`${ROUTES.EDITOR}?mode=${EDITOR_MODES.USE}`} replace />} />
+                      {/* 编辑器页面路由 */}
+                      <Route path={ROUTES.EDITOR} element={<EditorPage />} />
+                      {/* 模板库页面路由 */}
+                      <Route path={ROUTES.LIBRARY} element={<LibraryPage />} />
+                      {/* 组件库页面路由 */}
+                      <Route path={ROUTES.COMPONENTS} element={<ComponentsPage />} />
+                      {/* 会话记录页面路由 */}
+                      <Route path={ROUTES.SESSIONS} element={<SessionsPage />} />
                     </Routes>
                   </div>
                 </div>

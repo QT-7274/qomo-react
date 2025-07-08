@@ -1,3 +1,8 @@
+/**
+ * 模板库组件
+ * 显示和管理所有模板，支持搜索、筛选和排序功能，使用配置化的文本和路由
+ */
+
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -9,6 +14,8 @@ import { Input } from '../ui/Input';
 import Button from '../ui/Button';
 import Badge from '../ui/Badge';
 import TemplateCard from './TemplateCard';
+import { ROUTES, EDITOR_MODES } from '@/config/constants';
+import { NOTIFICATIONS, BUTTON_TEXTS, PLACEHOLDERS, EMPTY_STATES } from '@/config/text';
 
 interface TemplateLibraryProps {
   className?: string;
@@ -74,11 +81,11 @@ const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ className }) => {
     updateEditorComponents(template.components);
 
     // 跳转到模板工作台（编辑模式）
-    navigate('/editor?mode=create');
+    navigate(`${ROUTES.EDITOR}?mode=${EDITOR_MODES.CREATE}`);
 
     showNotification({
       type: 'success',
-      title: '模板已加载',
+      title: NOTIFICATIONS.SUCCESS.TEMPLATE_LOADED,
       message: '模板已加载到编辑器中，已跳转到模板工作台',
       duration: 2000,
     });
@@ -89,8 +96,8 @@ const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ className }) => {
       await deleteTemplate(templateId);
       showNotification({
         type: 'success',
-        title: '模板已删除',
-        message: '模板已成功删除',
+        title: NOTIFICATIONS.SUCCESS.TEMPLATE_DELETED,
+        message: NOTIFICATIONS.SUCCESS.TEMPLATE_DELETED,
         duration: 2000,
       });
     } catch (error) {
@@ -155,19 +162,19 @@ const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ className }) => {
           variant="primary"
           onClick={() => {
             setCurrentTemplate(null);
-            navigate('/editor?mode=create');
+            navigate(`${ROUTES.EDITOR}?mode=${EDITOR_MODES.CREATE}`);
           }}
           icon={<Plus className="w-4 h-4" />}
           className='bg-blue-600 text-white hover:bg-blue-700 border-blue-600 shadow-sm'
         >
-          新建模板
+          {BUTTON_TEXTS.NEW_TEMPLATE}
         </Button>
       </div>
 
       {/* Search and Filters */}
       <div className="space-y-4">
         <Input
-          placeholder="搜索模板或标签..."
+          placeholder={PLACEHOLDERS.SEARCH_TEMPLATES}
           value={searchTerm}
           onChange={(value) => setSearchTerm(value)}
         />

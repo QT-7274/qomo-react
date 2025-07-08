@@ -1,3 +1,8 @@
+/**
+ * 组件库管理组件
+ * 显示和管理所有保存的组件，支持搜索、筛选和复制到编辑器功能，使用配置化的文本和图标
+ */
+
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PopConfirm } from 'tea-component';
@@ -11,6 +16,8 @@ import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
 import { Select } from '@/components/common/TeaSelect';
 import { COMPONENT_TYPES, COMPONENT_DISPLAY_CONFIG, UI_TEXT } from '@/config/appConfig';
+import { BUTTON_TEXTS, PLACEHOLDERS, NOTIFICATIONS, EMPTY_STATES } from '@/config/text';
+import { getIcon } from '@/utils/iconMap';
 
 const ComponentLibrary: React.FC = () => {
   const {
@@ -84,7 +91,7 @@ const ComponentLibrary: React.FC = () => {
       await navigator.clipboard.writeText(component.content);
       showNotification({
         type: 'success',
-        title: '复制成功',
+        title: NOTIFICATIONS.SUCCESS.COPY_SUCCESS,
         message: '组件内容已复制到剪贴板',
         duration: 2000,
       });
@@ -147,7 +154,7 @@ const ComponentLibrary: React.FC = () => {
           <div className="flex flex-wrap gap-4">
             <div className="flex-1 min-w-[200px]">
               <Input
-                placeholder="搜索组件名称或内容..."
+                placeholder={PLACEHOLDERS.SEARCH_COMPONENTS}
                 value={searchTerm}
                 onChange={(value) => setSearchTerm(value)}
                 size="m"

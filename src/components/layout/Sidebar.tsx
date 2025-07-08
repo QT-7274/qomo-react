@@ -1,14 +1,20 @@
+/**
+ * 侧边栏组件
+ * 负责显示应用导航、用户信息和快速统计
+ */
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import {
-  Wand2,
-  BookOpen,
-  MessageSquare,
-  Sparkles,
-  Package
-} from 'lucide-react';
-import { cn } from '@/utils';
+import { Sparkles } from 'lucide-react';
+import { cn } from '@/utils'; // 自定义类名合并工具函数
 import { useAppStore } from '@/store/useAppStore';
+import {
+  MAIN_NAVIGATION,
+  APP_METADATA,
+  QUICK_STATS_CONFIG,
+  // isActiveRoute,
+} from '@/config/navigation';
+import { STATS } from '@/config/text';
+import { getIcon } from '@/utils/iconMap';
 import TeaButton from '@/components/common/TeaButton';
 import NavLink from '@/components/common/NavLink';
 
@@ -18,13 +24,9 @@ interface SidebarProps {
   className?: string;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({
-  isOpen,
-  onClose,
-  className
-}) => {
-
-  const { user, setCurrentTemplate } = useAppStore();
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, className }) => {
+  const location = useLocation();
+  const { user, templates, setCurrentTemplate } = useAppStore();
 
   if (!isOpen) return null;
 
@@ -39,9 +41,11 @@ const Sidebar: React.FC<SidebarProps> = ({
             </div>
             <div>
               <h1 className='text-xl font-bold text-gray-800'>
-                Qomo
+                {APP_METADATA.name}
               </h1>
-              <p className='text-xs text-gray-600'>AI模板系统</p>
+              <p className='text-xs text-gray-600'>
+                {APP_METADATA.description}
+              </p>
             </div>
           </div>
           <TeaButton
@@ -53,69 +57,42 @@ const Sidebar: React.FC<SidebarProps> = ({
           />
         </div>
 
-        {/* User Info 暂时挂起*/}
-        {user && (
-          <div className='bg-white border border-gray-200 rounded-lg p-4 space-y-3'>
-            <div className='flex items-center gap-3'>
-              <div className='w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center'>
-                <span className='text-white font-semibold'>
-                  {user.name.charAt(0)}
-                </span>
-              </div>
-              <div className='flex-1'>
-                <h3 className='text-gray-800 font-medium'>
-                  {user.name}
-                </h3>
-                <p className='text-gray-600 text-sm'>{user.email}</p>
-              </div>
-            </div>
-          </div>
-        )}
-
         {/* Navigation */}
         <nav className='space-y-2'>
-          <div
-            onClick={() => setCurrentTemplate(null)}
-          >
-            <NavLink
-              path='/editor'
-              label='模板工作台'
-              icon={Wand2}
-              color='primary'
-            />
-          </div>
-          <NavLink
-            path='/library'
-            label='模板库'
-            icon={BookOpen}
-            color='success'
-          />
-          <NavLink
-            path='/components'
-            label='组件库'
-            icon={Package}
-            color='primary'
-          />
-          <NavLink
-            path='/sessions'
-            label='会话记录'
-            icon={MessageSquare}
-            color='warning'
-          />
+          {MAIN_NAVIGATION.map((item) => {
+            const IconComponent = getIcon(item.icon);
+
+            return (
+              <NavLink
+                key={item.id}
+                path={item.path}
+                label={item.label}
+                icon={IconComponent}
+                color={item.color as any}
+              />
+            );
+          })}
         </nav>
 
-        {/* Quick Stats 暂时挂起*/}
+        {/* Quick Stats */}
         <div className='bg-white border border-gray-200 rounded-lg p-4'>
-          <h4 className='text-gray-800 font-medium mb-3'>快速统计</h4>
+          <h4 className='text-gray-800 font-medium mb-3'>
+            {STATS.TEMPLATES_COUNT}
+          </h4>
           <div className='space-y-2 text-sm'>
-            <div className='flex justify-between text-gray-600'>
-              <span>已创建模板</span>
-              <span>3</span>
-            </div>
-            <div className='flex justify-between text-gray-600'>
-              <span>模板库</span>
-              <span>12</span>
-            </div>
+            {QUICK_STATS_CONFIG.map((stat) => (
+              <div
+                key={stat.key}
+                className='flex justify-between text-gray-600'
+              >
+                <span>{stat.label}</span>
+                <span>
+                  {stat.key === 'templates'
+                    ? templates.length
+                    : stat.defaultValue}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -124,63 +101,3 @@ const Sidebar: React.FC<SidebarProps> = ({
 };
 
 export default Sidebar;
-
-// TopBar Component
-interface TopBarProps {
-  sidebarOpen: boolean;
-  onToggleSidebar: () => void;
-  className?: string;
-}
-
-export const TopBar: React.FC<TopBarProps> = ({
-  sidebarOpen,
-  onToggleSidebar,
-  className
-}) => {
-  const location = useLocation();
-
-  const getPageInfo = (pathname: string) => {
-    const pageMap = {
-      '/': { title: '模板工作台', description: '创建和编辑AI提示模板' },
-      '/editor': { title: '模板工作台', description: '创建和编辑AI提示模板' },
-      '/library': { title: '模板库', description: '管理您的模板库' },
-      '/components': { title: '组件库', description: '管理您的组件库' },
-      '/sessions': { title: '会话记录', description: '查看历史会话记录' }
-    };
-    return pageMap[pathname as keyof typeof pageMap] || { title: '未知页面', description: '' };
-  };
-
-  const pageInfo = getPageInfo(location.pathname);
-
-  return (
-    <div className={cn('bg-white border-b border-gray-200 px-6 py-4', className)}>
-      <div className='flex items-center justify-between'>
-        <div className='flex items-center gap-4'>
-          {!sidebarOpen && (
-            <TeaButton
-              variant='text'
-              size='sm'
-              onClick={onToggleSidebar}
-              icon='more'
-            />
-          )}
-          <div>
-            <h2 className='text-xl font-semibold text-gray-800'>
-              {pageInfo.title}
-            </h2>
-            <p className='text-gray-600 text-sm'>
-              {pageInfo.description}
-            </p>
-          </div>
-        </div>
-        <TeaButton
-          variant='text'
-          size='sm'
-          icon='setting'
-        >
-          设置
-        </TeaButton>
-      </div>
-    </div>
-  );
-};

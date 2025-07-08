@@ -1,3 +1,8 @@
+/**
+ * 模板卡片组件
+ * 显示模板信息，支持编辑、删除和应用操作，使用配置化的颜色和文本
+ */
+
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Edit, Trash2, Download, Star, Users, Calendar, Tag } from 'lucide-react';
@@ -6,6 +11,9 @@ import { formatRelativeTime } from '../../utils';
 import { Card, CardContent } from '../ui/Card';
 import Button from '../ui/Button';
 import Badge from '../ui/Badge';
+import { CATEGORY_LABELS } from '@/config/text';
+import { BUTTON_TEXTS } from '@/config/text';
+import { COLOR_THEMES } from '@/config/constants';
 
 interface TemplateCardProps {
   template: Template;
@@ -22,13 +30,16 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
   onApply,
   className
 }) => {
+  // 使用配置化的类别颜色映射
   const getCategoryColor = (category: string): 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'outline' => {
     const colors = {
-      general: 'primary' as const,
+      productivity: 'primary' as const,
       creative: 'success' as const,
-      technical: 'secondary' as const,
-      business: 'warning' as const,
-      educational: 'danger' as const,
+      analysis: 'secondary' as const,
+      education: 'warning' as const,
+      business: 'danger' as const,
+      technical: 'outline' as const,
+      personal: 'default' as const,
     };
     return colors[category as keyof typeof colors] || 'default';
   };
@@ -83,7 +94,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
                 }}
                 icon={<Download className="w-3 h-3" />}
                 className="apply-template-btn"
-                title="应用模板"
+                title={BUTTON_TEXTS.APPLY}
               />
               <Button
                 variant="text"
@@ -94,7 +105,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
                 }}
                 icon={<Edit className="w-3 h-3" />}
                 className="edit-template-btn"
-                title="编辑模板"
+                title={BUTTON_TEXTS.EDIT}
               />
               <Button
                 variant="text"
@@ -105,7 +116,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
                 }}
                 icon={<Trash2 className="w-3 h-3" />}
                 className="delete-btn"
-                title="删除模板"
+                title={BUTTON_TEXTS.DELETE}
               />
             </div>
           </div>

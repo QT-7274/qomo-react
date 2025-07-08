@@ -1,19 +1,13 @@
+/**
+ * 模板组件卡片
+ * 支持拖拽排序、编辑和删除功能，使用配置化的图标和颜色主题
+ */
+
 import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useDrag, useDrop } from 'react-dnd';
 import { Tooltip } from 'tea-component';
-import {
-  GripVertical,
-  Edit,
-  Trash2,
-  FileText,
-  MessageSquare,
-  Target,
-  BookOpen,
-  Lightbulb,
-  Check,
-  X,
-} from 'lucide-react';
+import { GripVertical, Edit, Trash2, Check, X } from 'lucide-react';
 import { TemplateComponent, ComponentType, DragItem } from '@/types';
 import { cn } from '@/utils';
 import { Card, CardContent } from '@/components/ui/Card';
@@ -27,6 +21,8 @@ import {
   COMPONENT_ICON_COLORS,
   UI_TEXT,
 } from '@/config/appConfig';
+import { getIcon } from '@/utils/iconMap';
+import { COMPONENT_TYPE_LABELS, BUTTON_TEXTS } from '@/config/text';
 
 interface TemplateComponentCardProps {
   component: TemplateComponent;
@@ -124,16 +120,10 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
   drag(dragHandleRef);
   drop(ref);
 
+  // 使用配置化的图标获取函数
   const getComponentIcon = (type: ComponentType) => {
-    const icons = {
-      prefix: FileText,
-      question_slot: MessageSquare,
-      suffix: MessageSquare,
-      context: BookOpen,
-      constraint: Target,
-      example: Lightbulb,
-    };
-    return icons[type] || FileText;
+    const config = COMPONENT_TYPES.find(c => c.type === type);
+    return config ? getIcon(config.icon) : getIcon('FileText');
   };
 
   const getComponentColor = (
@@ -149,8 +139,9 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
     return COMPONENT_COLOR_CONFIG[type] || 'default';
   };
 
+  // 使用配置化的标签获取函数
   const getComponentLabel = (type: ComponentType) => {
-    return COMPONENT_DISPLAY_CONFIG[type]?.label || type;
+    return COMPONENT_TYPE_LABELS[type] || COMPONENT_DISPLAY_CONFIG[type]?.label || type;
   };
 
   // 获取组件的advice提示
@@ -296,7 +287,7 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
                         onClick={handleStartEdit}
                         icon={<Edit className='w-4 h-4' />}
                         className='p-2 hover:bg-blue-100 text-blue-600 hover:text-blue-700 border border-blue-200 hover:border-blue-300'
-                        title='编辑组件'
+                        title={BUTTON_TEXTS.EDIT}
                       />
                     )}
                     {/* 根据删除逻辑显示删除按钮 */}
@@ -307,7 +298,7 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
                         onClick={() => onRemove(component.id)}
                         icon={<Trash2 className='w-4 h-4' />}
                         className='p-2 hover:bg-red-100 text-red-600 hover:text-red-700 border border-red-200 hover:border-red-300'
-                        title='删除组件'
+                        title={BUTTON_TEXTS.DELETE}
                       />
                     )}
                   </div>

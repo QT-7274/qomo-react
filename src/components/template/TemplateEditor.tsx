@@ -30,6 +30,8 @@ import TemplateComponentCard from '@/components/template/TemplateComponentCard';
 import TemplatePreview from '@/components/template/TemplatePreview';
 import { COMPONENT_TYPES, UI_TEXT, ANIMATION_CONFIG, TEMPLATE_CATEGORIES, COMMON_TAGS, DEFAULT_TEMPLATE_CONFIG, COMPONENT_BUTTON_COLORS } from '@/config/appConfig';
 import { TEST_IDS } from '@/config/constants';
+import { NOTIFICATIONS, ERROR_MESSAGES } from '@/config/text';
+import { DEFAULTS } from '@/config/constants';
 
 interface TemplateEditorProps {
   template?: Template | null;
@@ -240,8 +242,8 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
     } else if (mode === 'create' && !templateName) {
       showNotification({
         type: 'error',
-        title: '保存失败',
-        message: '请输入模板名称',
+        title: NOTIFICATIONS.ERROR.SAVE_FAILED,
+        message: ERROR_MESSAGES.REQUIRED_FIELD,
         duration: 3000,
       });
       return;
@@ -269,16 +271,16 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
       setCurrentTemplate(templateData);
       showNotification({
         type: 'success',
-        title: '模板已更新',
-        message: mode === 'use' ? `模板"${templateName}"已成功保存` : '模板已成功保存',
+        title: NOTIFICATIONS.SUCCESS.TEMPLATE_UPDATED,
+        message: mode === 'use' ? `模板"${templateName}"已成功保存` : NOTIFICATIONS.SUCCESS.TEMPLATE_SAVED,
         duration: 2000,
       });
     } else {
       addTemplate(templateData);
       showNotification({
         type: 'success',
-        title: '模板已创建',
-        message: mode === 'use' ? `模板"${templateName}"已成功创建` : '新模板已成功创建',
+        title: NOTIFICATIONS.SUCCESS.TEMPLATE_CREATED,
+        message: mode === 'use' ? `模板"${templateName}"已成功创建` : NOTIFICATIONS.SUCCESS.TEMPLATE_CREATED,
         duration: 2000,
       });
     }

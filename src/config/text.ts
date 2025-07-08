@@ -205,3 +205,10 @@ export const NAVIGATION = {
   HELP: '帮助',
   ABOUT: '关于',
 } as const;
+
+// ==================== 应用信息 ====================
+export const APP_INFO = {
+  NAME: 'Qomo',
+  DESCRIPTION: 'AI模板系统',
+  VERSION: '2.0.0',
+} as const;

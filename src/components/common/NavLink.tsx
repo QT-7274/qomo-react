@@ -1,13 +1,20 @@
+/**
+ * 导航链接组件
+ * 支持配置化的颜色主题和活动状态指示
+ */
+
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { LucideIcon } from 'lucide-react';
 import { cn } from '@/utils';
+import { COLOR_THEMES, ROUTES } from '@/config/constants';
+import { COMPONENT_COLORS } from '@/config/theme';
 
 interface NavLinkProps {
   path: string;
   label: string;
   icon: LucideIcon;
-  color?: 'primary' | 'success' | 'warning' | 'danger' | 'info';
+  color?: keyof typeof COLOR_THEMES;
   className?: string;
 }
 
@@ -15,33 +22,37 @@ const NavLink: React.FC<NavLinkProps> = ({
   path,
   label,
   icon: Icon,
-  color = 'primary',
+  color = COLOR_THEMES.PRIMARY,
   className
 }) => {
   const location = useLocation();
-  const isActive = location.pathname === path || (location.pathname === '/' && path === '/editor');
+  // 检查当前路径是否为活动状态，特殊处理编辑器路径
+  const isActive = location.pathname === path || (location.pathname === ROUTES.HOME && path === ROUTES.EDITOR);
 
-  // 根据颜色主题设置激活状态的样式
-  const getActiveStyles = (color: string) => {
+  // 根据颜色主题设置激活状态的样式 - 使用配置化的颜色映射
+  const getActiveStyles = (colorTheme: string) => {
     const colorMap = {
-      primary: 'bg-blue-50 text-blue-600',
-      success: 'bg-green-50 text-green-600',
-      warning: 'bg-yellow-50 text-yellow-600',
-      danger: 'bg-red-50 text-red-600',
-      info: 'bg-gray-50 text-gray-600'
+      [COLOR_THEMES.PRIMARY]: 'bg-blue-50 text-blue-600',
+      [COLOR_THEMES.SECONDARY]: 'bg-slate-50 text-slate-600',
+      [COLOR_THEMES.SUCCESS]: 'bg-green-50 text-green-600',
+      [COLOR_THEMES.WARNING]: 'bg-yellow-50 text-yellow-600',
+      [COLOR_THEMES.DANGER]: 'bg-red-50 text-red-600',
+      [COLOR_THEMES.INFO]: 'bg-gray-50 text-gray-600'
     };
-    return colorMap[color as keyof typeof colorMap] || colorMap.primary;
+    return colorMap[colorTheme as keyof typeof colorMap] || colorMap[COLOR_THEMES.PRIMARY];
   };
 
-  const getIndicatorStyles = (color: string) => {
+  // 获取活动状态指示器的样式
+  const getIndicatorStyles = (colorTheme: string) => {
     const colorMap = {
-      primary: 'bg-blue-600',
-      success: 'bg-green-600',
-      warning: 'bg-yellow-600',
-      danger: 'bg-red-600',
-      info: 'bg-gray-600'
+      [COLOR_THEMES.PRIMARY]: 'bg-blue-600',
+      [COLOR_THEMES.SECONDARY]: 'bg-slate-600',
+      [COLOR_THEMES.SUCCESS]: 'bg-green-600',
+      [COLOR_THEMES.WARNING]: 'bg-yellow-600',
+      [COLOR_THEMES.DANGER]: 'bg-red-600',
+      [COLOR_THEMES.INFO]: 'bg-gray-600'
     };
-    return colorMap[color as keyof typeof colorMap] || colorMap.primary;
+    return colorMap[colorTheme as keyof typeof colorMap] || colorMap[COLOR_THEMES.PRIMARY];
   };
 
   return (

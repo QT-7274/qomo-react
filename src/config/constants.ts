@@ -85,9 +85,18 @@ export const ICON_NAMES = {
 export const ROUTES = {
   HOME: '/',
   EDITOR: '/editor',
-  LIBRARY: '/library', 
+  LIBRARY: '/library',
   COMPONENTS: '/components',
   SESSIONS: '/sessions',
+} as const;
+
+// ==================== 导航图标常量 ====================
+export const NAV_ICONS = {
+  EDITOR: 'Wand2',
+  LIBRARY: 'BookOpen',
+  COMPONENTS: 'Package',
+  SESSIONS: 'MessageSquare',
+  SPARKLES: 'Sparkles',
 } as const;
 
 // ==================== 查询参数常量 ====================
