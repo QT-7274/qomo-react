@@ -87,7 +87,6 @@ export const ROUTES = {
   EDITOR: '/editor',
   LIBRARY: '/library',
   COMPONENTS: '/components',
-  SESSIONS: '/sessions',
 } as const;
 
 // ==================== 导航图标常量 ====================
@@ -95,7 +94,6 @@ export const NAV_ICONS = {
   EDITOR: 'Wand2',
   LIBRARY: 'BookOpen',
   COMPONENTS: 'Package',
-  SESSIONS: 'MessageSquare',
   SPARKLES: 'Sparkles',
 } as const;
 
@@ -131,7 +129,6 @@ export const STORAGE_KEYS = {
   TEMPLATES: 'templates',
   COMPONENTS: 'components',
   USER_PREFERENCES: 'userPreferences',
-  SESSIONS: 'sessions',
 } as const;
 
 // ==================== 默认值常量 ====================

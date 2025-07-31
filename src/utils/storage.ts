@@ -1,7 +1,7 @@
 // IndexedDB 存储工具类
 // 用于持久化存储模板和组件数据
 
-import { Template, StoredComponent } from '../types';
+import { Template, StoredComponent } from '@/types';
 
 const DB_NAME = 'QomoTemplateDB';
 const DB_VERSION = 1;

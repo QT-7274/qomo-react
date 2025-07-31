@@ -4,6 +4,7 @@ import { AppStore, User, Template, Question, Notification, UIState, EditorState,
 import { mockQuestions } from '@/data/mockData'; // 导入模拟问题数据
 import { generateId } from '@/utils'; // 导入生成唯一 ID 的工具函数
 import { COMPONENT_TYPES, TEMPLATE_CATEGORIES, DEFAULT_TEMPLATE_CONFIG } from '@/config/appConfig'; // 导入组件类型和模板类别的配置
+import { COMPONENT_TYPE_LABELS } from '@/config/text'; // 导入组件类型的中文标签
 import { storageManager } from '@/utils/storage'; // 导入用于管理存储的工具
 
 // 初始 UI 状态设定
@@ -22,7 +23,7 @@ const generateInitialComponents = () => {
     return {
       id: generateId(), // 生成唯一 ID
       type: type as any, // 组件类型
-      content: config?.defaultContent || '', // 组件内容
+      content: '', // 组件内容为空，不使用defaultContent
       position: index, // 组件在数组中的位置
       isRequired: DEFAULT_TEMPLATE_CONFIG.requiredComponentTypes.includes(type), // 是否为必需组件
       placeholder: config?.placeholder, // 组件的占位符
@@ -61,7 +62,6 @@ export const useAppStore = create<AppStore>((set, get) => ({
   },
   templates: [], // 存储模板的数组
   questions: mockQuestions, // 存储问题的数组
-  sessions: [], // 存储会话的数组
   ui: initialUIState, // 存储 UI 状态
   editor: initialEditorState, // 存储编辑器状态
   storedComponents: [], // 存储组件的数组
@@ -102,12 +102,18 @@ export const useAppStore = create<AppStore>((set, get) => ({
     // 异步保存到 IndexedDB
     storageManager.saveTemplate(newTemplate).catch(console.error);
 
-    // 同时保存模板中的组件到组件库
+    // 同时保存模板中的组件到组件库（只保存有内容的组件）
     newTemplate.components.forEach(async (component) => {
+      // 检查组件内容是否为空，如果为空则不保存到组件库
+      if (!component.content || !component.content.trim()) {
+        return; // 跳过内容为空的组件
+      }
+
+      const componentLabel = COMPONENT_TYPE_LABELS[component.type as keyof typeof COMPONENT_TYPE_LABELS] || component.type;
       const storedComponent: StoredComponent = {
         id: generateId(), // 生成唯一 ID
-        name: `${newTemplate.name} - ${component.type}`, // 组件名称
-        description: `来自模板"${newTemplate.name}"的${component.type}组件`, // 组件描述
+        name: `${newTemplate.name} - ${componentLabel}`, // 组件名称（使用中文标签）
+        description: `来自模板"${newTemplate.name}"的${componentLabel}组件`, // 组件描述（使用中文标签）
         category: newTemplate.category, // 组件类别
         type: component.type, // 组件类型
         content: component.content, // 组件内容

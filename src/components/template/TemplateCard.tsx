@@ -6,11 +6,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Edit, Trash2, Download, Star, Users, Calendar, Tag } from 'lucide-react';
-import { Template } from '../../types';
-import { formatRelativeTime } from '../../utils';
-import { Card, CardContent } from '../ui/Card';
-import Button from '../ui/Button';
-import Badge from '../ui/Badge';
+import { Template } from '@/types';
+import { formatRelativeTime } from '@/utils';
+import { Card, CardContent } from '@/components/ui/Card';
+import Button from '@/components/ui/Button';
+import Badge from '@/components/ui/Badge';
 import { CATEGORY_LABELS } from '@/config/text';
 import { BUTTON_TEXTS } from '@/config/text';
 import { COLOR_THEMES } from '@/config/constants';

@@ -52,14 +52,6 @@ export const MAIN_NAVIGATION: NavigationItem[] = [
     color: COLOR_THEMES.PRIMARY,
     description: PAGE_DESCRIPTIONS.COMPONENTS,
   },
-  {
-    id: 'sessions',
-    path: ROUTES.SESSIONS,
-    label: NAVIGATION.SESSION_HISTORY,
-    icon: NAV_ICONS.SESSIONS,
-    color: COLOR_THEMES.WARNING,
-    description: PAGE_DESCRIPTIONS.SESSIONS,
-  },
 ];
 
 // ==================== 页面信息映射 ====================
@@ -79,10 +71,6 @@ export const PAGE_INFO_MAP: Record<string, PageInfo> = {
   [ROUTES.COMPONENTS]: {
     title: PAGE_TITLES.COMPONENTS,
     description: PAGE_DESCRIPTIONS.COMPONENTS,
-  },
-  [ROUTES.SESSIONS]: {
-    title: PAGE_TITLES.SESSIONS,
-    description: PAGE_DESCRIPTIONS.SESSIONS,
   },
 };
 
@@ -141,11 +129,6 @@ export const QUICK_STATS_CONFIG = [
   {
     key: 'components',
     label: '组件库',
-    defaultValue: 0,
-  },
-  {
-    key: 'sessions',
-    label: '会话记录',
     defaultValue: 0,
   },
 ];

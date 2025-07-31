@@ -1,4 +1,4 @@
-import { Template, Question } from '../types';
+import { Template, Question } from '@/types';
 
 export const mockTemplates: Template[] = [
   {
@@ -10,24 +10,26 @@ export const mockTemplates: Template[] = [
       {
         id: 'prefix-1',
         type: 'prefix',
-        content: '请以专业、准确的方式回答以下问题：',
+        content: '',
         position: 0,
-        isRequired: true
+        isRequired: true,
+        placeholder: '你是一位RESTful API设计专家。'
       },
       {
         id: 'question-slot-1',
         type: 'question_slot',
-        content: '[用户问题将插入此处]',
+        content: '',
         position: 1,
         isRequired: true,
-        placeholder: '在此输入您的问题...'
+        placeholder: '如何设计订单查询和状态更新的API？'
       },
       {
         id: 'suffix-1',
         type: 'suffix',
-        content: '请提供详细的解释和实用的建议。',
+        content: '',
         position: 2,
-        isRequired: false
+        isRequired: false,
+        placeholder: '你需要提供完整的API端点设计和请求/响应示例。'
       }
     ],
 
@@ -49,31 +51,34 @@ export const mockTemplates: Template[] = [
       {
         id: 'context-1',
         type: 'context',
-        content: '你是一位富有创造力的写作导师，擅长激发灵感。',
+        content: '',
         position: 0,
-        isRequired: true
+        isRequired: true,
+        placeholder: '我需要为电商平台设计订单相关的API。'
       },
       {
         id: 'prefix-2',
         type: 'prefix',
-        content: '请以创新和富有想象力的方式处理以下写作任务：',
+        content: '',
         position: 1,
-        isRequired: true
+        isRequired: true,
+        placeholder: '你是一位RESTful API设计专家。'
       },
       {
         id: 'question-slot-2',
         type: 'question_slot',
-        content: '[写作任务将插入此处]',
+        content: '',
         position: 2,
         isRequired: true,
-        placeholder: '描述您的写作需求...'
+        placeholder: '如何设计订单查询和状态更新的API？'
       },
       {
         id: 'constraint-1',
         type: 'constraint',
-        content: '要求：1) 保持原创性 2) 语言生动有趣 3) 结构清晰',
+        content: '',
         position: 3,
-        isRequired: false
+        isRequired: false,
+        placeholder: '你生成的内容必须符合RESTful规范。'
       }
     ],
 

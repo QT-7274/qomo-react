@@ -90,38 +90,7 @@ export interface ValidationRule {
 
 
 
-export interface Session {
-  id: string;
-  templateId: string;
-  questions: Question[];
-  responses: AIResponse[];
-  createdAt: Date;
-  status: 'active' | 'completed' | 'archived';
-  metadata: SessionMetadata;
-}
 
-export interface SessionMetadata {
-  totalTokens: number;
-  averageResponseTime: number;
-  satisfactionRating?: number;
-  notes?: string;
-}
-
-export interface AIResponse {
-  id: string;
-  questionId: string;
-  content: string;
-  timestamp: Date;
-  metadata: ResponseMetadata;
-}
-
-export interface ResponseMetadata {
-  model: string;
-  tokens: number;
-  responseTime: number;
-  confidence?: number;
-  qualityScore?: number;
-}
 
 export interface DragItem {
   id: string;
@@ -138,7 +107,7 @@ export interface DropResult {
 
 // UI State types
 export interface UIState {
-  activeTab: 'editor' | 'library' | 'sessions';
+  activeTab: 'editor' | 'library' | 'components';
   sidebarOpen: boolean;
   modalOpen: boolean;
   loading: boolean;
@@ -192,7 +161,6 @@ export interface AppStore {
   user: User | null;
   templates: Template[];
   questions: Question[];
-  sessions: Session[];
   ui: UIState;
   editor: EditorState;
   storedComponents: StoredComponent[]; // 存储的组件库

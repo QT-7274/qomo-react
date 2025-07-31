@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Filter, SortAsc } from 'lucide-react';
-import { Question, QuestionType } from '../../types';
-import { useAppStore } from '../../store/useAppStore';
-import { cn } from '../../utils';
-import { Input } from '../ui/Input';
-import Button from '../ui/Button';
-import Badge from '../ui/Badge';
+import { Question, QuestionType } from '@/types';
+import { useAppStore } from '@/store/useAppStore';
+import { cn } from '@/utils';
+import { Input } from '@/components/ui/Input';
+import Button from '@/components/ui/Button';
+import Badge from '@/components/ui/Badge';
 import QuestionCard from './QuestionCard';
 // import QuestionEditor from './QuestionEditor';
 

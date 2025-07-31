@@ -8,7 +8,7 @@
 
 /* 引入自定义的 tea 组件库样式覆盖文件
    用于修改或覆盖 tea 组件库的默认样式 */
-@import "./styles/tea-overrides.css";
+@import "@/styles/tea-overrides.css";
 
 /* Tailwind CSS 的三个核心层
    base: 重置浏览器默认样式，提供一致的基础样式

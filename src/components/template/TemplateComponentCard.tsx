@@ -144,11 +144,7 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
     return COMPONENT_TYPE_LABELS[type] || COMPONENT_DISPLAY_CONFIG[type]?.label || type;
   };
 
-  // 获取组件的advice提示
-  const getComponentAdvice = (type: ComponentType) => {
-    const config = COMPONENT_TYPES.find(c => c.type === type);
-    return config?.advice || '';
-  };
+
 
   // 获取组件的tips提示
   const getComponentTips = (type: ComponentType) => {
@@ -389,9 +385,9 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
                 <div className='flex items-center justify-between text-xs text-gray-500'>
                   <div className='flex items-center gap-2'>
                     <span>位置: {index + 1}</span>
-                    {getComponentAdvice(component.type) && (
-                      <Tooltip title={`"${getComponentAdvice(component.type)}"`}>
-                        <span className='text-blue-600 cursor-help'>💡 填写示例</span>
+                    {component.placeholder && (
+                      <Tooltip title={component.placeholder}>
+                        <span className='text-blue-600 cursor-help'>💡 提示</span>
                       </Tooltip>
                     )}
                   </div>

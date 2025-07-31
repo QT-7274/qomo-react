@@ -4,10 +4,8 @@ import { Eye, Copy, Play, Calendar, Check } from 'lucide-react';
 import { Template } from '@/types';
 import { formatDate, cn } from '@/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { Textarea } from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
-import Label from '@/components/common/Label';
 import { TEMPLATE_CATEGORIES, COMPONENT_DISPLAY_CONFIG } from '@/config/appConfig';
 
 interface TemplatePreviewProps {
@@ -16,7 +14,6 @@ interface TemplatePreviewProps {
 }
 
 const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template, className }) => {
-  const [sampleQuestion, setSampleQuestion] = useState('');
   const [generatedPrompt, setGeneratedPrompt] = useState('');
   const [copySuccess, setCopySuccess] = useState(false);
   const [showFireworks, setShowFireworks] = useState(false);
@@ -38,12 +35,10 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template, className }
             }
             break;
           case 'question_slot':
-            if (sampleQuestion.trim()) {
-              prompt += sampleQuestion + '\n\n';
-            } else if (component.content !== '[用户问题将插入此处]') {
+            if (component.content !== '[用户问题将插入此处]') {
               prompt += component.content + '\n\n';
             } else {
-              prompt += '[请在左侧输入示例问题]\n\n';
+              prompt += '[用户问题将在此处显示]\n\n';
             }
             break;
         }
@@ -62,7 +57,7 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template, className }
 
   React.useEffect(() => {
     generatePrompt();
-  }, [template.components, sampleQuestion]);
+  }, [template.components]);
 
   const copyToClipboard = async () => {
     try {
@@ -147,19 +142,7 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template, className }
         </CardContent>
       </Card>
 
-      {/* Sample Question Input */}
-      <Card variant="default" padding="md">
-        <CardContent className="space-y-3">
-          <Label className='mb-2'>示例问题 (用于预览)</Label>
-          <Textarea
-            placeholder="输入一个示例问题来预览最终效果..."
-            value={sampleQuestion}
-            onChange={(value) => setSampleQuestion(value)}
-            rows={3}
-            className="resize-none w-full"
-          />
-        </CardContent>
-      </Card>
+
 
       {/* Generated Prompt Preview */}
       <Card variant="default" padding="md">
@@ -356,7 +339,7 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template, className }
                 <div className="flex items-center justify-center h-32 text-gray-500">
                   <div className="text-center">
                     <Play className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                    <p>输入示例问题以查看生成的提示词</p>
+                    <p>模板预览将在此显示</p>
                   </div>
                 </div>
               )}

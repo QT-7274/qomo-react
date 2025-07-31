@@ -7,8 +7,7 @@
 export const PAGE_TITLES = {
   EDITOR: '模板工作台',
   LIBRARY: '模板库',
-  COMPONENTS: '组件库', 
-  SESSIONS: '会话记录',
+  COMPONENTS: '组件库',
   UNKNOWN: '未知页面',
 } as const;
 
@@ -17,7 +16,6 @@ export const PAGE_DESCRIPTIONS = {
   EDITOR: '创建和编辑AI提示模板',
   LIBRARY: '管理您的模板库',
   COMPONENTS: '管理您的组件库',
-  SESSIONS: '查看历史会话记录',
 } as const;
 
 // ==================== 按钮文本 ====================
@@ -169,7 +167,6 @@ export const CONFIRM_DIALOGS = {
 export const EMPTY_STATES = {
   NO_TEMPLATES: '暂无模板',
   NO_COMPONENTS: '暂无组件',
-  NO_SESSIONS: '暂无会话记录',
   NO_SEARCH_RESULTS: '未找到匹配的结果',
   START_CREATING: '开始创建您的第一个模板',
   TRY_DIFFERENT_SEARCH: '尝试调整搜索条件',
@@ -200,7 +197,6 @@ export const NAVIGATION = {
   TEMPLATE_WORKSPACE: '模板工作台',
   TEMPLATE_LIBRARY: '模板库',
   COMPONENT_LIBRARY: '组件库',
-  SESSION_HISTORY: '会话记录',
   USER_SETTINGS: '用户设置',
   HELP: '帮助',
   ABOUT: '关于',

@@ -16,7 +16,6 @@ import { useAppStore } from '@/store/useAppStore'; // 自定义状态管理
 import EditorPage from '@/pages/EditorPage'; // 编辑器页面
 import LibraryPage from '@/pages/LibraryPage'; // 资源库页面
 import ComponentsPage from '@/pages/ComponentsPage'; // 组件页面
-import SessionsPage from '@/pages/SessionsPage'; // 会话页面
 import { ROUTES, EDITOR_MODES } from '@/config/constants'; // 配置化的路由和编辑器模式
 
 // 主应用组件
@@ -78,8 +77,6 @@ function App() {
                       <Route path={ROUTES.LIBRARY} element={<LibraryPage />} />
                       {/* 组件库页面路由 */}
                       <Route path={ROUTES.COMPONENTS} element={<ComponentsPage />} />
-                      {/* 会话记录页面路由 */}
-                      <Route path={ROUTES.SESSIONS} element={<SessionsPage />} />
                     </Routes>
                   </div>
                 </div>

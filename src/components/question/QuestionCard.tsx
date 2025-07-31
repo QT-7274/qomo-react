@@ -1,11 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { GripVertical, Edit, Trash2, Tag, Clock } from 'lucide-react';
-import { Question } from '../../types';
-import { formatRelativeTime, cn } from '../../utils';
-import { Card, CardContent } from '../ui/Card';
-import Badge from '../ui/Badge';
-import Button from '../ui/Button';
+import { Question } from '@/types';
+import { formatRelativeTime, cn } from '@/utils';
+import { Card, CardContent } from '@/components/ui/Card';
+import Badge from '@/components/ui/Badge';
+import Button from '@/components/ui/Button';
 
 interface QuestionCardProps {
   question: Question;

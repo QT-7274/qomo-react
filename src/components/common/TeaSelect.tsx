@@ -41,7 +41,7 @@ const Select = React.forwardRef<HTMLElement, SelectProps>(
         size={size}
         appearance={appearance}
         placeholder={placeholder}
-        className={cn('min-w-0 ', className)} // 确保可以缩小
+        className={cn('min-w-0', className)} // 确保可以缩小
         {...props}
       />
     );

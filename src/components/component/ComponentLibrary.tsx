@@ -6,7 +6,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PopConfirm } from 'tea-component';
-import { Plus, Trash2, Copy } from 'lucide-react';
+import { Plus, Trash2, ShoppingCart, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '@/store/useAppStore';
 import { StoredComponent, ComponentType } from '@/types';
 import { generateId } from '@/utils';
@@ -15,11 +16,13 @@ import { Input } from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
 import { Select } from '@/components/common/TeaSelect';
-import { COMPONENT_TYPES, COMPONENT_DISPLAY_CONFIG, UI_TEXT } from '@/config/appConfig';
+import { COMPONENT_TYPES, COMPONENT_DISPLAY_CONFIG, UI_TEXT, COMPONENT_CARD_COLORS } from '@/config/appConfig';
+import { ROUTES } from '@/config/constants';
 import { BUTTON_TEXTS, PLACEHOLDERS, NOTIFICATIONS, EMPTY_STATES } from '@/config/text';
 import { getIcon } from '@/utils/iconMap';
 
 const ComponentLibrary: React.FC = () => {
+  const navigate = useNavigate();
   const {
     storedComponents,
     deleteComponentFromStorage,
@@ -27,10 +30,11 @@ const ComponentLibrary: React.FC = () => {
     editor,
     showNotification
   } = useAppStore();
-  
+
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState<string>('all');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [selectedComponents, setSelectedComponents] = useState<Set<string>>(new Set());
 
   // 过滤组件
   const filteredComponents = storedComponents.filter(component => {
@@ -63,48 +67,48 @@ const ComponentLibrary: React.FC = () => {
     }))
   ];
 
-  // 使用组件
-  const handleUseComponent = (component: StoredComponent) => {
-    const newComponent = {
+  // 选择/取消选择组件
+  const handleToggleComponent = (componentId: string) => {
+    const newSelected = new Set(selectedComponents);
+    if (newSelected.has(componentId)) {
+      newSelected.delete(componentId);
+    } else {
+      newSelected.add(componentId);
+    }
+    setSelectedComponents(newSelected);
+  };
+
+  // 批量添加选中的组件到编辑器并跳转
+  const handleAddSelectedComponentsAndNavigate = () => {
+    const componentsToAdd = storedComponents.filter(comp => selectedComponents.has(comp.id));
+
+    const newComponents = componentsToAdd.map((component, index) => ({
       id: generateId(),
       type: component.type,
       content: component.content,
-      position: editor.components.length,
+      position: editor.components.length + index,
       isRequired: component.isRequired,
       placeholder: component.placeholder,
       validation: component.validation,
-    };
+    }));
 
-    updateEditorComponents([...editor.components, newComponent]);
-    
+    updateEditorComponents([...editor.components, ...newComponents]);
+
     showNotification({
       type: 'success',
       title: '组件已添加',
-      message: `${component.name} 已添加到编辑器`,
+      message: `已添加 ${componentsToAdd.length} 个组件到编辑器，正在跳转到工作台`,
       duration: 2000,
     });
+
+    // 清空选择
+    setSelectedComponents(new Set());
+
+    // 跳转到模板工作台
+    navigate('/editor?mode=create');
   };
 
-  // 复制组件内容
-  const handleCopyComponent = async (component: StoredComponent) => {
-    try {
-      await navigator.clipboard.writeText(component.content);
-      showNotification({
-        type: 'success',
-        title: NOTIFICATIONS.SUCCESS.COPY_SUCCESS,
-        message: '组件内容已复制到剪贴板',
-        duration: 2000,
-      });
-    } catch (error) {
-      console.error('复制失败:', error);
-      showNotification({
-        type: 'error',
-        title: '复制失败',
-        message: '无法复制到剪贴板',
-        duration: 2000,
-      });
-    }
-  };
+
 
   // 删除组件
   const handleDeleteComponent = async (component: StoredComponent) => {
@@ -132,6 +136,27 @@ const ComponentLibrary: React.FC = () => {
     return COMPONENT_DISPLAY_CONFIG[type] || { label: type, variant: 'default' as const };
   };
 
+  // 获取组件卡片背景颜色
+  const getComponentCardColor = (type: ComponentType) => {
+    return COMPONENT_CARD_COLORS[type] || 'bg-white';
+  };
+
+  // 获取已选组件的统计信息
+  const getSelectedComponentsStats = () => {
+    const selectedComps = storedComponents.filter(comp => selectedComponents.has(comp.id));
+    const stats = selectedComps.reduce((acc, comp) => {
+      const typeInfo = getComponentTypeInfo(comp.type);
+      const typeName = typeInfo.label;
+      acc[typeName] = (acc[typeName] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+
+    return {
+      total: selectedComps.length,
+      byType: stats
+    };
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -151,7 +176,7 @@ const ComponentLibrary: React.FC = () => {
       {/* Filters */}
       <Card variant="default" padding="md">
         <CardContent>
-          <div className="flex flex-wrap gap-4">
+          <div className="flex flex-wrap gap-4 items-center">
             <div className="flex-1 min-w-[200px]">
               <Input
                 placeholder={PLACEHOLDERS.SEARCH_COMPONENTS}
@@ -160,7 +185,40 @@ const ComponentLibrary: React.FC = () => {
                 size="m"
               />
             </div>
-            <div className="min-w-[120px]">
+
+            {/* 已选组件显示区域 */}
+            {selectedComponents.size > 0 && (
+              <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                <div className="flex items-center gap-2">
+                  <ShoppingCart className="w-4 h-4 text-blue-600" />
+                  <span className="text-sm font-medium text-blue-800">
+                    已选 {getSelectedComponentsStats().total} 个组件
+                  </span>
+                </div>
+
+                {/* 组件类型统计 */}
+                <div className="flex gap-1">
+                  {Object.entries(getSelectedComponentsStats().byType).map(([type, count]) => (
+                    <Badge key={type} variant="outline" size="sm" className="text-xs">
+                      {type} {count}
+                    </Badge>
+                  ))}
+                </div>
+
+                {/* 跳转按钮 */}
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={handleAddSelectedComponentsAndNavigate}
+                  icon={<ArrowRight className="w-3 h-3" />}
+                  className="bg-blue-600 text-white hover:bg-blue-700 border-blue-600"
+                >
+                  添加到工作台
+                </Button>
+              </div>
+            )}
+
+            <div>
               <Select
                 options={typeOptions}
                 value={selectedType}
@@ -169,7 +227,7 @@ const ComponentLibrary: React.FC = () => {
                 placeholder="选择类型"
               />
             </div>
-            <div className="min-w-[120px]">
+            <div>
               <Select
                 options={categoryOptions}
                 value={selectedCategory}
@@ -193,7 +251,7 @@ const ComponentLibrary: React.FC = () => {
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.2 }}
             >
-              <Card variant="default" padding="md" hover>
+              <Card variant="default" padding="md" hover className={getComponentCardColor(component.type)}>
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-sm font-medium truncate">
@@ -223,23 +281,19 @@ const ComponentLibrary: React.FC = () => {
                     </div>
 
                     {/* Actions */}
-                    <div className="flex gap-2">
+                    <div className="flex justify-between items-center">
                       <Button
-                        variant="primary"
+                        variant={selectedComponents.has(component.id) ? "primary" : "outline"}
                         size="sm"
-                        onClick={() => handleUseComponent(component)}
+                        onClick={() => handleToggleComponent(component.id)}
                         icon={<Plus className="w-3 h-3" />}
-                        className="flex-1 bg-blue-600 text-white hover:bg-blue-700 border-blue-600"
+                        className={selectedComponents.has(component.id)
+                          ? "bg-blue-600 text-white hover:bg-blue-700 border-blue-600"
+                          : "text-blue-600 hover:bg-blue-50 border-blue-600"
+                        }
                       >
-                        使用
+                        {selectedComponents.has(component.id) ? '已选' : '选择'}
                       </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleCopyComponent(component)}
-                        icon={<Copy className="w-3 h-3" />}
-                        title="复制内容"
-                      />
                       <PopConfirm
                         title={`确定要删除组件"${component.name}"吗？`}
                         message="删除后无法恢复，请谨慎操作。"

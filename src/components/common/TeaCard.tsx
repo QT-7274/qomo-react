@@ -79,7 +79,7 @@ const CardContent = React.forwardRef<HTMLDivElement, CardContentProps>(
     return (
       <TeaCard.Body
         ref={ref}
-        className={cn('pt-0', className)} // 移除顶部间距，因为 Card 已经有了内边距
+        className={cn('p-0', className)} // 移除顶部间距，因为 Card 已经有了内边距
         title={title}
         subtitle={subtitle}
         operation={operation}

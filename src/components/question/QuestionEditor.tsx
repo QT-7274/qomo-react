@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Save, X, Plus } from 'lucide-react';
-import { Question, QuestionType, QuestionMetadata } from '../../types';
-import { useAppStore } from '../../store/useAppStore';
-import { generateId } from '../../utils';
-import { Modal, ModalContent, ModalFooter } from '../ui/Modal';
-import { Input, Textarea } from '../ui/Input';
-import Button from '../ui/Button';
-import Badge from '../ui/Badge';
+import { Question, QuestionType, QuestionMetadata } from '@/types';
+import { useAppStore } from '@/store/useAppStore';
+import { generateId } from '@/utils';
+import { Modal, ModalContent, ModalFooter } from '@/components/ui/Modal';
+import { Input, Textarea } from '@/components/ui/Input';
+import Button from '@/components/ui/Button';
+import Badge from '@/components/ui/Badge';
 
 interface QuestionEditorProps {
   isOpen: boolean;

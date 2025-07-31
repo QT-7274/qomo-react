@@ -196,9 +196,9 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
     }, 100); // 等待DOM更新后再滚动
   };
 
-  const getDefaultContent = (type: ComponentType): string => {
-    const config = COMPONENT_TYPES.find(c => c.type === type);
-    return config?.defaultContent || '';
+  const getDefaultContent = (_type: ComponentType): string => {
+    // 不再使用defaultContent，所有组件默认为空内容
+    return '';
   };
 
   const updateComponent = (id: string, updates: Partial<TemplateComponent>) => {

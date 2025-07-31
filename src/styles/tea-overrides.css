@@ -202,3 +202,9 @@ button.delete-btn:hover {
   min-height: 100px !important;
   resize: vertical !important;
 }
+
+/* 组件库页面的 Select 组件宽度设置 */
+.tea-dropdown-box.size-m,
+.tea-dropdown.size-m .tea-dropdown__header {
+  width: 150px !important;
+}
