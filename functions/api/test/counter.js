@@ -3,7 +3,7 @@
  * 完全按照官方示例格式编写
  */
 
-export async function onRequest({ request, params, env, qomo }) {
+export async function onRequest({ request, params, env }) {
     // 设置 CORS 头
     const corsHeaders = {
         'Access-Control-Allow-Origin': '*',

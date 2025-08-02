@@ -3,7 +3,7 @@
  * 帮助调试 KV 存储配置问题
  */
 
-export async function onRequest({ request, params, env, qomo }) {
+export async function onRequest({ request, params, env }) {
     const corsHeaders = {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET, OPTIONS',

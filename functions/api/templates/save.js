@@ -3,7 +3,7 @@
  * 将用户的模板保存到 KV 存储中
  */
 
-export async function onRequest({ request, params, env, qomo }) {
+export async function onRequest({ request, params, env }) {
   const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
