@@ -88,6 +88,7 @@ export const ROUTES = {
   LIBRARY: '/library',
   COMPONENTS: '/components',
   I18N_DEMO: '/i18n-demo', // 国际化演示页面
+  EDGEONE_TEST: '/edgeone-test', // EdgeOne 功能测试页面
 } as const;
 
 // ==================== 导航图标常量 ====================
@@ -95,7 +96,7 @@ export const NAV_ICONS = {
   EDITOR: 'Wand2',
   LIBRARY: 'BookOpen',
   COMPONENTS: 'Package',
-  SPARKLES: 'Sparkles',
+  QOMO_LOGO: 'QomoLogo', // 替换 SPARKLES 为 QOMO_LOGO
 } as const;
 
 // ==================== 查询参数常量 ====================

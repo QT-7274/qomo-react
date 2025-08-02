@@ -4,7 +4,7 @@
  */
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { Sparkles } from 'lucide-react';
+import QomoLogo from '@/assets/QomoLogo';
 import { cn } from '@/utils'; // 自定义类名合并工具函数
 import { useAppStore } from '@/store/useAppStore';
 import {
@@ -36,9 +36,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, className }) => {
         {/* Header */}
         <div className='flex items-center justify-between'>
           <div className='flex items-center gap-3'>
-            <div className='w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center'>
-              <Sparkles className='w-6 h-6 text-white' />
-            </div>
+            {/* <div className='rounded-xl flex items-center justify-center'> */}
+              <QomoLogo className='w-12 h-12 text-white' />
+            {/* </div> */}
             <div>
               <h1 className='text-xl font-bold text-gray-800'>
                 {APP_METADATA.name}

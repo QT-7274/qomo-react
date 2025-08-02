@@ -10,10 +10,13 @@ import { cn } from '@/utils';
 import { COLOR_THEMES, ROUTES } from '@/config/constants';
 import { COMPONENT_COLORS } from '@/config/theme';
 
+// 定义图标组件类型，支持 Lucide 图标和自定义组件
+type IconComponent = LucideIcon | React.ComponentType<any>;
+
 interface NavLinkProps {
   path: string;
   label: string;
-  icon: LucideIcon;
+  icon: IconComponent;
   color?: keyof typeof COLOR_THEMES;
   className?: string;
 }

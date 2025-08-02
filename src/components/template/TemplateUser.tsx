@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Copy, Sparkles, ArrowRight, Wand2 } from 'lucide-react';
+import { Search, Copy, ArrowRight, Wand2 } from 'lucide-react';
+import QomoLogo from '@/assets/QomoLogo';
 import { useAppStore } from '@/store/useAppStore';
 import { Template } from '@/types';
 import { cn } from '@/utils';
@@ -241,7 +242,7 @@ const TemplateUser: React.FC = () => {
                     variant="outline"
                     size="sm"
                     onClick={handleCopyPrompt}
-                    icon={copySuccess ? <Sparkles className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                    icon={copySuccess ? <QomoLogo className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                     disabled={!generatedPrompt}
                     className={cn(
                       'transition-all duration-200',
@@ -261,7 +262,7 @@ const TemplateUser: React.FC = () => {
                   </div>
                 ) : (
                   <div className="text-center py-8 text-gray-500">
-                    <Sparkles className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                    <QomoLogo className="w-8 h-8 mx-auto mb-2 opacity-50" />
                     <p className="text-sm">
                       {userQuestion ? '正在生成提示词...' : '请输入问题以生成提示词'}
                     </p>
