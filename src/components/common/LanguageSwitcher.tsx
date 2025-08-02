@@ -3,9 +3,8 @@
  * 提供多语言切换功能，支持中英文切换
  */
 
-import React, { useState } from 'react';
-import { Select, Button } from 'tea-component';
-import { Globe } from 'lucide-react';
+import React from 'react';
+import { Select } from 'tea-component';
 import { useLanguageSwitcher, useI18n } from '@/i18n/hooks';
 import { SUPPORTED_LANGUAGES, SupportedLanguage } from '@/i18n';
 import { cn } from '@/utils';
@@ -20,22 +19,21 @@ interface LanguageSwitcherProps {
 const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
   className,
   size = 's',
-  variant = 'text',
-  showText = false,
+  variant = 'text', // 保留以备将来使用
+  showText = false, // 保留以备将来使用
 }) => {
+  // 暂时忽略未使用的参数警告
+  void variant;
+  void showText;
+
   const { currentLanguage, changeLanguage, isLoading } = useLanguageSwitcher();
   const { t } = useI18n();
-  const [dropdownVisible, setDropdownVisible] = useState(false);
-
-  // 获取当前语言配置
-  const currentLangConfig = SUPPORTED_LANGUAGES.find(lang => lang.code === currentLanguage);
 
   // 处理语言切换
   const handleLanguageChange = async (language: SupportedLanguage) => {
     try {
       await changeLanguage(language);
-      setDropdownVisible(false);
-      
+
       // 显示切换成功提示
       console.log('Language changed successfully');
     } catch (error) {

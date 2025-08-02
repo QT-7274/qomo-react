@@ -12,7 +12,7 @@ import { mockTemplates } from '@/data/mockData';
 import { Template } from '@/types';
 
 const I18nDemo: React.FC = () => {
-  const { t, currentLanguage } = useI18n();
+  const { t, currentLanguage, languagePackage } = useI18n();
 
   // 使用第一个模板作为演示
   const demoTemplate: Template = mockTemplates[0];
@@ -94,19 +94,19 @@ const I18nDemo: React.FC = () => {
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-gray-500">SAVE:</span>
-                      <span className="font-medium">{languagePackage?.BUTTON_TEXTS?.SAVE}</span>
+                      <span className="font-medium">{t('保存')}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-500">EDIT:</span>
-                      <span className="font-medium">{languagePackage?.BUTTON_TEXTS?.EDIT}</span>
+                      <span className="font-medium">{t('编辑')}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-500">DELETE:</span>
-                      <span className="font-medium">{languagePackage?.BUTTON_TEXTS?.DELETE}</span>
+                      <span className="font-medium">{t('删除')}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-500">APPLY:</span>
-                      <span className="font-medium">{languagePackage?.BUTTON_TEXTS?.APPLY}</span>
+                      <span className="font-medium">{t('应用')}</span>
                     </div>
                   </div>
                 </div>
@@ -119,19 +119,19 @@ const I18nDemo: React.FC = () => {
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-gray-500">productivity:</span>
-                      <span className="font-medium">{languagePackage?.CATEGORY_LABELS?.productivity}</span>
+                      <span className="font-medium">{t('效率')}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-500">creative:</span>
-                      <span className="font-medium">{languagePackage?.CATEGORY_LABELS?.creative}</span>
+                      <span className="font-medium">{t('创意')}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-500">technical:</span>
-                      <span className="font-medium">{languagePackage?.CATEGORY_LABELS?.technical}</span>
+                      <span className="font-medium">{t('技术')}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-500">business:</span>
-                      <span className="font-medium">{languagePackage?.CATEGORY_LABELS?.business}</span>
+                      <span className="font-medium">{t('商务')}</span>
                     </div>
                   </div>
                 </div>
@@ -144,15 +144,15 @@ const I18nDemo: React.FC = () => {
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-gray-500">EDITOR:</span>
-                      <span className="font-medium">{languagePackage?.PAGE_TITLES?.EDITOR}</span>
+                      <span className="font-medium">{t('模板编辑器')}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-500">LIBRARY:</span>
-                      <span className="font-medium">{languagePackage?.PAGE_TITLES?.LIBRARY}</span>
+                      <span className="font-medium">{t('模板库')}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-500">COMPONENTS:</span>
-                      <span className="font-medium">{languagePackage?.PAGE_TITLES?.COMPONENTS}</span>
+                      <span className="font-medium">{t('组件库')}</span>
                     </div>
                   </div>
                 </div>
@@ -165,15 +165,15 @@ const I18nDemo: React.FC = () => {
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-gray-500">COMPONENTS_COUNT:</span>
-                      <span className="font-medium">{languagePackage?.STATS?.COMPONENTS_COUNT}</span>
+                      <span className="font-medium">{t('个组件')}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-500">USAGE_COUNT:</span>
-                      <span className="font-medium">{languagePackage?.STATS?.USAGE_COUNT}</span>
+                      <span className="font-medium">{t('次使用')}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-500">CREATED_AT:</span>
-                      <span className="font-medium">{languagePackage?.STATS?.CREATED_AT}</span>
+                      <span className="font-medium">{t('创建时间')}</span>
                     </div>
                   </div>
                 </div>
