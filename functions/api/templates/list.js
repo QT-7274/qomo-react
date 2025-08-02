@@ -3,7 +3,7 @@
  * 从 KV 存储中获取用户的模板列表或公开模板
  */
 
-export async function onRequest({ request, params, env, qomo }) {
+export async function onRequest({ request, params, env }) {
   const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
@@ -15,13 +15,13 @@ export async function onRequest({ request, params, env, qomo }) {
     return new Response(null, { headers: corsHeaders });
   }
 
-  return handleListTemplates(request, qomo, corsHeaders);
+  return handleListTemplates(request, corsHeaders);
 }
 
 /**
  * 处理获取模板列表请求
  */
-async function handleListTemplates(request, qomo, corsHeaders) {
+async function handleListTemplates(request, corsHeaders) {
   try {
     const url = new URL(request.url);
     const userId = url.searchParams.get('userId') || 'anonymous';

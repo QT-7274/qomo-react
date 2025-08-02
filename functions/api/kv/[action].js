@@ -25,28 +25,28 @@ export async function onRequest({ request, env, params }) {
     return new Response(null, { headers: corsHeaders });
   }
 
-  return handleRequest(request, env, action, corsHeaders);
+  return handleRequest(request, action, corsHeaders);
 }
 
 /**
  * 处理具体的请求
  */
-async function handleRequest(request, env, action, corsHeaders) {
+async function handleRequest(request, action, corsHeaders) {
   try {
     let result;
 
     switch (action) {
       case 'put':
-        result = await handlePut(request, env);
+        result = await handlePut(request);
         break;
       case 'get':
-        result = await handleGet(request, env);
+        result = await handleGet(request);
         break;
       case 'delete':
-        result = await handleDelete(request, env);
+        result = await handleDelete(request);
         break;
       case 'list':
-        result = await handleList(request, env);
+        result = await handleList(request);
         break;
       default:
         result = { success: false, error: '不支持的操作' };
@@ -75,7 +75,7 @@ async function handleRequest(request, env, action, corsHeaders) {
 /**
  * 处理存储操作
  */
-async function handlePut(request, env) {
+async function handlePut(request) {
   const { key, value, metadata } = await request.json();
   
   if (!key || !value) {
@@ -83,8 +83,8 @@ async function handlePut(request, env) {
   }
 
   try {
-    // 使用 EdgeOne KV 存储（变量名 qomo）
-    await env.qomo.put(key, value, {
+    // 使用 EdgeOne KV 存储（qomo 命名空间）
+    await qomo.put(key, value, {
       metadata: metadata || {},
     });
 
@@ -97,15 +97,15 @@ async function handlePut(request, env) {
 /**
  * 处理获取操作
  */
-async function handleGet(request, env) {
+async function handleGet(request) {
   const { key } = await request.json();
-  
+
   if (!key) {
     return { success: false, error: '缺少 key 参数' };
   }
 
   try {
-    const value = await env.qomo.get(key);
+    const value = await qomo.get(key);
 
     if (value === null) {
       return { success: false, error: '数据不存在' };
@@ -120,15 +120,15 @@ async function handleGet(request, env) {
 /**
  * 处理删除操作
  */
-async function handleDelete(request, env) {
+async function handleDelete(request) {
   const { key } = await request.json();
-  
+
   if (!key) {
     return { success: false, error: '缺少 key 参数' };
   }
 
   try {
-    await env.qomo.delete(key);
+    await qomo.delete(key);
     return { success: true };
   } catch (error) {
     return { success: false, error: error.message };
@@ -138,7 +138,7 @@ async function handleDelete(request, env) {
 /**
  * 处理列表操作
  */
-async function handleList(request, env) {
+async function handleList(request) {
   const { prefix, limit = 100 } = await request.json();
 
   try {
@@ -147,10 +147,10 @@ async function handleList(request, env) {
       options.prefix = prefix;
     }
 
-    const result = await env.qomo.list(options);
-    
-    return { 
-      success: true, 
+    const result = await qomo.list(options);
+
+    return {
+      success: true,
       data: {
         keys: result.keys,
         list_complete: result.list_complete,

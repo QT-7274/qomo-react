@@ -25,13 +25,13 @@ export async function onRequest({ request, params, env }) {
     });
   }
 
-  return handleSaveTemplate(request, env, qomo, corsHeaders);
+  return handleSaveTemplate(request, corsHeaders);
 }
 
 /**
  * 处理保存模板请求
  */
-async function handleSaveTemplate(request, env, qomo, corsHeaders) {
+async function handleSaveTemplate(request, corsHeaders) {
   try {
     // 检查 KV 存储是否可用
     if (!qomo) {

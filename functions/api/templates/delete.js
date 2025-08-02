@@ -3,7 +3,7 @@
  * 从 KV 存储中删除指定的模板
  */
 
-export async function onRequest({ request, params, env, qomo }) {
+export async function onRequest({ request, params, env }) {
   const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'DELETE, POST, OPTIONS',
@@ -25,13 +25,13 @@ export async function onRequest({ request, params, env, qomo }) {
     });
   }
 
-  return handleDeleteTemplate(request, qomo, corsHeaders);
+  return handleDeleteTemplate(request, corsHeaders);
 }
 
 /**
  * 处理删除模板请求
  */
-async function handleDeleteTemplate(request, qomo, corsHeaders) {
+async function handleDeleteTemplate(request, corsHeaders) {
   try {
     let templateId, userId;
     
