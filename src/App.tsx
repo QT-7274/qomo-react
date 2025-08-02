@@ -11,11 +11,13 @@ import Sidebar from '@/components/layout/Sidebar'; // 侧边栏组件
 import TopBar from '@/components/layout/TopBar'; // 顶部导航栏组件
 import DevTools from '@/components/dev/DevTools'; // 开发工具组件
 import { useAppStore } from '@/store/useAppStore'; // 自定义状态管理
+import { useI18n } from '@/i18n/hooks'; // 国际化Hook
 
 // 导入页面组件
 import EditorPage from '@/pages/EditorPage'; // 编辑器页面
 import LibraryPage from '@/pages/LibraryPage'; // 资源库页面
 import ComponentsPage from '@/pages/ComponentsPage'; // 组件页面
+import I18nDemo from '@/components/demo/I18nDemo'; // 国际化演示页面
 import { ROUTES, EDITOR_MODES } from '@/config/constants'; // 配置化的路由和编辑器模式
 
 // 主应用组件
@@ -24,6 +26,8 @@ function App() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   // 从状态管理中获取初始化和加载函数
   const { initStorage, loadTemplatesFromStorage, loadComponentsFromStorage } = useAppStore();
+  // 初始化国际化系统
+  const { isLoading: i18nLoading } = useI18n();
 
   // 组件加载时初始化存储和加载数据
   useEffect(() => {
@@ -77,6 +81,8 @@ function App() {
                       <Route path={ROUTES.LIBRARY} element={<LibraryPage />} />
                       {/* 组件库页面路由 */}
                       <Route path={ROUTES.COMPONENTS} element={<ComponentsPage />} />
+                      {/* 国际化演示页面路由 */}
+                      <Route path={ROUTES.I18N_DEMO} element={<I18nDemo />} />
                     </Routes>
                   </div>
                 </div>

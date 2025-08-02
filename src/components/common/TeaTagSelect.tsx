@@ -1,6 +1,6 @@
 import React from 'react';
 import { TagSelect as TeaTagSelect } from 'tea-component';
-
+import { useI18n } from '@/i18n/hooks';
 import Label from './Label';
 
 interface TagOption {
@@ -27,20 +27,22 @@ interface TagSelectProps {
 }
 
 const TagSelect = React.forwardRef<HTMLDivElement, TagSelectProps>(
-  ({ 
-    label, 
-    className, 
+  ({
+    label,
+    className,
     options = [],
-    placeholder = '请选择',
+    placeholder,
     autoClearSearchValue = true,
     hideCloseButton = false,
-    ...props 
+    ...props
   }, ref) => {
+    const { t } = useI18n();
+    const finalPlaceholder = placeholder || t('请选择');
     const tagSelectElement = (
       <TeaTagSelect
         ref={ref}
         options={options}
-        placeholder={placeholder}
+        placeholder={finalPlaceholder}
         autoClearSearchValue={autoClearSearchValue}
         hideCloseButton={hideCloseButton}
         className={className}

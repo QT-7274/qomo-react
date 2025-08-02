@@ -1,6 +1,7 @@
 import React from 'react';
 import { Select as TeaSelect } from 'tea-component';
 import { cn } from '@/utils';
+import { useI18n } from '@/i18n/hooks';
 import Label from './Label';
 
 interface SelectOption {
@@ -31,16 +32,18 @@ const Select = React.forwardRef<HTMLElement, SelectProps>(
     options = [],
     size = 'm',
     appearance = 'button',
-    placeholder = '请选择',
+    placeholder,
     ...props
   }, ref) => {
+    const { t } = useI18n();
+    const finalPlaceholder = placeholder || t('请选择');
     const selectElement = (
       <TeaSelect
         ref={ref}
         options={options}
         size={size}
         appearance={appearance}
-        placeholder={placeholder}
+        placeholder={finalPlaceholder}
         className={cn('min-w-0', className)} // 确保可以缩小
         {...props}
       />

@@ -1,4 +1,5 @@
 // Core types for the AI Template System
+import { SupportedLanguage } from '@/i18n';
 
 export interface User {
   id: string;
@@ -10,7 +11,7 @@ export interface User {
 
 export interface UserPreferences {
   theme: 'light' | 'dark' | 'auto';
-  language: string;
+  language: SupportedLanguage; // 使用类型安全的语言代码
   autoSave: boolean;
   showTips: boolean;
 }

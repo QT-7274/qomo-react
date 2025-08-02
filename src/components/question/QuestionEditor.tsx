@@ -8,6 +8,7 @@ import { Modal, ModalContent, ModalFooter } from '@/components/ui/Modal';
 import { Input, Textarea } from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
+import { useI18n } from '@/i18n/hooks';
 
 interface QuestionEditorProps {
   isOpen: boolean;
@@ -20,6 +21,7 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
   question,
   onClose,
 }) => {
+  const { t } = useI18n();
   const { addQuestion, updateQuestion, showNotification } = useAppStore();
   
   const [formData, setFormData] = useState({
@@ -62,9 +64,9 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
     const newErrors: Record<string, string> = {};
     
     if (!formData.content.trim()) {
-      newErrors.content = '问题内容不能为空';
+      newErrors.content = t('问题内容不能为空');
     } else if (formData.content.length < 10) {
-      newErrors.content = '问题内容至少需要10个字符';
+      newErrors.content = `${t('问题内容至少需要')}10${t('个字符')}`;
     }
     
     setErrors(newErrors);
@@ -92,8 +94,8 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
       
       showNotification({
         type: 'success',
-        title: '问题已更新',
-        message: '问题信息已成功更新',
+        title: t('问题已更新'),
+        message: t('问题信息已成功更新'),
         duration: 2000,
       });
     } else {
@@ -112,8 +114,8 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
       
       showNotification({
         type: 'success',
-        title: '问题已创建',
-        message: '新问题已成功添加到问题库',
+        title: t('问题已创建'),
+        message: t('新问题已成功添加到问题库'),
         duration: 2000,
       });
     }
@@ -139,28 +141,28 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
   };
 
   const questionTypes = [
-    { value: 'general', label: '通用问题', icon: '💬' },
-    { value: 'technical', label: '技术问题', icon: '⚙️' },
-    { value: 'creative', label: '创意问题', icon: '🎨' },
-    { value: 'analytical', label: '分析问题', icon: '📊' },
-    { value: 'research', label: '研究问题', icon: '🔬' },
-    { value: 'brainstorm', label: '头脑风暴', icon: '💡' },
+    { value: 'general', label: t('通用问题'), icon: '💬' },
+    { value: 'technical', label: t('技术问题'), icon: '⚙️' },
+    { value: 'creative', label: t('创意问题'), icon: '🎨' },
+    { value: 'analytical', label: t('分析问题'), icon: '📊' },
+    { value: 'research', label: t('研究问题'), icon: '🔬' },
+    { value: 'brainstorm', label: t('头脑风暴'), icon: '💡' },
   ];
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={question ? '编辑问题' : '创建新问题'}
-      description={question ? '修改问题的内容和属性' : '添加一个新的问题到您的问题库'}
+      title={question ? t('编辑问题') : t('创建新问题')}
+      description={question ? t('修改问题的内容和属性') : t('添加一个新的问题到您的问题库')}
       size="lg"
     >
       <ModalContent className="space-y-6">
         {/* Question Content */}
         <div className="space-y-2">
           <Textarea
-            label="问题内容"
-            placeholder="请输入您的问题..."
+            label={t('问题内容')}
+            placeholder={t('请输入您的问题')}
             value={formData.content}
             onChange={(value) => setFormData(prev => ({ ...prev, content: value }))}
             rows={4}
@@ -174,7 +176,7 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
         {/* Question Type */}
         <div className="space-y-2">
           <label className="block text-sm font-medium text-gray-700">
-            问题类型
+            {t('问题类型')}
           </label>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
             {questionTypes.map(type => (
@@ -200,13 +202,13 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
         {/* Tags */}
         <div className="space-y-3">
           <label className="block text-sm font-medium text-gray-700">
-            标签
+            {t('标签')}
           </label>
           
           {/* Add Tag Input */}
           <div className="flex gap-2">
             <Input
-              placeholder="添加标签..."
+              placeholder={t('添加标签')}
               value={newTag}
               onChange={(value) => setNewTag(value)}
               onKeyPress={(e) => e.key === 'Enter' && handleAddTag()}
@@ -218,7 +220,7 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
               icon={<Plus className="w-4 h-4" />}
               disabled={!newTag.trim()}
             >
-              添加
+              {t('添加')}
             </Button>
           </div>
           
@@ -243,8 +245,8 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Domain */}
           <Input
-            label="领域 (可选)"
-            placeholder="如: 人工智能"
+            label={`${t('领域')} (${t('可选')})`}
+            placeholder={`${t('如')}${t('人工智能')}`}
             value={formData.domain}
             onChange={(value) => setFormData(prev => ({ ...prev, domain: value }))}
           />
@@ -252,7 +254,7 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
           {/* Complexity */}
           <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-700">
-              复杂度
+              {t('复杂度')}
             </label>
             <select
               value={formData.complexity}
@@ -262,16 +264,16 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
               }))}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
-              <option value="simple">简单</option>
-              <option value="medium">中等</option>
-              <option value="complex">复杂</option>
+              <option value="simple">{t('简单')}</option>
+              <option value="medium">{t('中等')}</option>
+              <option value="complex">{t('复杂')}</option>
             </select>
           </div>
 
           {/* Expected Length */}
           <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-700">
-              期望回答长度
+              {t('期望回答长度')}
             </label>
             <select
               value={formData.expectedLength}
@@ -281,9 +283,9 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
               }))}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
-              <option value="short">简短</option>
-              <option value="medium">中等</option>
-              <option value="long">详细</option>
+              <option value="short">{t('简短')}</option>
+              <option value="medium">{t('中等')}</option>
+              <option value="long">{t('详细')}</option>
             </select>
           </div>
         </div>
@@ -291,10 +293,10 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
 
       <ModalFooter>
         <Button variant="outline" onClick={onClose} icon={<X className="w-4 h-4" />}>
-          取消
+          {t('取消')}
         </Button>
         <Button variant="primary" onClick={handleSubmit} icon={<Save className="w-4 h-4" />}>
-          {question ? '更新问题' : '创建问题'}
+          {question ? t('更新问题') : t('创建问题')}
         </Button>
       </ModalFooter>
     </Modal>

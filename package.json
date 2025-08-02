@@ -7,7 +7,12 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "check-i18n": "node scripts/check-i18n.js",
+    "check-translations": "node scripts/check-translations.js",
+    "check-untranslated": "node scripts/check-untranslated.js",
+    "check-all-i18n": "npm run check-untranslated && npm run check-translations && npm run check-i18n",
+    "build:check": "npm run check-all-i18n && npm run build"
   },
   "dependencies": {
     "@types/react-beautiful-dnd": "^13.1.8",

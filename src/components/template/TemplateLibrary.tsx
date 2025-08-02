@@ -16,12 +16,14 @@ import Badge from '@/components/ui/Badge';
 import TemplateCard from './TemplateCard';
 import { ROUTES, EDITOR_MODES } from '@/config/constants';
 import { NOTIFICATIONS, BUTTON_TEXTS, PLACEHOLDERS, EMPTY_STATES } from '@/config/text';
+import { useI18n } from '@/i18n/hooks';
 
 interface TemplateLibraryProps {
   className?: string;
 }
 
 const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ className }) => {
+  const { t } = useI18n();
   const navigate = useNavigate();
   const {
     templates,
@@ -38,7 +40,7 @@ const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ className }) => {
 
   // Filter and sort templates
   const filteredTemplates = React.useMemo(() => {
-    let filtered = templates.filter(template => {
+    const filtered = templates.filter(template => {
       const matchesSearch = template.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           template.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           template.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
@@ -86,7 +88,7 @@ const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ className }) => {
     showNotification({
       type: 'success',
       title: NOTIFICATIONS.SUCCESS.TEMPLATE_LOADED,
-      message: '模板已加载到编辑器中，已跳转到模板工作台',
+      message: `${t('模板已加载到编辑器中')}，${t('已跳转到模板工作台')}`,
       duration: 2000,
     });
   };
@@ -104,8 +106,8 @@ const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ className }) => {
       console.error('删除模板失败:', error);
       showNotification({
         type: 'error',
-        title: '删除失败',
-        message: '无法删除模板',
+        title: t('删除失败'),
+        message: t('无法删除模板'),
         duration: 2000,
       });
     }
@@ -132,19 +134,19 @@ const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ className }) => {
 
     showNotification({
       type: 'success',
-      title: '模板已应用',
-      message: `模板"${template.name}"已应用，已跳转到模板工作台使用模式`,
+      title: t('模板已应用'),
+      message: `${t('模板')}"${template.name}"${t('已应用')}，${t('已跳转到模板工作台使用模式')}`,
       duration: 3000,
     });
   };
 
   const templateCategories: { value: TemplateCategory | 'all'; label: string; icon: string }[] = [
-    { value: 'all', label: '全部', icon: '📋' },
-    { value: 'productivity', label: '效率', icon: '💬' },
-    { value: 'creative', label: '创意', icon: '🎨' },
-    { value: 'technical', label: '技术', icon: '⚙️' },
-    { value: 'research', label: '研究', icon: '💼' },
-    { value: 'education', label: '教育', icon: '📚' },
+    { value: 'all', label: t('全部'), icon: '📋' },
+    { value: 'productivity', label: t('效率'), icon: '💬' },
+    { value: 'creative', label: t('创意'), icon: '🎨' },
+    { value: 'technical', label: t('技术'), icon: '⚙️' },
+    { value: 'research', label: t('研究'), icon: '💼' },
+    { value: 'education', label: t('教育'), icon: '📚' },
   ];
 
   return (
@@ -156,7 +158,7 @@ const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ className }) => {
           animate={{ opacity: 1, x: 0 }}
           className="text-2xl font-bold text-gray-800"
         >
-          模板库
+          {t('模板库')}
         </motion.h2>
         <Button
           variant="primary"
@@ -182,7 +184,7 @@ const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ className }) => {
         {/* Category Filter */}
         <div className="flex items-center gap-2 flex-wrap">
           <Filter className="w-4 h-4 text-gray-600" />
-          <span className="text-sm text-gray-600">分类:</span>
+          <span className="text-sm text-gray-600">{t('分类')}:</span>
           {templateCategories.map(category => (
             <Badge
               key={category.value}
@@ -202,16 +204,16 @@ const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ className }) => {
         {/* Sort Options */}
         <div className="flex items-center gap-2">
           <SortAsc className="w-4 h-4 text-gray-600" />
-          <span className="text-sm text-gray-600">排序:</span>
+          <span className="text-sm text-gray-600">{t('排序')}:</span>
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
             className="bg-white border border-gray-300 rounded-lg px-3 py-1 text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="date">更新时间</option>
-            <option value="name">名称</option>
-            <option value="rating">评分</option>
-            <option value="usage">使用次数</option>
+            <option value="date">{t('更新时间')}</option>
+            <option value="name">{t('名称')}</option>
+            <option value="rating">{t('评分')}</option>
+            <option value="usage">{t('使用次数')}</option>
           </select>
         </div>
       </div>
@@ -223,8 +225,8 @@ const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ className }) => {
         transition={{ delay: 0.2 }}
         className="text-sm text-gray-600"
       >
-        共 {filteredTemplates.length} 个模板
-        {searchTerm && ` (搜索: "${searchTerm}")`}
+        {t('共')} {filteredTemplates.length} {t('个模板')}
+        {searchTerm && ` (${t('搜索')}: "${searchTerm}")`}
       </motion.div>
 
       {/* Templates Grid */}
@@ -252,10 +254,10 @@ const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ className }) => {
           <div className="text-gray-400 mb-4">
             <Search className="w-16 h-16 mx-auto mb-4 opacity-50" />
             <h3 className="text-lg font-medium text-gray-600 mb-2">
-              {searchTerm ? '未找到匹配的模板' : '暂无模板'}
+              {searchTerm ? t('未找到匹配的模板') : t('暂无模板')}
             </h3>
             <p className="text-gray-500">
-              {searchTerm ? '尝试调整搜索条件' : '开始创建您的第一个模板'}
+              {searchTerm ? t('尝试调整搜索条件') : t('开始创建您的第一个模板')}
             </p>
           </div>
           {!searchTerm && (
@@ -268,7 +270,7 @@ const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ className }) => {
               icon={<Plus className="w-4 h-4" />}
               className='bg-blue-600 text-white hover:bg-blue-700 border-blue-600 shadow-sm'
             >
-              创建模板
+              {t('创建模板')}
             </Button>
           )}
         </motion.div>

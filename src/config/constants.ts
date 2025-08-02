@@ -87,6 +87,7 @@ export const ROUTES = {
   EDITOR: '/editor',
   LIBRARY: '/library',
   COMPONENTS: '/components',
+  I18N_DEMO: '/i18n-demo', // 国际化演示页面
 } as const;
 
 // ==================== 导航图标常量 ====================

@@ -28,6 +28,7 @@ import { TagSelect } from '@/components/common/TeaTagSelect';
 
 import TemplateComponentCard from '@/components/template/TemplateComponentCard';
 import TemplatePreview from '@/components/template/TemplatePreview';
+import { useI18n } from '@/i18n/hooks';
 import { COMPONENT_TYPES, UI_TEXT, ANIMATION_CONFIG, TEMPLATE_CATEGORIES, COMMON_TAGS, DEFAULT_TEMPLATE_CONFIG, COMPONENT_BUTTON_COLORS } from '@/config/appConfig';
 import { TEST_IDS } from '@/config/constants';
 import { NOTIFICATIONS, ERROR_MESSAGES } from '@/config/text';
@@ -39,6 +40,7 @@ interface TemplateEditorProps {
 }
 
 const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) => {
+  const { t } = useI18n();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const {
@@ -112,8 +114,8 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
       setCopySuccess(true);
       showNotification({
         type: 'success',
-        title: '复制成功',
-        message: '提示词已复制到剪贴板',
+        title: t('复制成功'),
+        message: t('提示词已复制到剪贴板'),
         duration: 2000,
       });
       // 移除自动重置，只在内容变化时重置
@@ -121,8 +123,8 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
       console.error('复制失败:', error);
       showNotification({
         type: 'error',
-        title: '复制失败',
-        message: '无法复制到剪贴板',
+        title: t('复制失败'),
+        message: t('无法复制到剪贴板'),
         duration: 2000,
       });
     }
@@ -237,8 +239,8 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
         month: '2-digit',
         day: '2-digit'
       }).replace(/\//g, '-');
-      templateName = `${dateStr}-创建的模板`;
-      templateDescription = templateDescription || '基于问题输入创建的模板';
+      templateName = `${dateStr}-${t('创建的模板')}`;
+      templateDescription = templateDescription || t('基于问题输入创建的模板');
     } else if (mode === 'create' && !templateName) {
       showNotification({
         type: 'error',
@@ -272,7 +274,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
       showNotification({
         type: 'success',
         title: NOTIFICATIONS.SUCCESS.TEMPLATE_UPDATED,
-        message: mode === 'use' ? `模板"${templateName}"已成功保存` : NOTIFICATIONS.SUCCESS.TEMPLATE_SAVED,
+        message: mode === 'use' ? `${t('模板')}"${templateName}"${t('已成功保存')}` : NOTIFICATIONS.SUCCESS.TEMPLATE_SAVED,
         duration: 2000,
       });
     } else {
@@ -280,7 +282,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
       showNotification({
         type: 'success',
         title: NOTIFICATIONS.SUCCESS.TEMPLATE_CREATED,
-        message: mode === 'use' ? `模板"${templateName}"已成功创建` : NOTIFICATIONS.SUCCESS.TEMPLATE_CREATED,
+        message: mode === 'use' ? `${t('模板')}"${templateName}"${t('已成功创建')}` : NOTIFICATIONS.SUCCESS.TEMPLATE_CREATED,
         duration: 2000,
       });
     }
@@ -310,7 +312,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
   }));
 
   return (
-    <div className={cn('space-y-6 p-6', className)}>
+    <div className={cn('space-y-6 p-3', className)}>
         {/* Header with Mode Switcher */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -358,11 +360,11 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
               </Button>
             )}
             <PopConfirm
-              title="确定要重置模板到默认状态吗？"
-              message="这将清除所有当前的修改。"
+              title={t('确定要重置模板到默认状态吗')}
+              message={t('这将清除所有当前的修改')}
               footer={(close) => (
                 <div className="flex gap-2 justify-end">
-                  <Button variant="outline" onClick={close}>取消</Button>
+                  <Button variant="outline" onClick={close}>{t('取消')}</Button>
                   <Button
                     variant="primary"
                     onClick={() => { handleReset(); close(); }}
@@ -378,9 +380,9 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
                 icon={<RotateCcw className="w-4 h-4" />}
                 htmlType="button"
                 className="text-orange-600 border-orange-200 hover:bg-orange-50 hover:border-orange-300 active:scale-95 transition-all duration-150"
-                title="重置到默认状态"
+                title={t('重置到默认状态')}
               >
-                重置
+                {t('重置')}
               </Button>
             </PopConfirm>
             <Button
@@ -412,25 +414,25 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
                     ) : (
                       <>
                         <MessageSquare className="w-5 h-5" />
-                        问题输入
+                        {t('问题输入区域')}
                       </>
                     )}
                   </div>
                   {mode === 'use' && (
                     <div className="text-sm text-gray-500">
-                      没有自己喜欢的模板？
+                      {t('没有自己喜欢的模板')}？
                       <button
                         onClick={() => handleModeSwitch('create')}
                         className="text-blue-600 hover:text-blue-700 underline ml-1"
                       >
-                        去创建一个！
+                        {t('去创建一个')}！
                       </button>
                     </div>
                   )}
                 </CardTitle>
                 {mode === 'use' && (
                   <p className="text-sm text-gray-600 mt-1">
-                    输入你的具体问题，系统将基于模板组件生成提示词
+                    {t('输入你的具体问题')}{t('系统将基于模板组件生成提示词')}
                   </p>
                 )}
               </CardHeader>
@@ -494,17 +496,17 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
                   // 使用模板模式 - 显示问题输入
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      你的问题
+                      {t('你的问题')}
                     </label>
                     <Textarea
-                      placeholder="请输入你想要解决的问题..."
+                      placeholder={t('请输入你想要解决的问题')}
                       value={userQuestion}
                       onChange={(value) => setUserQuestion(value)}
                       rows={6}
                       className="w-full"
                     />
                     <div className="text-xs text-gray-500 mt-2">
-                      💡 输入问题后，系统会根据模板组件自动生成提示词<br/>
+                      {t('输入问题后')}{t('系统会根据模板组件自动生成提示词')}<br/>
                     </div>
                   </div>
                 )}
@@ -585,8 +587,8 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
                   {components.length === 0 && (
                     <div className="text-center py-12 text-gray-500">
                       <Wand2 className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                      <p className="text-lg mb-2">开始构建您的模板</p>
-                      <p className="text-sm">添加组件或拖拽问题到此处</p>
+                      <p className="text-lg mb-2">{t('开始构建您的模板')}</p>
+                      <p className="text-sm">{t('添加组件或拖拽问题到此处')}</p>
                     </div>
                   )}
                 </div>
@@ -602,7 +604,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
                 <TemplatePreview
                   template={{
                     id: 'preview',
-                    name: formData.name || '未命名模板',
+                    name: formData.name || t('未命名模板'),
                     description: formData.description,
                     category: formData.category,
                     components,
@@ -627,7 +629,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-gray-800 flex items-center gap-2">
                       <Play className="w-5 h-5" />
-                      生成的提示词
+                      {t('生成的提示词')}
                     </CardTitle>
                     <Button
                       variant="outline"
@@ -660,7 +662,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
                         <div className="text-center">
                           <Play className="w-8 h-8 mx-auto mb-2 opacity-50" />
                           <p>
-                            {userQuestion ? '请添加模板组件以生成提示词' : '请先输入问题'}
+                            {userQuestion ? t('请添加模板组件以生成提示词') : t('请先输入问题')}
                           </p>
                         </div>
                       </div>
@@ -673,7 +675,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
               <Card variant="default" padding="md">
                 <CardHeader>
                   <CardTitle className="text-gray-800 text-sm">
-                    组件结构
+                    {t('组件结构')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -709,7 +711,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
                                           component.content.substring(0, 30) + '...' :
                                           component.content
                                         ) :
-                                        '空内容'
+                                        t('空内容')
                                     )}
                                   </span>
                                 </div>
@@ -719,7 +721,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
                         })
                     ) : (
                       <div className="text-center py-4 text-gray-500 text-sm">
-                        还没有添加任何组件
+                        {t('还没有添加任何组件')}
                       </div>
                     )}
                   </div>

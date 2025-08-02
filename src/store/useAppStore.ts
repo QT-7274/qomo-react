@@ -6,6 +6,7 @@ import { generateId } from '@/utils'; // 导入生成唯一 ID 的工具函数
 import { COMPONENT_TYPES, TEMPLATE_CATEGORIES, DEFAULT_TEMPLATE_CONFIG } from '@/config/appConfig'; // 导入组件类型和模板类别的配置
 import { COMPONENT_TYPE_LABELS } from '@/config/text'; // 导入组件类型的中文标签
 import { storageManager } from '@/utils/storage'; // 导入用于管理存储的工具
+import { SupportedLanguage } from '@/i18n'; // 导入支持的语言类型
 
 // 初始 UI 状态设定
 const initialUIState: UIState = {
@@ -55,7 +56,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
     email: 'creator@example.com', // 用户邮箱
     preferences: {
       theme: 'auto', // 用户主题偏好
-      language: 'zh-CN', // 默认语言
+      language: 'zh-CN' as SupportedLanguage, // 默认语言，使用类型安全的语言代码
       autoSave: true, // 是否自动保存
       showTips: true, // 是否显示提示
     },

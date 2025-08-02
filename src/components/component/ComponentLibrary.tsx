@@ -20,8 +20,10 @@ import { COMPONENT_TYPES, COMPONENT_DISPLAY_CONFIG, UI_TEXT, COMPONENT_CARD_COLO
 import { ROUTES } from '@/config/constants';
 import { BUTTON_TEXTS, PLACEHOLDERS, NOTIFICATIONS, EMPTY_STATES } from '@/config/text';
 import { getIcon } from '@/utils/iconMap';
+import { useI18n } from '@/i18n/hooks';
 
 const ComponentLibrary: React.FC = () => {
+  const { t } = useI18n();
   const navigate = useNavigate();
   const {
     storedComponents,
@@ -51,7 +53,7 @@ const ComponentLibrary: React.FC = () => {
 
   // 获取组件类型选项
   const typeOptions = [
-    { value: 'all', text: '全部类型' },
+    { value: 'all', text: t('全部类型') },
     ...COMPONENT_TYPES.map(type => ({
       value: type.type,
       text: type.label
@@ -60,7 +62,7 @@ const ComponentLibrary: React.FC = () => {
 
   // 获取分类选项
   const categoryOptions = [
-    { value: 'all', text: '全部分类' },
+    { value: 'all', text: t('全部分类') },
     ...categories.map(category => ({
       value: category,
       text: category
@@ -96,8 +98,8 @@ const ComponentLibrary: React.FC = () => {
 
     showNotification({
       type: 'success',
-      title: '组件已添加',
-      message: `已添加 ${componentsToAdd.length} 个组件到编辑器，正在跳转到工作台`,
+      title: t('组件已添加'),
+      message: `${t('已添加')} ${componentsToAdd.length} ${t('个组件到编辑器')}${t('正在跳转到工作台')}`,
       duration: 2000,
     });
 
@@ -116,16 +118,16 @@ const ComponentLibrary: React.FC = () => {
       await deleteComponentFromStorage(component.id);
       showNotification({
         type: 'success',
-        title: '删除成功',
-        message: `组件"${component.name}"已删除`,
+        title: t('删除成功'),
+        message: `${t('组件')}"${component.name}"${t('已删除')}`,
         duration: 2000,
       });
     } catch (error) {
       console.error('删除失败:', error);
       showNotification({
         type: 'error',
-        title: '删除失败',
-        message: '无法删除组件',
+        title: t('删除失败'),
+        message: t('无法删除组件'),
         duration: 2000,
       });
     }
@@ -169,7 +171,7 @@ const ComponentLibrary: React.FC = () => {
           {UI_TEXT.titles.componentLibrary}
         </motion.h2>
         <div className="text-sm text-gray-600">
-          共 {filteredComponents.length} 个组件
+          {t('共')} {filteredComponents.length} {t('个组件')}
         </div>
       </div>
 
@@ -192,7 +194,7 @@ const ComponentLibrary: React.FC = () => {
                 <div className="flex items-center gap-2">
                   <ShoppingCart className="w-4 h-4 text-blue-600" />
                   <span className="text-sm font-medium text-blue-800">
-                    已选 {getSelectedComponentsStats().total} 个组件
+                    {t('已选')} {getSelectedComponentsStats().total} {t('个组件')}
                   </span>
                 </div>
 
@@ -213,7 +215,7 @@ const ComponentLibrary: React.FC = () => {
                   icon={<ArrowRight className="w-3 h-3" />}
                   className="bg-blue-600 text-white hover:bg-blue-700 border-blue-600"
                 >
-                  添加到工作台
+                  {t('添加到工作台')}
                 </Button>
               </div>
             )}
@@ -224,7 +226,7 @@ const ComponentLibrary: React.FC = () => {
                 value={selectedType}
                 onChange={(value) => setSelectedType(value)}
                 size="m"
-                placeholder="选择类型"
+                placeholder={t('选择类型')}
               />
             </div>
             <div>
@@ -233,7 +235,7 @@ const ComponentLibrary: React.FC = () => {
                 value={selectedCategory}
                 onChange={(value) => setSelectedCategory(value)}
                 size="m"
-                placeholder="选择分类"
+                placeholder={t('选择分类')}
               />
             </div>
           </div>
@@ -276,7 +278,7 @@ const ComponentLibrary: React.FC = () => {
 
                     {/* Meta Info */}
                     <div className="flex items-center justify-between text-xs text-gray-500">
-                      <span>使用 {component.usageCount} 次</span>
+                      <span>{t('使用')} {component.usageCount} {t('次')}</span>
                       <span>{component.category}</span>
                     </div>
 
@@ -292,20 +294,20 @@ const ComponentLibrary: React.FC = () => {
                           : "text-blue-600 hover:bg-blue-50 border-blue-600"
                         }
                       >
-                        {selectedComponents.has(component.id) ? '已选' : '选择'}
+                        {selectedComponents.has(component.id) ? t('已选') : t('选择')}
                       </Button>
                       <PopConfirm
-                        title={`确定要删除组件"${component.name}"吗？`}
-                        message="删除后无法恢复，请谨慎操作。"
+                        title={`${t('确定要删除组件')}"${component.name}"${t('吗')}？`}
+                        message={`${t('删除后无法恢复')}${t('请谨慎操作')}`}
                         footer={(close) => (
                           <div className="flex gap-2 justify-end">
-                            <Button variant="outline" onClick={close}>取消</Button>
+                            <Button variant="outline" onClick={close}>{t('取消')}</Button>
                             <Button
                               variant="primary"
                               onClick={() => { handleDeleteComponent(component); close(); }}
                               className="bg-red-600 text-white hover:bg-red-700 border-red-600"
                             >
-                              确认删除
+                              {t('确认删除')}
                             </Button>
                           </div>
                         )}
@@ -315,7 +317,7 @@ const ComponentLibrary: React.FC = () => {
                           size="sm"
                           icon={<Trash2 className="w-3 h-3" />}
                           className="text-red-600 hover:bg-red-50"
-                          title="删除组件"
+                          title={t('删除组件')}
                         />
                       </PopConfirm>
                     </div>
@@ -337,15 +339,15 @@ const ComponentLibrary: React.FC = () => {
         >
           <div className="text-6xl mb-4">📦</div>
           <h3 className="text-xl font-semibold text-gray-600 mb-2">
-            {searchTerm || selectedType !== 'all' || selectedCategory !== 'all' 
-              ? '没有找到匹配的组件' 
-              : '组件库为空'
+            {searchTerm || selectedType !== 'all' || selectedCategory !== 'all'
+              ? t('没有找到匹配的组件')
+              : t('组件库为空')
             }
           </h3>
           <p className="text-gray-500 mb-6">
             {searchTerm || selectedType !== 'all' || selectedCategory !== 'all'
-              ? '尝试调整搜索条件或筛选器'
-              : '创建模板时会自动保存组件到组件库'
+              ? t('尝试调整搜索条件或筛选器')
+              : t('创建模板时会自动保存组件到组件库')
             }
           </p>
         </motion.div>

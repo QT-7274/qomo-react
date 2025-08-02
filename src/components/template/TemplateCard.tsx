@@ -1,6 +1,6 @@
 /**
  * 模板卡片组件
- * 显示模板信息，支持编辑、删除和应用操作，使用配置化的颜色和文本
+ * 显示模板信息，支持编辑、删除和应用操作，使用国际化和配置化的颜色和文本
  */
 
 import React from 'react';
@@ -11,8 +11,7 @@ import { formatRelativeTime } from '@/utils';
 import { Card, CardContent } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
-import { CATEGORY_LABELS } from '@/config/text';
-import { BUTTON_TEXTS } from '@/config/text';
+import { useI18n } from '@/i18n/hooks';
 import { COLOR_THEMES } from '@/config/constants';
 
 interface TemplateCardProps {
@@ -30,6 +29,9 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
   onApply,
   className
 }) => {
+  // 使用国际化Hook获取翻译函数
+  const { t } = useI18n();
+
   // 使用配置化的类别颜色映射
   const getCategoryColor = (category: string): 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'outline' => {
     const colors = {
@@ -76,11 +78,16 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
             <div className="flex items-center gap-2">
               <span className="text-lg">{getCategoryIcon(template.category)}</span>
               <Badge variant={getCategoryColor(template.category)} size="sm">
-                {template.category}
+                {t(template.category === 'productivity' ? t('效率工具') :
+                   template.category === 'creative' ? t('创意写作') :
+                   template.category === 'research' ? t('分析总结') :
+                   template.category === 'education' ? t('教育学习') :
+                   template.category === 'business' ? t('商务办公') :
+                   template.category === 'technical' ? t('技术开发') : t('效率工具'))}
               </Badge>
               {template.isPublic && (
                 <Badge variant="outline" size="sm">
-                  公开
+                  {t('公开')}
                 </Badge>
               )}
             </div>
@@ -94,7 +101,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
                 }}
                 icon={<Download className="w-3 h-3" />}
                 className="apply-template-btn"
-                title={BUTTON_TEXTS.APPLY}
+                title={t('应用')}
               />
               <Button
                 variant="text"
@@ -105,7 +112,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
                 }}
                 icon={<Edit className="w-3 h-3" />}
                 className="edit-template-btn"
-                title={BUTTON_TEXTS.EDIT}
+                title={t('编辑')}
               />
               <Button
                 variant="text"
@@ -116,7 +123,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
                 }}
                 icon={<Trash2 className="w-3 h-3" />}
                 className="delete-btn"
-                title={BUTTON_TEXTS.DELETE}
+                title={t('删除')}
               />
             </div>
           </div>
@@ -137,7 +144,9 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
             <div className="mb-4">
               <div className="flex items-center gap-2 text-sm text-gray-600">
                 <span className="w-4 h-4 text-center">🧩</span>
-                <span>{template.components.length} 个组件</span>
+                <span>
+                  {template.components.length} {t('个组件')}
+                </span>
               </div>
             </div>
 
@@ -146,7 +155,9 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
               <div className="mb-4">
                 <div className="flex items-center gap-1 mb-2">
                   <Tag className="w-3 h-3 text-gray-500" />
-                  <span className="text-xs text-gray-500">标签</span>
+                  <span className="text-xs text-gray-500">
+                    {t('标签')}
+                  </span>
                 </div>
                 <div className="flex flex-wrap gap-1">
                   {template.tags.slice(0, 3).map((tag, index) => (

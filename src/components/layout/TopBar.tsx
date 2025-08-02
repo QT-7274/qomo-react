@@ -1,14 +1,16 @@
 /**
  * 顶部导航栏组件
- * 负责显示页面标题、描述和设置按钮
+ * 负责显示页面标题、描述、语言切换和设置按钮
  */
 
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { cn } from '@/utils'; // 自定义类名合并工具函数
 import { getPageInfo } from '@/config/navigation';
-import { BUTTON_TEXTS } from '@/config/text';
+
 import TeaButton from '@/components/common/TeaButton';
+import LanguageSwitcher from '@/components/common/LanguageSwitcher';
+import { useI18n } from '@/i18n/hooks';
 
 interface TopBarProps {
   sidebarOpen: boolean;
@@ -23,6 +25,7 @@ const TopBar: React.FC<TopBarProps> = ({
 }) => {
   const location = useLocation();
   const pageInfo = getPageInfo(location.pathname);
+  const { t } = useI18n();
 
   return (
     <div className={cn('bg-white border-b border-gray-200 px-6 py-4', className)}>
@@ -34,7 +37,7 @@ const TopBar: React.FC<TopBarProps> = ({
               size='sm'
               onClick={onToggleSidebar}
               icon='more'
-              aria-label="打开侧边栏"
+              aria-label={t('打开侧边栏')}
             />
           )}
           <div>
@@ -46,14 +49,17 @@ const TopBar: React.FC<TopBarProps> = ({
             </p>
           </div>
         </div>
-        <TeaButton
-          variant='text'
-          size='sm'
-          icon='setting'
-          aria-label={BUTTON_TEXTS.SETTINGS}
-        >
-          {BUTTON_TEXTS.SETTINGS}
-        </TeaButton>
+        <div className='flex items-center gap-2'>
+          <LanguageSwitcher size='s' />
+          <TeaButton
+            variant='text'
+            size='sm'
+            icon='setting'
+            aria-label={t('设置')}
+          >
+            {t('设置')}
+          </TeaButton>
+        </div>
       </div>
     </div>
   );
