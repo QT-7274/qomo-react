@@ -3,7 +3,7 @@
  * 从 KV 存储中删除指定的模板
  */
 
-export async function onRequest({ request, params, env }) {
+export async function onRequest({ request, params, env, qomo }) {
   const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'DELETE, POST, OPTIONS',
@@ -25,13 +25,13 @@ export async function onRequest({ request, params, env }) {
     });
   }
 
-  return handleDeleteTemplate(request, env, corsHeaders);
+  return handleDeleteTemplate(request, qomo, corsHeaders);
 }
 
 /**
  * 处理删除模板请求
  */
-async function handleDeleteTemplate(request, env, corsHeaders) {
+async function handleDeleteTemplate(request, qomo, corsHeaders) {
   try {
     let templateId, userId;
     
@@ -62,7 +62,7 @@ async function handleDeleteTemplate(request, env, corsHeaders) {
     const publicKey = `public:template:${templateId}`;
 
     // 检查模板是否存在
-    const templateData = await env.qomo.get(userKey);
+    const templateData = await qomo.get(userKey);
     if (!templateData) {
       return new Response(JSON.stringify({
         success: false,
@@ -77,12 +77,12 @@ async function handleDeleteTemplate(request, env, corsHeaders) {
     const template = JSON.parse(templateData);
 
     // 删除用户的模板
-    await env.qomo.delete(userKey);
+    await qomo.delete(userKey);
 
     // 如果是公开模板，也删除公开区域的副本
     if (template.isPublic) {
       try {
-        await env.qomo.delete(publicKey);
+        await qomo.delete(publicKey);
       } catch (error) {
         console.warn('删除公开模板副本失败:', error);
         // 不中断主流程，因为用户模板已经删除成功

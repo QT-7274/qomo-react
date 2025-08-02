@@ -171,6 +171,41 @@ const EdgeOneTest: React.FC = () => {
   };
 
   /**
+   * 调试环境配置
+   */
+  const debugEnvironment = () => {
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      simulateTest('环境调试', {
+        success: true,
+        message: '环境调试信息（模拟）',
+        data: {
+          environment: {
+            availableEnvVars: ['NODE_ENV', 'qomo'],
+            totalEnvVars: 2,
+          },
+          kvStorage: {
+            qomoExists: true,
+            qomoType: 'object',
+          },
+          kvTest: {
+            success: true,
+            message: 'KV 存储可用（模拟）',
+          },
+          recommendations: [
+            {
+              type: 'success',
+              title: 'KV 存储配置正常',
+              message: '环境变量 qomo 已正确配置',
+            }
+          ]
+        }
+      });
+    } else {
+      executeTest('环境调试', '/api/debug/env');
+    }
+  };
+
+  /**
    * 测试保存模板
    */
   const testSaveTemplate = () => {
@@ -314,10 +349,18 @@ const EdgeOneTest: React.FC = () => {
                 >
                   测试访问计数器
                 </TeaButton>
+                <TeaButton
+                  variant="weak"
+                  loading={loading['环境调试']}
+                  onClick={debugEnvironment}
+                >
+                  🔍 环境调试
+                </TeaButton>
               </div>
 
               {renderResult('KV存储')}
               {renderResult('访问计数器')}
+              {renderResult('环境调试')}
             </div>
 
             {/* 分割线 */}
@@ -386,6 +429,7 @@ const EdgeOneTest: React.FC = () => {
               <div className="text-sm text-gray-600 space-y-2">
                 <p>• <strong>KV 存储测试</strong>：测试基本的增删改查功能</p>
                 <p>• <strong>访问计数器</strong>：简单的计数器，验证 KV 读写</p>
+                <p>• <strong>环境调试</strong>：检查 KV 存储配置和环境变量</p>
                 <p>• <strong>保存模板</strong>：测试模板保存到云端功能</p>
                 <p>• <strong>获取模板</strong>：测试从云端获取模板列表</p>
               </div>

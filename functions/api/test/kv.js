@@ -3,7 +3,7 @@
  * 测试 KV 存储的基本功能
  */
 
-export async function onRequest({ request, params, env }) {
+export async function onRequest({ request, params, env, qomo }) {
   const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
@@ -16,6 +16,24 @@ export async function onRequest({ request, params, env }) {
   }
 
   try {
+    // 检查 KV 存储是否可用
+    if (!qomo) {
+      return new Response(JSON.stringify({
+        success: false,
+        error: 'KV 存储未配置',
+        details: {
+          message: 'KV 命名空间 qomo 未找到',
+          solution: '请在 EdgeOne Pages 控制台配置 KV 命名空间绑定 qomo'
+        }
+      }), {
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json',
+          ...corsHeaders,
+        },
+      });
+    }
+
     // 测试写入
     const testKey = 'test:' + Date.now();
     const testValue = JSON.stringify({
@@ -24,7 +42,7 @@ export async function onRequest({ request, params, env }) {
       userAgent: request.headers.get('User-Agent'),
     });
 
-    await env.qomo.put(testKey, testValue, {
+    await qomo.put(testKey, testValue, {
       metadata: {
         type: 'test',
         createdAt: new Date().toISOString(),
@@ -32,17 +50,17 @@ export async function onRequest({ request, params, env }) {
     });
 
     // 测试读取
-    const retrievedValue = await env.qomo.get(testKey);
+    const retrievedValue = await qomo.get(testKey);
     const parsedValue = JSON.parse(retrievedValue);
 
     // 测试列表
-    const listResult = await env.qomo.list({
+    const listResult = await qomo.list({
       prefix: 'test:',
       limit: 5,
     });
 
     // 清理测试数据
-    await env.qomo.delete(testKey);
+    await qomo.delete(testKey);
 
     return new Response(JSON.stringify({
       success: true,

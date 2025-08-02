@@ -3,7 +3,7 @@
  * 完全按照官方示例格式编写
  */
 
-export async function onRequest({ request, params, env }) {
+export async function onRequest({ request, params, env, qomo }) {
     // 设置 CORS 头
     const corsHeaders = {
         'Access-Control-Allow-Origin': '*',
@@ -17,16 +17,34 @@ export async function onRequest({ request, params, env }) {
     }
 
     try {
-        // 获取变量名为 qomo 的命名空间 key
-        let count = await env.qomo.get('visit_count');
+        // 检查 KV 存储是否可用
+        if (!qomo) {
+            return new Response(JSON.stringify({
+                success: false,
+                error: 'KV 存储未配置',
+                details: {
+                    message: 'KV 命名空间 qomo 未找到',
+                    solution: '请在 EdgeOne Pages 控制台配置 KV 命名空间绑定 qomo'
+                }
+            }), {
+                status: 500,
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...corsHeaders,
+                },
+            });
+        }
+
+        // 获取 qomo KV 命名空间的 key
+        let count = await qomo.get('visit_count');
         count = Number(count || 0) + 1;
-        
+
         // 重新写入 visit_count 键值
-        await env.qomo.put('visit_count', String(count));
+        await qomo.put('visit_count', String(count));
 
         // 同时记录访问时间
         const now = new Date().toISOString();
-        await env.qomo.put('last_visit', now);
+        await qomo.put('last_visit', now);
 
         // 获取用户信息
         const userAgent = request.headers.get('User-Agent') || 'Unknown';

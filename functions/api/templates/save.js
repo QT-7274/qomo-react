@@ -3,7 +3,7 @@
  * 将用户的模板保存到 KV 存储中
  */
 
-export async function onRequest({ request, params, env }) {
+export async function onRequest({ request, params, env, qomo }) {
   const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
@@ -25,16 +25,31 @@ export async function onRequest({ request, params, env }) {
     });
   }
 
-  return handleSaveTemplate(request, env, corsHeaders);
+  return handleSaveTemplate(request, env, qomo, corsHeaders);
 }
 
 /**
  * 处理保存模板请求
  */
-async function handleSaveTemplate(request, env, corsHeaders) {
+async function handleSaveTemplate(request, env, qomo, corsHeaders) {
   try {
+    // 检查 KV 存储是否可用
+    if (!qomo) {
+      return new Response(JSON.stringify({
+        success: false,
+        error: 'KV 存储未配置',
+        details: {
+          message: 'KV 命名空间 qomo 未找到',
+          solution: '请在 EdgeOne Pages 控制台配置 KV 命名空间绑定 qomo'
+        }
+      }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json', ...corsHeaders },
+      });
+    }
+
     const templateData = await request.json();
-    
+
     // 验证必要字段
     if (!templateData.id || !templateData.name) {
       return new Response(JSON.stringify({
@@ -59,8 +74,8 @@ async function handleSaveTemplate(request, env, corsHeaders) {
       version: templateData.version || '1.0.0',
     };
 
-    // 存储到 KV（使用变量名 qomo）
-    await env.qomo.put(key, JSON.stringify(dataToStore), {
+    // 存储到 KV（使用 qomo 命名空间）
+    await qomo.put(key, JSON.stringify(dataToStore), {
       metadata: {
         userId: userId,
         templateName: templateData.name,
@@ -73,7 +88,7 @@ async function handleSaveTemplate(request, env, corsHeaders) {
     // 如果是公开模板，也存储到公开区域
     if (templateData.isPublic) {
       const publicKey = `public:template:${templateData.id}`;
-      await env.qomo.put(publicKey, JSON.stringify({
+      await qomo.put(publicKey, JSON.stringify({
         ...dataToStore,
         publishedBy: userId,
         publishedAt: new Date().toISOString(),

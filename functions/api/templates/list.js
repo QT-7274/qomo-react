@@ -3,7 +3,7 @@
  * 从 KV 存储中获取用户的模板列表或公开模板
  */
 
-export async function onRequest({ request, params, env }) {
+export async function onRequest({ request, params, env, qomo }) {
   const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
@@ -15,13 +15,13 @@ export async function onRequest({ request, params, env }) {
     return new Response(null, { headers: corsHeaders });
   }
 
-  return handleListTemplates(request, env, corsHeaders);
+  return handleListTemplates(request, qomo, corsHeaders);
 }
 
 /**
  * 处理获取模板列表请求
  */
-async function handleListTemplates(request, env, corsHeaders) {
+async function handleListTemplates(request, qomo, corsHeaders) {
   try {
     const url = new URL(request.url);
     const userId = url.searchParams.get('userId') || 'anonymous';
@@ -37,7 +37,7 @@ async function handleListTemplates(request, env, corsHeaders) {
     }
 
     // 从 KV 存储获取模板列表
-    const listResult = await env.qomo.list({
+    const listResult = await qomo.list({
       prefix: prefix,
       limit: limit,
     });
@@ -47,7 +47,7 @@ async function handleListTemplates(request, env, corsHeaders) {
     // 批量获取模板详细数据
     for (const item of listResult.keys) {
       try {
-        const templateData = await env.qomo.get(item.name);
+        const templateData = await qomo.get(item.name);
         if (templateData) {
           const template = JSON.parse(templateData);
           
