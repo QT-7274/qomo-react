@@ -25,7 +25,6 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
   // 暂时忽略未使用的参数警告
   void variant;
   void showText;
-
   const { currentLanguage, changeLanguage, isLoading } = useLanguageSwitcher();
   const { t } = useI18n();
 
