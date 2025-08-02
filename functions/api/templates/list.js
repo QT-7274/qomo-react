@@ -42,6 +42,15 @@ async function handleListTemplates(request, corsHeaders) {
       limit: limit,
     });
 
+    // 调试信息
+    console.log('Debug info:', {
+      userId,
+      type,
+      prefix,
+      foundKeys: listResult.keys?.length || 0,
+      keys: listResult.keys?.map(k => k.name) || []
+    });
+
     const templates = [];
 
     // 批量获取模板详细数据
@@ -81,6 +90,13 @@ async function handleListTemplates(request, corsHeaders) {
         total: templates.length,
         hasMore: !listResult.list_complete,
         cursor: listResult.cursor,
+      },
+      debug: {
+        userId,
+        type,
+        prefix,
+        foundKeys: listResult.keys?.length || 0,
+        rawKeys: listResult.keys?.map(k => k.name) || []
       }
     }), {
       headers: { 'Content-Type': 'application/json', ...corsHeaders },

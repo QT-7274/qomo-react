@@ -206,6 +206,36 @@ const EdgeOneTest: React.FC = () => {
   };
 
   /**
+   * 查看所有 KV 键
+   */
+  const debugKeys = () => {
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      simulateTest('查看键列表', {
+        success: true,
+        message: 'KV 键列表（模拟）',
+        data: {
+          totalKeys: 3,
+          keysByPrefix: {
+            'template:test-user': [
+              { key: 'template:test-user:test-1', metadata: {} },
+              { key: 'template:test-user:test-2', metadata: {} }
+            ],
+            'public:template': [
+              { key: 'public:template:shared-1', metadata: {} }
+            ]
+          },
+          otherKeys: [
+            { key: 'visit_count', metadata: {} }
+          ],
+          rawKeys: ['template:test-user:test-1', 'template:test-user:test-2', 'public:template:shared-1', 'visit_count']
+        }
+      });
+    } else {
+      executeTest('查看键列表', '/api/debug/keys');
+    }
+  };
+
+  /**
    * 测试保存模板
    */
   const testSaveTemplate = () => {
@@ -356,11 +386,19 @@ const EdgeOneTest: React.FC = () => {
                 >
                   🔍 环境调试
                 </TeaButton>
+                <TeaButton
+                  variant="weak"
+                  loading={loading['查看键列表']}
+                  onClick={debugKeys}
+                >
+                  🗝️ 查看键列表
+                </TeaButton>
               </div>
 
               {renderResult('KV存储')}
               {renderResult('访问计数器')}
               {renderResult('环境调试')}
+              {renderResult('查看键列表')}
             </div>
 
             {/* 分割线 */}
@@ -430,6 +468,7 @@ const EdgeOneTest: React.FC = () => {
                 <p>• <strong>KV 存储测试</strong>：测试基本的增删改查功能</p>
                 <p>• <strong>访问计数器</strong>：简单的计数器，验证 KV 读写</p>
                 <p>• <strong>环境调试</strong>：检查 KV 存储配置和环境变量</p>
+                <p>• <strong>查看键列表</strong>：查看 KV 中所有存储的键名</p>
                 <p>• <strong>保存模板</strong>：测试模板保存到云端功能</p>
                 <p>• <strong>获取模板</strong>：测试从云端获取模板列表</p>
               </div>
