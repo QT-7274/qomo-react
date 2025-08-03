@@ -87,8 +87,9 @@ function App() {
                       <Route path={ROUTES.I18N_DEMO} element={<I18nDemo />} />
                       {/* EdgeOne 功能测试页面路由 */}
                       <Route path={ROUTES.EDGEONE_TEST} element={<EdgeOneTest />} />
-                      {/* 云端同步演示页面路由 */}
-                      <Route path="/cloud-sync" element={<CloudSyncDemo />} />
+                      {/* 调试路由 - 只在调试分支可用 */}
+                      <Route path={ROUTES.DEBUG_CLOUD} element={<CloudSyncDemo />} />
+                      <Route path={ROUTES.DEBUG_KV} element={<EdgeOneTest />} />
                     </Routes>
                   </div>
                 </div>

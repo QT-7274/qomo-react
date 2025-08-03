@@ -8,6 +8,7 @@ import { Card } from 'tea-component';
 import { useAppStore } from '@/store/useAppStore';
 import TeaButton from '@/components/common/TeaButton';
 import { Input, Textarea } from '@/components/common/TeaInput';
+import { DebugNavigation } from '@/components/debug/DebugNavigation';
 
 interface TestResult {
   success: boolean;
@@ -337,6 +338,9 @@ const EdgeOneTest: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
+      {/* 调试导航 */}
+      <DebugNavigation />
+
       <Card>
         <Card.Body>
           <h2 className="text-xl font-bold mb-4">EdgeOne Pages 功能测试</h2>
