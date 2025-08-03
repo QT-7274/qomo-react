@@ -38,32 +38,29 @@ export async function onRequest({ request, params, env }) {
         const otherKeys = [];
         
         for (const keyInfo of allKeys.keys) {
-            const keyName = keyInfo.name;
-            
+            const keyName = keyInfo.key;
+
             if (keyName.startsWith('template:')) {
                 const parts = keyName.split(':');
                 const userId = parts[1];
                 const prefix = `template:${userId}`;
-                
+
                 if (!keysByPrefix[prefix]) {
                     keysByPrefix[prefix] = [];
                 }
                 keysByPrefix[prefix].push({
-                    key: keyName,
-                    metadata: keyInfo.metadata
+                    key: keyName
                 });
             } else if (keyName.startsWith('public:template:')) {
                 if (!keysByPrefix['public:template']) {
                     keysByPrefix['public:template'] = [];
                 }
                 keysByPrefix['public:template'].push({
-                    key: keyName,
-                    metadata: keyInfo.metadata
+                    key: keyName
                 });
             } else {
                 otherKeys.push({
-                    key: keyName,
-                    metadata: keyInfo.metadata
+                    key: keyName
                 });
             }
         }
@@ -73,10 +70,10 @@ export async function onRequest({ request, params, env }) {
             message: 'KV 存储键列表',
             data: {
                 totalKeys: allKeys.keys.length,
-                hasMore: !allKeys.list_complete,
+                hasMore: !allKeys.complete,
                 keysByPrefix: keysByPrefix,
                 otherKeys: otherKeys,
-                rawKeys: allKeys.keys.map(k => k.name),
+                rawKeys: allKeys.keys.map(k => k.key),
             }
         }), {
             headers: {

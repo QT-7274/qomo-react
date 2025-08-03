@@ -48,7 +48,8 @@ async function handleListTemplates(request, corsHeaders) {
       type,
       prefix,
       foundKeys: listResult.keys?.length || 0,
-      keys: listResult.keys?.map(k => k.name) || []
+      listResult: listResult,
+      keys: listResult.keys?.map(k => ({ key: k.key })) || []
     });
 
     const templates = [];
@@ -56,7 +57,13 @@ async function handleListTemplates(request, corsHeaders) {
     // 批量获取模板详细数据
     for (const item of listResult.keys) {
       try {
-        const templateData = await qomo.get(item.name);
+        // 检查键名是否有效
+        if (!item || !item.key) {
+          console.log('Invalid key item:', item);
+          continue;
+        }
+
+        const templateData = await qomo.get(item.key);
         if (templateData) {
           const template = JSON.parse(templateData);
           
@@ -65,8 +72,7 @@ async function handleListTemplates(request, corsHeaders) {
             // 添加元数据信息
             templates.push({
               ...template,
-              metadata: item.metadata,
-              key: item.name,
+              key: item.key,
             });
           }
         }
@@ -88,7 +94,7 @@ async function handleListTemplates(request, corsHeaders) {
       data: {
         templates: templates,
         total: templates.length,
-        hasMore: !listResult.list_complete,
+        hasMore: !listResult.complete,
         cursor: listResult.cursor,
       },
       debug: {
@@ -96,7 +102,14 @@ async function handleListTemplates(request, corsHeaders) {
         type,
         prefix,
         foundKeys: listResult.keys?.length || 0,
-        rawKeys: listResult.keys?.map(k => k.name) || []
+        rawKeys: listResult.keys?.map(k => k?.key || 'null') || [],
+        fullListResult: {
+          complete: listResult.complete,
+          cursor: listResult.cursor,
+          keys: listResult.keys?.map(k => ({
+            key: k?.key || 'null'
+          })) || []
+        }
       }
     }), {
       headers: { 'Content-Type': 'application/json', ...corsHeaders },

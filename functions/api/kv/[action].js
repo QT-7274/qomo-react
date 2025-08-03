@@ -153,7 +153,7 @@ async function handleList(request) {
       success: true,
       data: {
         keys: result.keys,
-        list_complete: result.list_complete,
+        complete: result.complete,
         cursor: result.cursor,
       }
     };
