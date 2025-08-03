@@ -23,6 +23,16 @@ export async function onRequest({ request, params, env }) {
  */
 async function handleListTemplates(request, corsHeaders) {
   try {
+    // 获取地理位置和客户端信息
+    const geo = request.eo?.geo || {};
+
+    // 构建地理位置标识符
+    const geoId = [
+      geo.countryCodeAlpha2 || 'XX',
+      geo.regionCode?.split('-')[1] || 'XX',
+      geo.cityName || 'Unknown'
+    ].join('-');
+
     const url = new URL(request.url);
     const userId = url.searchParams.get('userId') || 'anonymous';
     const type = url.searchParams.get('type') || 'user'; // 'user' 或 'public'
@@ -33,7 +43,8 @@ async function handleListTemplates(request, corsHeaders) {
     if (type === 'public') {
       prefix = 'public:template:';
     } else {
-      prefix = `template:${userId}:`;
+      // 包含丰富地理位置信息的前缀
+      prefix = `template:${geoId}:${userId}:`;
     }
 
     // 从 KV 存储获取模板列表

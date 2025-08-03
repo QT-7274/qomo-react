@@ -61,11 +61,24 @@ async function handleSaveTemplate(request, corsHeaders) {
       });
     }
 
+    // 获取地理位置和客户端信息
+    const geo = request.eo?.geo || {};
+    const clientIp = request.eo?.clientIp || 'unknown';
+    const uuid = request.eo?.uuid || '';
+
+    // 构建地理位置标识符
+    const geoId = [
+      geo.countryCodeAlpha2 || 'XX',
+      geo.regionCode?.split('-')[1] || 'XX',
+      geo.cityName || 'Unknown'
+    ].join('-');
+
     // 获取用户信息（可以从请求头或认证信息中获取）
     const userId = templateData.userId || 'anonymous';
-    
-    // 构建 KV 存储的键名
-    const key = `template:${userId}:${templateData.id}`;
+
+    // 构建 KV 存储的键名（包含丰富的地理位置信息）
+    // 格式: template:{country-region-city}:{userId}:{templateId}
+    const key = `template:${geoId}:${userId}:${templateData.id}`;
     
     // 准备存储的数据
     const dataToStore = {

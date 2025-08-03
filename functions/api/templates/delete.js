@@ -57,8 +57,18 @@ async function handleDeleteTemplate(request, corsHeaders) {
       });
     }
 
-    // 构建 KV 存储的键名
-    const userKey = `template:${userId}:${templateId}`;
+    // 获取地理位置和客户端信息
+    const geo = request.eo?.geo || {};
+
+    // 构建地理位置标识符
+    const geoId = [
+      geo.countryCodeAlpha2 || 'XX',
+      geo.regionCode?.split('-')[1] || 'XX',
+      geo.cityName || 'Unknown'
+    ].join('-');
+
+    // 构建 KV 存储的键名（包含丰富地理位置信息）
+    const userKey = `template:${geoId}:${userId}:${templateId}`;
     const publicKey = `public:template:${templateId}`;
 
     // 检查模板是否存在

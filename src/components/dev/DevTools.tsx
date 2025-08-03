@@ -1,5 +1,6 @@
 import React from 'react';
-import { Database, Download, AlertTriangle } from 'lucide-react';
+import { Database, Download, AlertTriangle, Cloud } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useAppStore } from '@/store/useAppStore';
 import { mockTemplates } from '@/data/mockData';
 import Button from '@/components/ui/Button';
@@ -110,6 +111,20 @@ const DevTools: React.FC<DevToolsProps> = ({ className }) => {
         >
           {t('清空所有数据')}
         </Button>
+
+        {/* 只在开发环境显示云端同步演示 */}
+        {import.meta.env.DEV && (
+          <Link to="/cloud-sync" className="block">
+            <Button
+              variant="outline"
+              size="sm"
+              icon={<Cloud className="w-4 h-4" />}
+              className="w-full text-left justify-start bg-green-50 border-green-200 text-green-700 hover:bg-green-100"
+            >
+              云端同步演示 (开发)
+            </Button>
+          </Link>
+        )}
       </div>
       
       <div className="mt-3 pt-2 border-t border-yellow-200">
