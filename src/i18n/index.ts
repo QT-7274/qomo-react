@@ -39,6 +39,8 @@ interface I18nState {
   setLanguage: (language: SupportedLanguage) => void;
   isLoading: boolean;
   setLoading: (loading: boolean) => void;
+  userSet: boolean; // 标记是否为用户手动设置
+  setUserSet: (userSet: boolean) => void;
 }
 
 // 创建国际化状态管理
@@ -51,11 +53,16 @@ export const useI18nStore = create<I18nState>()(
       },
       isLoading: false,
       setLoading: (loading: boolean) => set({ isLoading: loading }),
+      userSet: false, // 默认未手动设置
+      setUserSet: (userSet: boolean) => set({ userSet }),
     }),
     {
       name: 'i18n-storage', // 本地存储键名
       storage: createJSONStorage(() => localStorage),
-      partialize: (state) => ({ currentLanguage: state.currentLanguage }),
+      partialize: (state) => ({
+        currentLanguage: state.currentLanguage,
+        userSet: state.userSet
+      }),
     }
   )
 );

@@ -11,7 +11,7 @@ import Sidebar from '@/components/layout/Sidebar'; // 侧边栏组件
 import TopBar from '@/components/layout/TopBar'; // 顶部导航栏组件
 import DevTools from '@/components/dev/DevTools'; // 开发工具组件
 import { useAppStore } from '@/store/useAppStore'; // 自定义状态管理
-import { useI18n } from '@/i18n/hooks'; // 国际化Hook
+import { useI18n, useGeoLanguageDetection } from '@/i18n/hooks'; // 国际化Hook
 
 // 导入页面组件
 import EditorPage from '@/pages/EditorPage'; // 编辑器页面
@@ -29,6 +29,17 @@ function App() {
   const { initStorage, loadTemplatesFromStorage, loadComponentsFromStorage } = useAppStore();
   // 初始化国际化系统
   const { isLoading: i18nLoading } = useI18n();
+  // 初始化地理位置自动语言检测
+  const { isDetecting: geoDetecting, geoInfo } = useGeoLanguageDetection();
+
+  // 在开发模式下输出geo信息
+  useEffect(() => {
+    if (geoInfo && import.meta.env.DEV) {
+      console.log('地理位置信息:', geoInfo);
+      console.log('推荐语言:', geoInfo.recommendedLanguage);
+      console.log('地理位置检测中:', geoDetecting);
+    }
+  }, [geoInfo, geoDetecting]);
 
   // 组件加载时初始化存储和加载数据
   useEffect(() => {
