@@ -87,8 +87,8 @@ export const ROUTES = {
   EDITOR: '/editor',
   LIBRARY: '/library',
   COMPONENTS: '/components',
-  DEBUG_CLOUD: '/debug/cloud-sync', // 云端同步调试页面
-  DEBUG_KV: '/debug/kv-test', // KV 存储测试页面
+  // DEBUG_CLOUD: '/debug/cloud-sync', // 云端同步调试页面
+  // DEBUG_KV: '/debug/kv-test', // KV 存储测试页面
 } as const;
 
 // ==================== 导航图标常量 ====================

@@ -83,8 +83,8 @@ function App() {
                       {/* 组件库页面路由 */}
                       <Route path={ROUTES.COMPONENTS} element={<ComponentsPage />} />
                       {/* 调试路由 - 测试分支专用 */}
-                      <Route path={ROUTES.DEBUG_CLOUD} element={<CloudSyncDemo />} />
-                      <Route path={ROUTES.DEBUG_KV} element={<EdgeOneTest />} />
+                      {/* <Route path={ROUTES.DEBUG_CLOUD} element={<CloudSyncDemo />} />
+                      <Route path={ROUTES.DEBUG_KV} element={<EdgeOneTest />} /> */}
                     </Routes>
                   </div>
                 </div>
