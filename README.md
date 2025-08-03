@@ -8,6 +8,8 @@
 
 [![使用 EdgeOne Pages 部署](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://console.cloud.tencent.com/edgeone/pages/new?template=vite-react)
 
+**Languages:** [English](README.en.md) | [中文](README.md)
+
 [在线体验](https://qomo.site) | [功能演示](#功能特性) | [技术架构](#技术架构) | [EdgeOne集成](#edgeone-pages-深度集成)
 
 </div>
