@@ -17,7 +17,6 @@ import { useI18n } from '@/i18n/hooks'; // 国际化Hook
 import EditorPage from '@/pages/EditorPage'; // 编辑器页面
 import LibraryPage from '@/pages/LibraryPage'; // 资源库页面
 import ComponentsPage from '@/pages/ComponentsPage'; // 组件页面
-import I18nDemo from '@/components/demo/I18nDemo'; // 国际化演示页面
 import EdgeOneTest from '@/components/test/EdgeOneTest'; // EdgeOne 功能测试页面
 import { CloudSyncDemo } from '@/components/cloud/CloudSyncDemo'; // 云端同步演示页面
 import { ROUTES, EDITOR_MODES } from '@/config/constants'; // 配置化的路由和编辑器模式
@@ -83,11 +82,7 @@ function App() {
                       <Route path={ROUTES.LIBRARY} element={<LibraryPage />} />
                       {/* 组件库页面路由 */}
                       <Route path={ROUTES.COMPONENTS} element={<ComponentsPage />} />
-                      {/* 国际化演示页面路由 */}
-                      <Route path={ROUTES.I18N_DEMO} element={<I18nDemo />} />
-                      {/* EdgeOne 功能测试页面路由 */}
-                      <Route path={ROUTES.EDGEONE_TEST} element={<EdgeOneTest />} />
-                      {/* 调试路由 - 只在调试分支可用 */}
+                      {/* 调试路由 - 测试分支专用 */}
                       <Route path={ROUTES.DEBUG_CLOUD} element={<CloudSyncDemo />} />
                       <Route path={ROUTES.DEBUG_KV} element={<EdgeOneTest />} />
                     </Routes>

@@ -50,6 +50,21 @@ export const useEdgeCloudSync = () => {
         }),
       });
 
+      // 检查响应状态
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      // 检查响应内容类型
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        const text = await response.text();
+        if (text.includes('<!doctype') || text.includes('<html')) {
+          throw new Error('API 端点不存在 - 请确保已部署 EdgeOne Pages 函数');
+        }
+        throw new Error(`响应不是 JSON 格式: ${contentType}`);
+      }
+
       const result = await response.json();
 
       if (result.success) {
@@ -112,6 +127,22 @@ export const useEdgeCloudSync = () => {
       }
 
       const response = await fetch(`/api/templates/list?${params.toString()}`);
+
+      // 检查响应状态
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      // 检查响应内容类型
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        const text = await response.text();
+        if (text.includes('<!doctype') || text.includes('<html')) {
+          throw new Error('API 端点不存在 - 请确保已部署 EdgeOne Pages 函数');
+        }
+        throw new Error(`响应不是 JSON 格式: ${contentType}`);
+      }
+
       const result = await response.json();
 
       if (result.success) {
@@ -168,6 +199,21 @@ export const useEdgeCloudSync = () => {
           userId: user?.id || 'anonymous',
         }),
       });
+
+      // 检查响应状态
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      // 检查响应内容类型
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        const text = await response.text();
+        if (text.includes('<!doctype') || text.includes('<html')) {
+          throw new Error('API 端点不存在 - 请确保已部署 EdgeOne Pages 函数');
+        }
+        throw new Error(`响应不是 JSON 格式: ${contentType}`);
+      }
 
       const result = await response.json();
 

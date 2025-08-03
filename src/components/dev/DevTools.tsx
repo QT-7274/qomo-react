@@ -1,5 +1,6 @@
 import React from 'react';
-import { Database, Download, AlertTriangle } from 'lucide-react';
+import { Database, Download, AlertTriangle, Cloud, Settings } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useAppStore } from '@/store/useAppStore';
 import { mockTemplates } from '@/data/mockData';
 import Button from '@/components/ui/Button';
@@ -111,7 +112,32 @@ const DevTools: React.FC<DevToolsProps> = ({ className }) => {
           {t('清空所有数据')}
         </Button>
 
-        {/* 移除云端同步演示按钮，改为在调试分支中通过路由访问 */}
+        {/* 调试工具链接 */}
+        <div className="space-y-2">
+          <h4 className="text-sm font-medium text-gray-700 mb-2">调试工具</h4>
+
+          <Link to="/debug/cloud-sync" className="block">
+            <Button
+              variant="outline"
+              size="sm"
+              icon={<Cloud className="w-4 h-4" />}
+              className="w-full text-left justify-start bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100"
+            >
+              云端同步管理
+            </Button>
+          </Link>
+
+          <Link to="/debug/kv-test" className="block">
+            <Button
+              variant="outline"
+              size="sm"
+              icon={<Settings className="w-4 h-4" />}
+              className="w-full text-left justify-start bg-green-50 border-green-200 text-green-700 hover:bg-green-100"
+            >
+              KV 存储测试
+            </Button>
+          </Link>
+        </div>
       </div>
       
       <div className="mt-3 pt-2 border-t border-yellow-200">

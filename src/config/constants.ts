@@ -87,8 +87,6 @@ export const ROUTES = {
   EDITOR: '/editor',
   LIBRARY: '/library',
   COMPONENTS: '/components',
-  I18N_DEMO: '/i18n-demo', // 国际化演示页面
-  EDGEONE_TEST: '/edgeone-test', // EdgeOne 功能测试页面
   DEBUG_CLOUD: '/debug/cloud-sync', // 云端同步调试页面
   DEBUG_KV: '/debug/kv-test', // KV 存储测试页面
 } as const;

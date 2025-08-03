@@ -65,6 +65,27 @@ async function handleListTemplates(request, corsHeaders) {
 
     const templates = [];
 
+    // 检查 listResult.keys 是否存在且为数组
+    if (!listResult.keys || !Array.isArray(listResult.keys)) {
+      console.log('No keys found or keys is not an array:', {
+        listResult,
+        keysType: typeof listResult.keys,
+        keysValue: listResult.keys
+      });
+
+      return new Response(JSON.stringify({
+        success: true,
+        data: {
+          templates: [],
+          total: 0,
+          hasMore: false,
+        },
+        message: '没有找到模板数据'
+      }), {
+        headers: { 'Content-Type': 'application/json', ...corsHeaders },
+      });
+    }
+
     // 批量获取模板详细数据
     for (const item of listResult.keys) {
       try {
