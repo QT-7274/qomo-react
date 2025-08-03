@@ -19,18 +19,18 @@ export const DebugNavigation: React.FC = () => {
       icon: Home,
       description: '返回应用主页'
     },
-    {
-      path: ROUTES.DEBUG_CLOUD,
-      name: '云端同步调试',
-      icon: Cloud,
-      description: '管理云端模板，测试同步功能'
-    },
-    {
-      path: ROUTES.DEBUG_KV,
-      name: 'KV 存储测试',
-      icon: Database,
-      description: '测试 EdgeOne KV 存储功能'
-    }
+    // {
+    //   path: ROUTES.DEBUG_CLOUD,
+    //   name: '云端同步调试',
+    //   icon: Cloud,
+    //   description: '管理云端模板，测试同步功能'
+    // },
+    // {
+    //   path: ROUTES.DEBUG_KV,
+    //   name: 'KV 存储测试',
+    //   icon: Database,
+    //   description: '测试 EdgeOne KV 存储功能'
+    // }
   ];
 
   // 检查是否在调试路由中

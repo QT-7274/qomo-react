@@ -17,8 +17,8 @@ import { useI18n } from '@/i18n/hooks'; // 国际化Hook
 import EditorPage from '@/pages/EditorPage'; // 编辑器页面
 import LibraryPage from '@/pages/LibraryPage'; // 资源库页面
 import ComponentsPage from '@/pages/ComponentsPage'; // 组件页面
-import EdgeOneTest from '@/components/test/EdgeOneTest'; // EdgeOne 功能测试页面
-import { CloudSyncDemo } from '@/components/cloud/CloudSyncDemo'; // 云端同步演示页面
+// import EdgeOneTest from '@/components/test/EdgeOneTest'; // EdgeOne 功能测试页面
+// import { CloudSyncDemo } from '@/components/cloud/CloudSyncDemo'; // 云端同步演示页面
 import { ROUTES, EDITOR_MODES } from '@/config/constants'; // 配置化的路由和编辑器模式
 
 // 主应用组件
