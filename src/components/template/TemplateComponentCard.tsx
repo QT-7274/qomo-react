@@ -23,6 +23,7 @@ import {
 } from '@/config/appConfig';
 import { getIcon } from '@/utils/iconMap';
 import { COMPONENT_TYPE_LABELS, BUTTON_TEXTS } from '@/config/text';
+import { useI18n } from '@/i18n/hooks';
 
 interface TemplateComponentCardProps {
   component: TemplateComponent;
@@ -44,6 +45,7 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
   mode = 'create',
 }) => {
   const [isEditing, setIsEditing] = useState(false);
+  const { t } = useI18n();
   const [editContent, setEditContent] = useState(component.content);
   const ref = useRef<HTMLDivElement>(null);
   const dragHandleRef = useRef<HTMLDivElement>(null);
@@ -265,12 +267,12 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
                         variant={getComponentColor(component.type)}
                         size='sm'
                       >
-                        {getComponentLabel(component.type)}
+                        {t(getComponentLabel(component.type))}
                       </Badge>
                     </Tooltip>
                     {component.isRequired && (
                       <Badge variant='danger' size='sm'>
-                        必需
+                        {t('必需')}
                       </Badge>
                     )}
                   </div>
@@ -349,7 +351,7 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
                         htmlFor={`required-${component.id}`}
                         className='text-sm text-blue-700 font-medium'
                       >
-                        必需组件
+                        {t('必需组件')}
                       </label>
                     </div>
                   </div>
@@ -367,12 +369,12 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
                         {/* 在使用模式下，question_slot组件显示特殊的placeholder */}
                         {mode === 'use' && component.type === 'question_slot' ? (
                           <span className='text-blue-600 italic font-medium'>
-                            {UI_TEXT.placeholders.questionSlotInUseMode}
+                            {t(UI_TEXT.placeholders.questionSlotInUseMode)}
                           </span>
                         ) : (
                           component.content || (
                             <span className='text-gray-400 italic'>
-                              {component.placeholder || '点击编辑添加内容...'}
+                              {component.placeholder ? t(component.placeholder) : t('点击编辑添加内容...')}
                             </span>
                           )
                         )}

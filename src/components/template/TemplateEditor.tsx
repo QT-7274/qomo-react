@@ -329,7 +329,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
                     : 'text-gray-600 hover:text-gray-800 hover:bg-white'
                 )}
               >
-                使用模板
+                {t('使用模板')}
               </Button>
               <Button
                 variant={mode === 'create' ? 'primary' : 'ghost'}
@@ -343,7 +343,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
                     : 'text-gray-600 hover:text-gray-800 hover:bg-white'
                 )}
               >
-                创建模板
+                {t('创建模板')}
               </Button>
             </div>
           </div>
@@ -356,7 +356,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
                 htmlType="button"
                 className="active:scale-95 transition-all duration-150"
               >
-{showPreview ? UI_TEXT.buttons.hidePreview : UI_TEXT.buttons.preview}
+{t(showPreview ? UI_TEXT.buttons.hidePreview : UI_TEXT.buttons.preview)}
               </Button>
             )}
             <PopConfirm
@@ -370,7 +370,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
                     onClick={() => { handleReset(); close(); }}
                     className="bg-blue-600 text-white hover:bg-blue-700 border-blue-600"
                   >
-                    确认
+                    {t('确认')}
                   </Button>
                 </div>
               )}
@@ -392,7 +392,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
               htmlType="button"
               className="bg-blue-600 text-white hover:bg-blue-700 border-blue-600 active:scale-95 transition-all duration-150"
             >
-{UI_TEXT.buttons.save}
+{t(UI_TEXT.buttons.save)}
             </Button>
           </div>
         </div>
@@ -409,7 +409,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
                     {mode === 'create' ? (
                       <>
                         <Settings className="w-5 h-5" />
-                        {UI_TEXT.titles.basicInfo}
+                        {t(UI_TEXT.titles.basicInfo)}
                       </>
                     ) : (
                       <>
@@ -441,15 +441,15 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
                   // 创建模板模式 - 显示基本信息表单
                   <>
                     <Input
-                      label={UI_TEXT.labels.templateName}
-                      placeholder={UI_TEXT.placeholders.templateName}
+                      label={t(UI_TEXT.labels.templateName)}
+                      placeholder={t(UI_TEXT.placeholders.templateName)}
                       value={formData.name}
                       onChange={(value) => updateEditorFormData({ name: value })}
                     />
 
                     <Textarea
-                      label={UI_TEXT.labels.templateDescription}
-                      placeholder={UI_TEXT.placeholders.templateDescription}
+                      label={t(UI_TEXT.labels.templateDescription)}
+                      placeholder={t(UI_TEXT.placeholders.templateDescription)}
                       value={formData.description}
                       onChange={(value) => updateEditorFormData({ description: value })}
                       rows={4}
@@ -461,16 +461,16 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
                       {/* Category */}
                       <div className="space-y-2 w-[140px] flex-shrink-0">
                         <Select
-                          label={UI_TEXT.labels.category}
+                          label={t(UI_TEXT.labels.category)}
                           value={formData.category}
                           onChange={(value) => updateEditorFormData({
                             category: value as Template['category']
                           })}
                           options={TEMPLATE_CATEGORIES.map(cat => ({
                             value: cat.key,
-                            text: cat.label
+                            text: t(cat.label)
                           }))}
-                          placeholder="请选择分类"
+                          placeholder={t('请选择分类')}
                           size="s"
                           className="w-full"
                         />
@@ -479,13 +479,13 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
                       {/* Tags */}
                       <div className="flex-1 space-y-3">
                         <TagSelect
-                          label={UI_TEXT.labels.tags}
+                          label={t(UI_TEXT.labels.tags)}
                           value={formData.tags}
                           onChange={(tags) => updateEditorFormData({ tags })}
-                          placeholder={UI_TEXT.placeholders.addTag}
+                          placeholder={t(UI_TEXT.placeholders.addTag)}
                           options={COMMON_TAGS.map(tag => ({
                             value: tag,
-                            text: tag
+                            text: t(tag)
                           }))}
                           optionsOnly={false} // 允许用户输入自定义标签
                         />
@@ -518,7 +518,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
               <CardHeader>
                 <CardTitle className="text-gray-800 flex items-center gap-2">
                   <Wand2 className="w-5 h-5" />
-{UI_TEXT.titles.templateComponents}
+{t(UI_TEXT.titles.templateComponents)}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -531,7 +531,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
                       const tips = config?.tips || '';
 
                       return (
-                        <Tooltip key={type} title={tips}>
+                        <Tooltip key={type} title={t(tips)}>
                           <Button
                             variant="outline"
                             size="sm"
@@ -540,7 +540,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
                             htmlType="button"
                             className={`${colors.bg} ${colors.hover} ${colors.border} ${colors.text} active:scale-95 transition-all duration-150 text-xs px-2 py-1`}
                           >
-                            {label}
+                            {t(label)}
                           </Button>
                         </Tooltip>
                       );
@@ -564,7 +564,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
                         className="text-primary-400"
                       >
                         <MessageSquare className="w-12 h-12 mx-auto mb-2" />
-                        <p className="text-lg font-medium">释放以插入问题</p>
+                        <p className="text-lg font-medium">{t('释放以插入问题')}</p>
                       </motion.div>
                     </div>
                   )}
@@ -643,7 +643,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
                         copySuccess && "!border-green-500 !text-green-600 !bg-green-50"
                       )}
                     >
-                      {copySuccess ? '已复制' : '复制'}
+                      {copySuccess ? t('已复制') : t('复制')}
                     </Button>
                   </div>
                 </CardHeader>
@@ -703,7 +703,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
                                   <span className="text-xs text-gray-500 truncate">
                                     {mode === 'use' && component.type === 'question_slot' ? (
                                       <span className="text-blue-600 italic">
-                                        {UI_TEXT.placeholders.questionSlotInUseMode}
+                                        {t(UI_TEXT.placeholders.questionSlotInUseMode)}
                                       </span>
                                     ) : (
                                       component.content ?

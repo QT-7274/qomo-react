@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
 import { TEMPLATE_CATEGORIES, COMPONENT_DISPLAY_CONFIG } from '@/config/appConfig';
+import { useI18n } from '@/i18n/hooks';
 
 interface TemplatePreviewProps {
   template: Template;
@@ -17,6 +18,8 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template, className }
   const [generatedPrompt, setGeneratedPrompt] = useState('');
   const [copySuccess, setCopySuccess] = useState(false);
   const [showFireworks, setShowFireworks] = useState(false);
+
+  const { t } = useI18n();
 
   const generatePrompt = () => {
     let prompt = '';
@@ -38,7 +41,7 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template, className }
             if (component.content !== '[用户问题将插入此处]') {
               prompt += component.content + '\n\n';
             } else {
-              prompt += '[用户问题将在此处显示]\n\n';
+              prompt += `${t('用户问题将在此处显示')}\n\n`;
             }
             break;
         }
@@ -84,7 +87,7 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template, className }
 
   const getCategoryLabel = (category: string) => {
     const config = TEMPLATE_CATEGORIES.find(c => c.key === category);
-    return config?.label || category;
+    return t(config?.label || category);
   };
 
   // 获取组件类型的中文标签和颜色
@@ -99,7 +102,7 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template, className }
         <CardHeader>
           <CardTitle className="text-gray-800 flex items-center gap-2">
             <Eye className="w-5 h-5" />
-            模板预览
+            {t('模板预览')}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -107,7 +110,7 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template, className }
           <div className="space-y-3">
             <div>
               <h3 className="text-lg font-semibold text-gray-800 mb-1">
-                {template.name || '未命名模板'}
+                {template.name || t('未命名模板')}
               </h3>
               {template.description && (
                 <p className="text-sm text-gray-600">
@@ -135,7 +138,7 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template, className }
               </div>
               <div className="flex items-center gap-2">
                 <span className="w-4 h-4 text-center">🧩</span>
-                <span>{template.components.length} 组件</span>
+                <span>{template.components.length} {t('组件')}</span>
               </div>
             </div>
           </div>
@@ -150,7 +153,7 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template, className }
           <div className="flex items-center justify-between">
             <CardTitle className="text-gray-800 flex items-center gap-2">
               <Play className="w-5 h-5" />
-              生成的提示词
+              {t('生成的提示词')}
             </CardTitle>
             <div className="flex items-center gap-3 relative">
               {/* 复制成功提示 */}
@@ -164,7 +167,7 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template, className }
                     className="flex items-center gap-1 text-green-600 text-sm font-medium"
                   >
                     <Check className="w-4 h-4" />
-                    <span>已复制</span>
+                    <span>{t('已复制')}</span>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -313,7 +316,7 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template, className }
                   copySuccess && "!border-green-500 !text-green-600 !bg-green-50"
                 )}
               >
-                {copySuccess ? '已复制' : '复制'}
+                {copySuccess ? t('已复制') : t('复制')}
               </Button>
             </div>
           </div>
@@ -339,7 +342,7 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template, className }
                 <div className="flex items-center justify-center h-32 text-gray-500">
                   <div className="text-center">
                     <Play className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                    <p>模板预览将在此显示</p>
+                    <p>{t('模板预览将在此显示')}</p>
                   </div>
                 </div>
               )}
@@ -348,7 +351,7 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template, className }
             {/* Character count */}
             {generatedPrompt && (
               <div className="mt-2 text-xs text-gray-500 text-right">
-                {generatedPrompt.length} 字符
+                {generatedPrompt.length} {t('字符')}
               </div>
             )}
           </div>
@@ -359,7 +362,7 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template, className }
       <Card variant="default" padding="md">
         <CardHeader>
           <CardTitle className="text-gray-800 text-sm">
-            组件结构
+            {t('组件结构')}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -380,11 +383,11 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template, className }
                   <div className="flex-1 overflow-hidden">
                     <div className="flex items-center gap-2">
                       <Badge variant={getComponentTypeInfo(component.type).variant} size="sm">
-                        {getComponentTypeInfo(component.type).label}
+                        {t(getComponentTypeInfo(component.type).label)}
                       </Badge>
                       {component.isRequired && (
                         <Badge variant="danger" size="sm">
-                          必需
+                          {t('必需')}
                         </Badge>
                       )}
                     </div>

@@ -12,9 +12,11 @@ import Badge from '@/components/ui/Badge';
 import { Select } from '@/components/common/TeaSelect';
 import TemplatePreview from '@/components/template/TemplatePreview';
 import { TEMPLATE_CATEGORIES, UI_TEXT } from '@/config/appConfig';
+import { useI18n } from '@/i18n/hooks';
 
 const TemplateUser: React.FC = () => {
   const { templates, showNotification } = useAppStore();
+  const { t } = useI18n();
   
   const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -34,10 +36,10 @@ const TemplateUser: React.FC = () => {
 
   // 分类选项
   const categoryOptions = [
-    { value: 'all', text: '全部分类' },
+    { value: 'all', text: t('全部分类') },
     ...TEMPLATE_CATEGORIES.map(category => ({
       value: category.key,
-      text: category.label
+      text: t(category.label)
     }))
   ];
 
@@ -93,8 +95,8 @@ const TemplateUser: React.FC = () => {
       setCopySuccess(true);
       showNotification({
         type: 'success',
-        title: '复制成功',
-        message: '提示词已复制到剪贴板',
+        title: t('复制成功'),
+        message: t('提示词已复制到剪贴板'),
         duration: 2000,
       });
       
@@ -103,8 +105,8 @@ const TemplateUser: React.FC = () => {
       console.error('复制失败:', error);
       showNotification({
         type: 'error',
-        title: '复制失败',
-        message: '无法复制到剪贴板',
+        title: t('复制失败'),
+        message: t('无法复制到剪贴板'),
         duration: 2000,
       });
     }
@@ -126,7 +128,7 @@ const TemplateUser: React.FC = () => {
         <Card variant="default" padding="md">
           <CardHeader>
             <CardTitle className="text-lg font-semibold text-gray-800">
-              选择模板
+              {t('选择模板')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -134,7 +136,7 @@ const TemplateUser: React.FC = () => {
               {/* Search and Filter */}
               <div className="space-y-3">
                 <Input
-                  placeholder="搜索模板..."
+                  placeholder={t('搜索模板...')}
                   value={searchTerm}
                   onChange={(value) => setSearchTerm(value)}
                   size="m"
@@ -144,7 +146,7 @@ const TemplateUser: React.FC = () => {
                   value={selectedCategory}
                   onChange={(value) => setSelectedCategory(value)}
                   size="m"
-                  placeholder="选择分类"
+                  placeholder={t('选择分类')}
                 />
               </div>
 
@@ -178,10 +180,10 @@ const TemplateUser: React.FC = () => {
                             </p>
                             <div className="flex items-center gap-2 mt-2">
                               <Badge variant="outline" size="sm">
-                                {TEMPLATE_CATEGORIES.find(c => c.key === template.category)?.label}
+                                {t(TEMPLATE_CATEGORIES.find(c => c.key === template.category)?.label || template.category)}
                               </Badge>
                               <span className="text-xs text-gray-500">
-                                {template.components.length} 个组件
+                                {template.components.length} {t('个组件')}
                               </span>
                             </div>
                           </div>
@@ -198,7 +200,7 @@ const TemplateUser: React.FC = () => {
               {filteredTemplates.length === 0 && (
                 <div className="text-center py-8 text-gray-500">
                   <Search className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                  <p className="text-sm">没有找到匹配的模板</p>
+                  <p className="text-sm">{t('没有找到匹配的模板')}</p>
                 </div>
               )}
             </div>
@@ -214,15 +216,15 @@ const TemplateUser: React.FC = () => {
             <Card variant="default" padding="md">
               <CardHeader>
                 <CardTitle className="text-lg font-semibold text-gray-800">
-                  {UI_TEXT.titles.questionInput}
+                  {t(UI_TEXT.titles.questionInput)}
                 </CardTitle>
                 <p className="text-sm text-gray-600 mt-1">
-                  输入你的具体问题，将会替换模板中的"具体问题"组件
+                  {t('输入你的具体问题')}{t('将会替换模板中的')}{'"'}{t('具体问题')}{'"'}{t('组件')}
                 </p>
               </CardHeader>
               <CardContent>
                 <Textarea
-                  placeholder="请输入你的问题..."
+                  placeholder={t('请输入你的问题...')}
                   value={userQuestion}
                   onChange={(value) => setUserQuestion(value)}
                   rows={4}
@@ -236,7 +238,7 @@ const TemplateUser: React.FC = () => {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-lg font-semibold text-gray-800">
-                    生成的提示词
+                    {t('生成的提示词')}
                   </CardTitle>
                   <Button
                     variant="outline"
@@ -249,7 +251,7 @@ const TemplateUser: React.FC = () => {
                       copySuccess && 'bg-green-50 border-green-200 text-green-700'
                     )}
                   >
-                    {copySuccess ? '已复制' : '复制'}
+                    {copySuccess ? t('已复制') : t('复制')}
                   </Button>
                 </div>
               </CardHeader>
@@ -264,7 +266,7 @@ const TemplateUser: React.FC = () => {
                   <div className="text-center py-8 text-gray-500">
                     <QomoLogo className="w-8 h-8 mx-auto mb-2 opacity-50" />
                     <p className="text-sm">
-                      {userQuestion ? '正在生成提示词...' : '请输入问题以生成提示词'}
+                      {userQuestion ? t('正在生成提示词...') : t('请输入问题以生成提示词')}
                     </p>
                   </div>
                 )}
@@ -282,10 +284,10 @@ const TemplateUser: React.FC = () => {
               <div className="text-center py-12">
                 <Wand2 className="w-16 h-16 mx-auto mb-4 text-gray-400" />
                 <h3 className="text-lg font-medium text-gray-600 mb-2">
-                  选择一个模板开始
+                  {t('选择一个模板开始')}
                 </h3>
                 <p className="text-gray-500">
-                  从左侧选择一个模板，然后输入你的问题来生成定制化的提示词
+                  {t('从左侧选择一个模板')}{t('然后输入你的问题来生成定制化的提示词')}
                 </p>
               </div>
             </CardContent>
