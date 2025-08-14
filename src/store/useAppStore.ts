@@ -5,7 +5,7 @@ import { mockQuestions } from '@/data/mockData'; // 导入模拟问题数据
 import { generateId } from '@/utils'; // 导入生成唯一 ID 的工具函数
 import { COMPONENT_TYPES, TEMPLATE_CATEGORIES, DEFAULT_TEMPLATE_CONFIG } from '@/config/appConfig'; // 导入组件类型和模板类别的配置
 import { COMPONENT_TYPE_LABELS } from '@/config/text'; // 导入组件类型的中文标签
-// import { storageManager } from '@/utils/storage'; // IndexedDB 存储已备份注释
+import { storageManager } from '@/utils/storage'; // 使用 IndexedDB 本地持久化
 // import { cloudStorageManager } from '@/utils/storage'; // 云端存储管理器暂时注释
 import { SupportedLanguage } from '@/i18n'; // 导入支持的语言类型
 
@@ -101,9 +101,9 @@ export const useAppStore = create<AppStore>((set, get) => ({
       templates: [...state.templates, newTemplate], // 将新模板添加到模板数组
     }));
 
-    // 异步保存到云端存储（通过 Hook 实现）
-    // storageManager.saveTemplate(newTemplate).catch(console.error); // IndexedDB 已备份注释
-    console.log('模板已添加到内存，请使用 useEdgeCloudSync Hook 保存到云端');
+    // 异步保存到本地 IndexedDB
+    storageManager.saveTemplate(newTemplate).catch(console.error);
+    console.log('模板已添加到内存，并已尝试保存到 IndexedDB');
 
     // 同时保存模板中的组件到组件库（只保存有内容的组件）
     newTemplate.components.forEach(async (component) => {
@@ -129,12 +129,12 @@ export const useAppStore = create<AppStore>((set, get) => ({
         tags: newTemplate.tags, // 模板标签
       };
       try {
-        // await storageManager.saveComponent(storedComponent); // IndexedDB 已备份注释
+        await storageManager.saveComponent(storedComponent);
         // 更新本地状态
         set((state) => ({
           storedComponents: [...state.storedComponents, storedComponent], // 将新组件添加到存储组件数组
         }));
-        console.log('组件已添加到内存，云端存储功能待实现');
+        console.log('组件已添加到内存，并已保存到 IndexedDB');
       } catch (error) {
         console.error('保存组件失败:', error); // 处理保存失败的错误
       }
@@ -152,13 +152,13 @@ export const useAppStore = create<AppStore>((set, get) => ({
       ),
     }));
 
-    // 异步保存到云端存储（通过 Hook 实现）
-    // const state = get();
-    // const template = state.templates.find(t => t.id === id);
-    // if (template) {
-    //   storageManager.saveTemplate(template).catch(console.error); // IndexedDB 已备份注释
-    // }
-    console.log('模板已更新到内存，请使用 useEdgeCloudSync Hook 同步到云端');
+    // 同步保存到本地 IndexedDB
+    const stateAfter = get();
+    const savedTemplate = stateAfter.templates.find(t => t.id === id);
+    if (savedTemplate) {
+      storageManager.saveTemplate(savedTemplate).catch(console.error);
+    }
+    console.log('模板已更新，并已尝试保存到 IndexedDB');
   },
 
   deleteTemplate: async (id: string) => { // 删除模板
@@ -167,14 +167,13 @@ export const useAppStore = create<AppStore>((set, get) => ({
       templates: state.templates.filter((template) => template.id !== id), // 过滤掉被删除的模板
     }));
 
-    // 从云端存储中删除（通过 Hook 实现）
-    // try {
-    //   await storageManager.deleteTemplate(id); // IndexedDB 已备份注释
-    //   console.log('模板已从数据库中删除:', id);
-    // } catch (error) {
-    //   console.error('从数据库删除模板失败:', error); // 处理删除失败的错误
-    // }
-    console.log('模板已从内存删除，请使用 useEdgeCloudSync Hook 从云端删除');
+    // 同步从本地 IndexedDB 删除
+    try {
+      await storageManager.deleteTemplate(id);
+      console.log('模板已从 IndexedDB 删除:', id);
+    } catch (error) {
+      console.error('从 IndexedDB 删除模板失败:', error);
+    }
   },
 
   // 将当前编辑器状态保存为模板
@@ -280,57 +279,57 @@ export const useAppStore = create<AppStore>((set, get) => ({
       editor: initialEditorState, // 重置为初始状态
     })),
 
-  // 存储操作（已迁移到云端存储）
-  initStorage: async () => { // 初始化存储
+  // 存储操作（本地 IndexedDB 为主，云端可选）
+  initStorage: async () => {
     try {
-      // await storageManager.init(); // IndexedDB 已备份注释
-      console.log('云端存储无需初始化，已就绪');
+      await storageManager.init();
+      console.log('IndexedDB 初始化完成');
     } catch (error) {
-      console.error('存储初始化失败:', error); // 处理初始化失败的错误
+      console.error('存储初始化失败:', error);
     }
   },
 
   loadTemplatesFromStorage: async () => { // 从存储加载模板
     try {
-      // const templates = await storageManager.getAllTemplates(); // IndexedDB 已备份注释
-      // set({ templates }); // 更新状态
-      console.log('请使用 useEdgeCloudSync Hook 的 getTemplatesFromCloud 方法加载模板');
+      const templates = await storageManager.getAllTemplates();
+      set({ templates });
+      console.log('已从 IndexedDB 加载模板:', templates.length);
     } catch (error) {
-      console.error('模板加载失败:', error); // 处理加载失败的错误
+      console.error('模板加载失败:', error);
     }
   },
 
   loadComponentsFromStorage: async () => { // 从存储加载组件
     try {
-      // const storedComponents = await storageManager.getAllComponents(); // IndexedDB 已备份注释
-      // set({ storedComponents }); // 更新状态
-      console.log('组件云端存储功能待实现');
+      const storedComponents = await storageManager.getAllComponents();
+      set({ storedComponents });
+      console.log('已从 IndexedDB 加载组件:', storedComponents.length);
     } catch (error) {
-      console.error('组件加载失败:', error); // 处理加载失败的错误
+      console.error('组件加载失败:', error);
     }
   },
 
   saveComponentToStorage: async (component: StoredComponent) => { // 保存组件到存储
     try {
-      // await storageManager.saveComponent(component); // IndexedDB 已备份注释
+      await storageManager.saveComponent(component);
       set((state) => ({
         storedComponents: [...state.storedComponents, component], // 更新状态
       }));
-      console.log('组件已保存到内存，云端存储功能待实现:', component.name);
+      console.log('组件已保存到 IndexedDB:', component.name);
     } catch (error) {
-      console.error('组件保存失败:', error); // 处理保存失败的错误
+      console.error('组件保存失败:', error);
     }
   },
 
   deleteComponentFromStorage: async (id: string) => { // 从存储删除组件
     try {
-      // await storageManager.deleteComponent(id); // IndexedDB 已备份注释
+      await storageManager.deleteComponent(id);
       set((state) => ({
         storedComponents: state.storedComponents.filter(c => c.id !== id), // 更新状态
       }));
-      console.log('组件已从内存删除，云端存储功能待实现:', id);
+      console.log('组件已从 IndexedDB 删除:', id);
     } catch (error) {
-      console.error('组件删除失败:', error); // 处理删除失败的错误
+      console.error('组件删除失败:', error);
     }
   },
 }));
