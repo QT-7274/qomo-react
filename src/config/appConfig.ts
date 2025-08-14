@@ -167,11 +167,11 @@ export const UI_TEXT = {
   
   // 占位符文本
   placeholders: {
-    templateName: '请输入模板名称...',
-    templateDescription: '请输入模板描述...',
-    sampleQuestion: '输入一个示例问题来预览最终效果...',
-    searchTemplates: '搜索模板...',
-    addTag: '添加标签...',
+    templateName: '请输入模板名称',
+    templateDescription: '请输入模板描述',
+    sampleQuestion: '输入一个示例问题来预览最终效果',
+    searchTemplates: '搜索模板',
+    addTag: '添加标签',
     questionSlotInUseMode: '[你的问题在这个位置]',
   },
   

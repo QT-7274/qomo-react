@@ -125,7 +125,7 @@ const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template, className }
               </Badge>
               {template.tags.map(tag => (
                 <Badge key={tag} variant="outline" size="sm">
-                  {tag}
+                  {t(tag)}
                 </Badge>
               ))}
             </div>

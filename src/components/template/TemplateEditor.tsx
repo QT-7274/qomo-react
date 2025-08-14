@@ -244,8 +244,8 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
     } else if (mode === 'create' && !templateName) {
       showNotification({
         type: 'error',
-        title: NOTIFICATIONS.ERROR.SAVE_FAILED,
-        message: ERROR_MESSAGES.REQUIRED_FIELD,
+        title: t(NOTIFICATIONS.ERROR.SAVE_FAILED),
+        message: t(ERROR_MESSAGES.REQUIRED_FIELD),
         duration: 3000,
       });
       return;
@@ -273,16 +273,16 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
       setCurrentTemplate(templateData);
       showNotification({
         type: 'success',
-        title: NOTIFICATIONS.SUCCESS.TEMPLATE_UPDATED,
-        message: mode === 'use' ? `${t('模板')}"${templateName}"${t('已成功保存')}` : NOTIFICATIONS.SUCCESS.TEMPLATE_SAVED,
+        title: t(NOTIFICATIONS.SUCCESS.TEMPLATE_UPDATED),
+        message: mode === 'use' ? `${t('模板')}"${templateName}"${t('已成功保存')}` : t(NOTIFICATIONS.SUCCESS.TEMPLATE_SAVED),
         duration: 2000,
       });
     } else {
       addTemplate(templateData);
       showNotification({
         type: 'success',
-        title: NOTIFICATIONS.SUCCESS.TEMPLATE_CREATED,
-        message: mode === 'use' ? `${t('模板')}"${templateName}"${t('已成功创建')}` : NOTIFICATIONS.SUCCESS.TEMPLATE_CREATED,
+        title: t(NOTIFICATIONS.SUCCESS.TEMPLATE_CREATED),
+        message: mode === 'use' ? `${t('模板')}"${templateName}"${t('已成功创建')}` : t(NOTIFICATIONS.SUCCESS.TEMPLATE_CREATED),
         duration: 2000,
       });
     }
@@ -471,7 +471,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
                             text: t(cat.label)
                           }))}
                           placeholder={t('请选择分类')}
-                          size="s"
+                          size="m"
                           className="w-full"
                         />
                       </div>
@@ -698,7 +698,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
                               <div className="flex-1 overflow-hidden">
                                 <div className="flex items-center gap-2">
                                   <span className={`text-xs px-2 py-1 rounded ${colors.bg} ${colors.text} ${colors.border} border`}>
-                                    {config?.label || component.type}
+                                    {t(config?.label || component.type)}
                                   </span>
                                   <span className="text-xs text-gray-500 truncate">
                                     {mode === 'use' && component.type === 'question_slot' ? (

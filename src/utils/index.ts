@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { useI18n } from '@/i18n/hooks';
 
 // Utility function to merge Tailwind classes
 export function cn(...inputs: ClassValue[]) {
@@ -24,6 +25,7 @@ export function formatDate(date: Date): string {
 
 // Format relative time
 export function formatRelativeTime(date: Date): string {
+  const { t } = useI18n();
   const now = new Date();
   const diff = now.getTime() - date.getTime();
   const seconds = Math.floor(diff / 1000);
@@ -31,10 +33,10 @@ export function formatRelativeTime(date: Date): string {
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
 
-  if (days > 0) return `${days}天前`;
-  if (hours > 0) return `${hours}小时前`;
-  if (minutes > 0) return `${minutes}分钟前`;
-  return '刚刚';
+  if (days > 0) return t(`${days}天前`);
+  if (hours > 0) return t(`${hours}小时前`);
+  if (minutes > 0) return t(`${minutes}分钟前`);
+  return t('刚刚');
 }
 
 // Debounce function

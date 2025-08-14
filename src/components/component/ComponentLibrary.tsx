@@ -18,7 +18,7 @@ import Badge from '@/components/ui/Badge';
 import { Select } from '@/components/common/TeaSelect';
 import { COMPONENT_TYPES, COMPONENT_DISPLAY_CONFIG, UI_TEXT, COMPONENT_CARD_COLORS } from '@/config/appConfig';
 import { ROUTES } from '@/config/constants';
-import { BUTTON_TEXTS, PLACEHOLDERS, NOTIFICATIONS, EMPTY_STATES } from '@/config/text';
+import { BUTTON_TEXTS, PLACEHOLDERS, NOTIFICATIONS, EMPTY_STATES, CATEGORY_LABELS } from '@/config/text';
 import { getIcon } from '@/utils/iconMap';
 import { useI18n } from '@/i18n/hooks';
 
@@ -65,7 +65,7 @@ const ComponentLibrary: React.FC = () => {
     { value: 'all', text: t('全部分类') },
     ...categories.map(category => ({
       value: category,
-      text: t(category)
+      text: t(CATEGORY_LABELS[category as keyof typeof CATEGORY_LABELS] || category)
     }))
   ];
 
@@ -257,7 +257,7 @@ const ComponentLibrary: React.FC = () => {
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-sm font-medium truncate">
-                      {component.name}
+                      {(() => { const sep = ' - '; const typeLabel = t(getComponentTypeInfo(component.type).label); return component.name.includes(sep) ? `${component.name.split(sep)[0]} - ${typeLabel}` : component.name; })()}
                     </CardTitle>
                     <Badge 
                       variant={getComponentTypeInfo(component.type).variant} 
@@ -279,7 +279,7 @@ const ComponentLibrary: React.FC = () => {
                     {/* Meta Info */}
                     <div className="flex items-center justify-between text-xs text-gray-500">
                       <span>{t('使用')} {component.usageCount} {t('次')}</span>
-                      <span>{t(component.category)}</span>
+                      <span>{t(CATEGORY_LABELS[component.category as keyof typeof CATEGORY_LABELS] || component.category)}</span>
                     </div>
 
                     {/* Actions */}

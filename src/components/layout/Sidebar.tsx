@@ -43,10 +43,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, className }) => {
             {/* </div> */}
             <div>
               <h1 className='text-xl font-bold text-gray-800'>
-                {APP_METADATA.name}
+                {t(APP_METADATA.name)}
               </h1>
               <p className='text-xs text-gray-600'>
-                {APP_METADATA.description}
+                {t(APP_METADATA.description)}
               </p>
             </div>
           </div>

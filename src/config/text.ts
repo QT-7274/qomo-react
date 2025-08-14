@@ -56,13 +56,13 @@ export const LABELS = {
 
 // ==================== 占位符文本 ====================
 export const PLACEHOLDERS = {
-  TEMPLATE_NAME: '请输入模板名称...',
-  TEMPLATE_DESCRIPTION: '请输入模板描述...',
-  SEARCH_TEMPLATES: '搜索模板...',
-  SEARCH_COMPONENTS: '搜索组件...',
-  QUESTION_INPUT: '请输入您的问题...',
-  COMPONENT_CONTENT: '请输入组件内容...',
-  ADD_TAG: '添加标签...',
+  TEMPLATE_NAME: '请输入模板名称',
+  TEMPLATE_DESCRIPTION: '请输入模板描述',
+  SEARCH_TEMPLATES: '搜索模板',
+  SEARCH_COMPONENTS: '搜索组件',
+  QUESTION_INPUT: '请输入您的问题',
+  COMPONENT_CONTENT: '请输入组件内容',
+  ADD_TAG: '添加标签',
 } as const;
 
 // ==================== 标题文本 ====================
@@ -78,12 +78,12 @@ export const TITLES = {
 
 // ==================== 组件类型标签 ====================
 export const COMPONENT_TYPE_LABELS = {
-  prefix: '前缀',
+  prefix: '角色设定',
   context: '上下文',
   constraint: '约束条件',
   example: '示例',
-  question_slot: '问题插槽',
-  suffix: '后缀',
+  question_slot: '具体问题',
+  suffix: '后置要求',
 } as const;
 
 // ==================== 模板类别标签 ====================
@@ -133,7 +133,7 @@ export const NOTIFICATIONS = {
 
 // ==================== 错误消息 ====================
 export const ERROR_MESSAGES = {
-  REQUIRED_FIELD: '此字段为必填项',
+  REQUIRED_FIELD: '必填项字段不能为空',
   INVALID_FORMAT: '格式不正确',
   TOO_LONG: '内容过长',
   TOO_SHORT: '内容过短',

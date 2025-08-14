@@ -87,7 +87,7 @@ const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ className }) => {
 
     showNotification({
       type: 'success',
-      title: NOTIFICATIONS.SUCCESS.TEMPLATE_LOADED,
+      title: t(NOTIFICATIONS.SUCCESS.TEMPLATE_LOADED),
       message: `${t('模板已加载到编辑器中')}，${t('已跳转到模板工作台')}`,
       duration: 2000,
     });
@@ -98,8 +98,8 @@ const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ className }) => {
       await deleteTemplate(templateId);
       showNotification({
         type: 'success',
-        title: NOTIFICATIONS.SUCCESS.TEMPLATE_DELETED,
-        message: NOTIFICATIONS.SUCCESS.TEMPLATE_DELETED,
+        title: t(NOTIFICATIONS.SUCCESS.TEMPLATE_DELETED),
+        message: t(NOTIFICATIONS.SUCCESS.TEMPLATE_DELETED),
         duration: 2000,
       });
     } catch (error) {
@@ -169,14 +169,14 @@ const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ className }) => {
           icon={<Plus className="w-4 h-4" />}
           className='bg-blue-600 text-white hover:bg-blue-700 border-blue-600 shadow-sm'
         >
-          {BUTTON_TEXTS.NEW_TEMPLATE}
+          {t('新建模板')}
         </Button>
       </div>
 
       {/* Search and Filters */}
       <div className="space-y-4">
         <Input
-          placeholder={PLACEHOLDERS.SEARCH_TEMPLATES}
+          placeholder={t(PLACEHOLDERS.SEARCH_TEMPLATES)}
           value={searchTerm}
           onChange={(value) => setSearchTerm(value)}
         />
@@ -212,7 +212,6 @@ const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ className }) => {
           >
             <option value="date">{t('更新时间')}</option>
             <option value="name">{t('名称')}</option>
-            <option value="rating">{t('评分')}</option>
             <option value="usage">{t('使用次数')}</option>
           </select>
         </div>

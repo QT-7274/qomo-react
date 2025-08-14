@@ -9,6 +9,7 @@ import { storageManager } from '@/utils/storage'; // 使用 IndexedDB 本地持�
 // import { cloudStorageManager } from '@/utils/storage'; // 云端存储管理器暂时注释
 import { SupportedLanguage } from '@/i18n'; // 导入支持的语言类型
 
+
 // 初始 UI 状态设定
 const initialUIState: UIState = {
   activeTab: 'editor', // 默认活动标签为 'editor'
@@ -112,11 +113,12 @@ export const useAppStore = create<AppStore>((set, get) => ({
         return; // 跳过内容为空的组件
       }
 
+
       const componentLabel = COMPONENT_TYPE_LABELS[component.type as keyof typeof COMPONENT_TYPE_LABELS] || component.type;
       const storedComponent: StoredComponent = {
         id: generateId(), // 生成唯一 ID
         name: `${newTemplate.name} - ${componentLabel}`, // 组件名称（使用中文标签）
-        description: `来自模板"${newTemplate.name}"的${componentLabel}组件`, // 组件描述（使用中文标签）
+        description: `来自模板"${newTemplate.name}"的${componentLabel}组件`, // 组件描述（中文为默认基线）
         category: newTemplate.category, // 组件类别
         type: component.type, // 组件类型
         content: component.content, // 组件内容
@@ -178,6 +180,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
 
   // 将当前编辑器状态保存为模板
   saveEditorAsTemplate: () => {
+
     const state = get();
     const { editor } = state;
 

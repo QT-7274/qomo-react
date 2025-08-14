@@ -162,7 +162,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
                 <div className="flex flex-wrap gap-1">
                   {template.tags.slice(0, 3).map((tag, index) => (
                     <Badge key={index} variant="outline" size="sm" className="text-xs">
-                      {tag}
+                      {t(tag)}
                     </Badge>
                   ))}
                   {template.tags.length > 3 && (
@@ -177,16 +177,12 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
 
           {/* Footer */}
           <div className="border-t border-gray-200 pt-4 mt-4">
-            <div className="grid grid-cols-3 gap-4 text-xs text-gray-500">
-              <div className="flex items-center gap-1">
-                <Star className="w-3 h-3" />
-                <span>{template.rating.toFixed(1)}</span>
-              </div>
-              <div className="flex items-center gap-1">
+            <div className="grid grid-cols-2 gap-4 text-xs text-gray-500">
+              <div className="flex items-center gap-2">
                 <Users className="w-3 h-3" />
                 <span>{template.usageCount}</span>
               </div>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-2">
                 <Calendar className="w-3 h-3" />
                 <span>{formatRelativeTime(template.updatedAt)}</span>
               </div>

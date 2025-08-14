@@ -136,7 +136,7 @@ const TemplateUser: React.FC = () => {
               {/* Search and Filter */}
               <div className="space-y-3">
                 <Input
-                  placeholder={t('搜索模板...')}
+                  placeholder={t('搜索模板')}
                   value={searchTerm}
                   onChange={(value) => setSearchTerm(value)}
                   size="m"
