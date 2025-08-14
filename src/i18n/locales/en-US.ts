@@ -48,6 +48,7 @@ const enUS: LanguagePackage = {
   '新建模板': 'New Template',
   '创建模板': 'Create Template',
   '使用模板': 'Use Template',
+  '保存模板': 'Save Template',
   '关闭': 'Close',
   '确认': 'Confirm',
 
@@ -343,6 +344,11 @@ const enUS: LanguagePackage = {
   '保存失败': 'Save failed',
   '更新失败': 'Update failed',
   '创建失败': 'Create failed',
+  '创建和编辑AI提示模板': 'Create and Edit AI Prompt Templates',
+  '管理您的模板库': 'Manage Your Template Library',
+  '管理您的组件库': 'Manage Your Component Library',
+  '已创建模板': 'Created Templates',
+  '已创建组件': 'Created Components',
 };
 
 export default enUS;

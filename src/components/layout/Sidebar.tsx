@@ -14,6 +14,7 @@ import {
   // isActiveRoute,
 } from '@/config/navigation';
 import { STATS } from '@/config/text';
+import { useI18n } from '@/i18n/hooks';
 import { getIcon } from '@/utils/iconMap';
 import TeaButton from '@/components/common/TeaButton';
 import NavLink from '@/components/common/NavLink';
@@ -26,6 +27,7 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, className }) => {
   const location = useLocation();
+  const { t } = useI18n();
   const { user, templates, setCurrentTemplate } = useAppStore();
 
   if (!isOpen) return null;
@@ -66,7 +68,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, className }) => {
               <NavLink
                 key={item.id}
                 path={item.path}
-                label={item.label}
+                label={t(item.label)}
                 icon={IconComponent}
                 color={item.color as any}
               />
@@ -77,7 +79,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, className }) => {
         {/* Quick Stats */}
         <div className='bg-white border border-gray-200 rounded-lg p-4'>
           <h4 className='text-gray-800 font-medium mb-3'>
-            {STATS.TEMPLATES_COUNT}
+            {t(STATS.TEMPLATES_COUNT)}
           </h4>
           <div className='space-y-2 text-sm'>
             {QUICK_STATS_CONFIG.map((stat) => (
@@ -85,7 +87,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, className }) => {
                 key={stat.key}
                 className='flex justify-between text-gray-600'
               >
-                <span>{stat.label}</span>
+                <span>{t(stat.label)}</span>
                 <span>
                   {stat.key === 'templates'
                     ? templates.length

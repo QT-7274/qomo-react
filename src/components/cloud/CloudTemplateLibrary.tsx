@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { useI18n } from '@/i18n/hooks';
 import { Card } from 'tea-component';
 import TeaButton from '@/components/common/TeaButton';
 import { useEdgeCloudSync } from '@/hooks/useEdgeCloudSync';
@@ -29,6 +30,7 @@ export const CloudTemplateLibrary: React.FC<CloudTemplateLibraryProps> = ({
   } = useEdgeCloudSync();
 
   const [userTemplates, setUserTemplates] = useState<Template[]>([]);
+  const { t } = useI18n();
   const [publicTemplates, setPublicTemplates] = useState<Template[]>([]);
   const [activeTab, setActiveTab] = useState<'user' | 'public'>('user');
 
@@ -69,8 +71,8 @@ export const CloudTemplateLibrary: React.FC<CloudTemplateLibraryProps> = ({
       addTemplate(template);
       showNotification({
         type: 'success',
-        title: '模板已添加',
-        message: `模板 "${template.name}" 已添加到本地`,
+        title: t('模板已添加'),
+        message: `${t('模板')} "${template.name}" ${t('已添加到本地')}`,
       });
     }
   };
@@ -88,7 +90,7 @@ export const CloudTemplateLibrary: React.FC<CloudTemplateLibraryProps> = ({
               {isPublic && (
                 <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">
                   <Users className="w-3 h-3" />
-                  公开
+                  {t('公开')}
                 </span>
               )}
             </div>
@@ -98,10 +100,10 @@ export const CloudTemplateLibrary: React.FC<CloudTemplateLibraryProps> = ({
             </p>
             
             <div className="flex items-center gap-4 text-xs text-gray-500 mb-3">
-              <span>分类：{template.category}</span>
-              <span>组件：{template.components?.length || 0} 个</span>
+              <span>{t('分类')}：{template.category}</span>
+              <span>{t('组件')}：{template.components?.length || 0} {t('个')}</span>
               {template.usageCount !== undefined && (
-                <span>使用：{template.usageCount} 次</span>
+                <span>{t('使用')}：{template.usageCount} {t('次')}</span>
               )}
             </div>
             
@@ -133,7 +135,7 @@ export const CloudTemplateLibrary: React.FC<CloudTemplateLibraryProps> = ({
             className="ml-4"
           >
             <Download className="w-4 h-4 mr-1" />
-            使用模板
+            {t('使用模板')}
           </TeaButton>
         </div>
       </Card.Body>
@@ -145,15 +147,15 @@ export const CloudTemplateLibrary: React.FC<CloudTemplateLibraryProps> = ({
       <Card>
         <Card.Body className="text-center py-8">
           <WifiOff className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">网络连接不可用</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">{t('网络连接不可用')}</h3>
           <p className="text-gray-600 mb-4">
-            云端模板库需要网络连接才能使用
+            {t('云端模板库需要网络连接才能使用')}
           </p>
           <TeaButton
             variant="weak"
             onClick={() => window.location.reload()}
           >
-            重新连接
+            {t('重新连接')}
           </TeaButton>
         </Card.Body>
       </Card>
@@ -166,10 +168,10 @@ export const CloudTemplateLibrary: React.FC<CloudTemplateLibraryProps> = ({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Cloud className="w-5 h-5 text-blue-500" />
-          <span className="font-medium">云端模板库</span>
+          <span className="font-medium">{t('云端模板库')}</span>
           <div className="flex items-center gap-1 text-sm text-green-600">
             <Wifi className="w-4 h-4" />
-            在线
+            {t('在线')}
           </div>
         </div>
         
@@ -182,7 +184,7 @@ export const CloudTemplateLibrary: React.FC<CloudTemplateLibraryProps> = ({
           }}
           loading={isSyncing}
         >
-          刷新
+          {t('刷新')}
         </TeaButton>
       </div>
 
@@ -197,7 +199,7 @@ export const CloudTemplateLibrary: React.FC<CloudTemplateLibraryProps> = ({
             }`}
             onClick={() => setActiveTab('user')}
           >
-            我的模板 ({userTemplates.length})
+            {t('我的模板')} ({userTemplates.length})
           </button>
           <button
             className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
@@ -207,7 +209,7 @@ export const CloudTemplateLibrary: React.FC<CloudTemplateLibraryProps> = ({
             }`}
             onClick={() => setActiveTab('public')}
           >
-            公开模板 ({publicTemplates.length})
+            {t('公开模板')} ({publicTemplates.length})
           </button>
         </div>
       )}
@@ -222,9 +224,9 @@ export const CloudTemplateLibrary: React.FC<CloudTemplateLibraryProps> = ({
               <Card>
                 <Card.Body className="text-center py-8">
                   <Cloud className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">暂无云端模板</h3>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">{t('暂无云端模板')}</h3>
                   <p className="text-gray-600">
-                    在模板编辑器中创建模板后，可以保存到云端
+                    {t('在模板编辑器中创建模板后可以保存到云端')}
                   </p>
                 </Card.Body>
               </Card>
@@ -240,9 +242,9 @@ export const CloudTemplateLibrary: React.FC<CloudTemplateLibraryProps> = ({
               <Card>
                 <Card.Body className="text-center py-8">
                   <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">暂无公开模板</h3>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">{t('暂无公开模板')}</h3>
                   <p className="text-gray-600">
-                    还没有用户分享公开模板
+                    {t('还没有用户分享公开模板')}
                   </p>
                 </Card.Body>
               </Card>

@@ -307,7 +307,7 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
                   <div className='space-y-2 p-4 bg-blue-50 border-2 border-blue-300 rounded-lg'>
                     <div className='flex items-center justify-between'>
                       <h4 className='font-medium text-blue-800'>
-                        ✏️ 编辑组件内容
+                        ✏️ {t('编辑组件内容')}
                       </h4>
                       <div className='flex gap-1'>
                         <Button
@@ -316,7 +316,7 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
                           onClick={handleSaveEdit}
                           icon={<Check className='w-4 h-4' />}
                           className='text-green-600 hover:bg-green-100 p-1.5'
-                          title='保存更改'
+                          title={t('保存更改')}
                         />
                         <Button
                           variant='ghost'
@@ -324,7 +324,7 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
                           onClick={handleCancelEdit}
                           icon={<X className='w-4 h-4' />}
                           className='text-gray-600 hover:bg-gray-100 p-1.5'
-                          title='取消编辑'
+                          title={t('取消编辑')}
                         />
                       </div>
                     </div>
@@ -333,7 +333,7 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
                       ref={textareaRef}
                       value={editContent}
                       onChange={(value) => setEditContent(value)}
-                      placeholder={component.placeholder || '输入内容...'}
+                      placeholder={component.placeholder || t('输入内容...')}
                       rows={3}
                       className='resize-none border-blue-200 focus:border-blue-400'
                       onKeyDown={handleKeyDown}
@@ -386,14 +386,14 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
                 {/* Component Info */}
                 <div className='flex items-center justify-between text-xs text-gray-500'>
                   <div className='flex items-center gap-2'>
-                    <span>位置: {index + 1}</span>
-                    {component.placeholder && (
+                    <span>{t('位置')}: {index + 1}</span>
+                    {/* {component.placeholder && (
                       <Tooltip title={component.placeholder}>
                         <span className='text-blue-600 cursor-help'>💡 提示</span>
                       </Tooltip>
-                    )}
+                    )} */}
                   </div>
-                  {component.validation && <span>包含验证规则</span>}
+                  {component.validation && <span>{t('包含验证规则')}</span>}
                 </div>
               </div>
             </div>

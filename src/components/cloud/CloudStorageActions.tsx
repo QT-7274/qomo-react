@@ -5,6 +5,7 @@
  */
 
 import React, { useState } from 'react';
+import { useI18n } from '@/i18n/hooks';
 import TeaButton from '@/components/common/TeaButton';
 import { useEdgeCloudSync } from '@/hooks/useEdgeCloudSync';
 import { useAppStore } from '@/store/useAppStore';
@@ -42,6 +43,7 @@ export const CloudStorageActions: React.FC<CloudStorageActionsProps> = ({
   } = useEdgeCloudSync();
 
   const [isLoading, setIsLoading] = useState(false);
+  const { t } = useI18n();
 
   /**
    * 保存当前模板到云端
@@ -50,8 +52,8 @@ export const CloudStorageActions: React.FC<CloudStorageActionsProps> = ({
     if (!template) {
       showNotification({
         type: 'warning',
-        title: '没有模板',
-        message: '请先创建或选择一个模板',
+        title: t('没有模板'),
+        message: t('请先创建或选择一个模板'),
       });
       return;
     }
@@ -63,8 +65,8 @@ export const CloudStorageActions: React.FC<CloudStorageActionsProps> = ({
       if (success) {
         showNotification({
           type: 'success',
-          title: '保存成功',
-          message: `模板 "${template.name}" 已保存到云端`,
+          title: t('保存成功'),
+          message: `${t('模板')} "${template.name}" ${t('已保存到云端')}`,
         });
       }
     } finally {
@@ -83,8 +85,8 @@ export const CloudStorageActions: React.FC<CloudStorageActionsProps> = ({
       if (templates.length === 0) {
         showNotification({
           type: 'info',
-          title: '没有云端模板',
-          message: '您还没有保存任何模板到云端',
+          title: t('没有云端模板'),
+          message: t('您还没有保存任何模板到云端'),
         });
         return;
       }
@@ -100,8 +102,8 @@ export const CloudStorageActions: React.FC<CloudStorageActionsProps> = ({
         
         showNotification({
           type: 'success',
-          title: '加载成功',
-          message: `模板 "${cloudTemplate.name}" 已从云端加载`,
+          title: t('加载成功'),
+          message: `${t('模板')} "${cloudTemplate.name}" ${t('已从云端加载')}`,
         });
       } else {
         // 多个模板时，显示选择列表（这里简化处理，加载最新的）
@@ -117,8 +119,8 @@ export const CloudStorageActions: React.FC<CloudStorageActionsProps> = ({
         
         showNotification({
           type: 'success',
-          title: '加载成功',
-          message: `已加载最新模板 "${latestTemplate.name}"，共有 ${templates.length} 个云端模板`,
+          title: t('加载成功'),
+          message: `${t('已加载最新模板')} "${latestTemplate.name}"，${t('共有')} ${templates.length} ${t('个云端模板')}`,
         });
       }
     } finally {
@@ -133,8 +135,8 @@ export const CloudStorageActions: React.FC<CloudStorageActionsProps> = ({
     if (!template) {
       showNotification({
         type: 'warning',
-        title: '没有模板',
-        message: '请先选择要删除的模板',
+        title: t('没有模板'),
+        message: t('请先选择要删除的模板'),
       });
       return;
     }
@@ -150,8 +152,8 @@ export const CloudStorageActions: React.FC<CloudStorageActionsProps> = ({
         
         showNotification({
           type: 'success',
-          title: '删除成功',
-          message: `模板 "${template.name}" 已从云端删除`,
+          title: t('删除成功'),
+          message: `${t('模板')} "${template.name}" ${t('已从云端删除')}`,
         });
       }
     } finally {
@@ -164,7 +166,7 @@ export const CloudStorageActions: React.FC<CloudStorageActionsProps> = ({
     return (
       <div className="flex items-center gap-2 text-gray-500">
         <CloudOff className="w-4 h-4" />
-        <span className="text-sm">离线</span>
+        <span className="text-sm">{t('离线')}</span>
       </div>
     );
   }
@@ -184,7 +186,7 @@ export const CloudStorageActions: React.FC<CloudStorageActionsProps> = ({
           className={buttonClass}
         >
           <Upload className="w-4 h-4 mr-1" />
-          保存到云端
+          {t('保存到云端')}
         </TeaButton>
       )}
 
@@ -197,7 +199,7 @@ export const CloudStorageActions: React.FC<CloudStorageActionsProps> = ({
           className={buttonClass}
         >
           <Download className="w-4 h-4 mr-1" />
-          从云端加载
+          {t('从云端加载')}
         </TeaButton>
       )}
 
@@ -210,14 +212,14 @@ export const CloudStorageActions: React.FC<CloudStorageActionsProps> = ({
           className={buttonClass}
         >
           <Trash2 className="w-4 h-4 mr-1" />
-          从云端删除
+          {t('从云端删除')}
         </TeaButton>
       )}
 
       {/* 在线状态指示器 */}
       <div className="flex items-center gap-1 text-green-600">
         <Cloud className="w-4 h-4" />
-        {size !== 'sm' && <span className="text-sm">在线</span>}
+        {size !== 'sm' && <span className="text-sm">{t('在线')}</span>}
       </div>
     </div>
   );

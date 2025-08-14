@@ -56,7 +56,7 @@ const ComponentLibrary: React.FC = () => {
     { value: 'all', text: t('全部类型') },
     ...COMPONENT_TYPES.map(type => ({
       value: type.type,
-      text: type.label
+      text: t(type.label)
     }))
   ];
 
@@ -65,7 +65,7 @@ const ComponentLibrary: React.FC = () => {
     { value: 'all', text: t('全部分类') },
     ...categories.map(category => ({
       value: category,
-      text: category
+      text: t(category)
     }))
   ];
 
@@ -148,7 +148,7 @@ const ComponentLibrary: React.FC = () => {
     const selectedComps = storedComponents.filter(comp => selectedComponents.has(comp.id));
     const stats = selectedComps.reduce((acc, comp) => {
       const typeInfo = getComponentTypeInfo(comp.type);
-      const typeName = typeInfo.label;
+      const typeName = t(typeInfo.label);
       acc[typeName] = (acc[typeName] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
@@ -168,7 +168,7 @@ const ComponentLibrary: React.FC = () => {
           animate={{ opacity: 1, x: 0 }}
           className="text-2xl font-bold text-gray-800"
         >
-          {UI_TEXT.titles.componentLibrary}
+          {t(UI_TEXT.titles.componentLibrary)}
         </motion.h2>
         <div className="text-sm text-gray-600">
           {t('共')} {filteredComponents.length} {t('个组件')}
@@ -181,7 +181,7 @@ const ComponentLibrary: React.FC = () => {
           <div className="flex flex-wrap gap-4 items-center">
             <div className="flex-1 min-w-[200px]">
               <Input
-                placeholder={PLACEHOLDERS.SEARCH_COMPONENTS}
+                placeholder={t(PLACEHOLDERS.SEARCH_COMPONENTS)}
                 value={searchTerm}
                 onChange={(value) => setSearchTerm(value)}
                 size="m"
@@ -263,7 +263,7 @@ const ComponentLibrary: React.FC = () => {
                       variant={getComponentTypeInfo(component.type).variant} 
                       size="sm"
                     >
-                      {getComponentTypeInfo(component.type).label}
+                      {t(getComponentTypeInfo(component.type).label)}
                     </Badge>
                   </div>
                 </CardHeader>
@@ -279,7 +279,7 @@ const ComponentLibrary: React.FC = () => {
                     {/* Meta Info */}
                     <div className="flex items-center justify-between text-xs text-gray-500">
                       <span>{t('使用')} {component.usageCount} {t('次')}</span>
-                      <span>{component.category}</span>
+                      <span>{t(component.category)}</span>
                     </div>
 
                     {/* Actions */}

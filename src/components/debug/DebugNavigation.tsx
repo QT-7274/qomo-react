@@ -8,16 +8,18 @@ import { Link, useLocation } from 'react-router-dom';
 import { Card } from 'tea-component';
 import { Cloud, Database, Settings, Home } from 'lucide-react';
 import { ROUTES } from '@/config/constants';
+import { useI18n } from '@/i18n/hooks';
 
 export const DebugNavigation: React.FC = () => {
   const location = useLocation();
+  const { t } = useI18n();
 
   const debugRoutes = [
     {
       path: ROUTES.HOME,
-      name: '返回首页',
+      name: t('返回首页'),
       icon: Home,
-      description: '返回应用主页'
+      description: t('返回应用主页')
     },
     // {
     //   path: ROUTES.DEBUG_CLOUD,
@@ -45,9 +47,9 @@ export const DebugNavigation: React.FC = () => {
       <Card.Body>
         <div className="flex items-center gap-3 mb-4">
           <Settings className="w-5 h-5 text-blue-500" />
-          <h3 className="text-lg font-semibold text-gray-900">调试导航</h3>
+          <h3 className="text-lg font-semibold text-gray-900">{t('调试导航')}</h3>
           <span className="px-2 py-1 bg-orange-100 text-orange-700 text-xs rounded-full">
-            调试分支
+            {t('调试分支')}
           </span>
         </div>
         
@@ -92,10 +94,10 @@ export const DebugNavigation: React.FC = () => {
           <div className="flex items-start gap-3">
             <Settings className="w-5 h-5 text-yellow-600 mt-0.5" />
             <div>
-              <p className="text-yellow-800 font-medium text-sm">调试分支说明</p>
+              <p className="text-yellow-800 font-medium text-sm">{t('调试分支说明')}</p>
               <p className="text-yellow-700 text-sm mt-1">
-                这些调试页面只在特定的调试分支中可用，用于开发和测试云端功能。
-                在主分支中，这些路由将不可访问。
+                {t('这些调试页面只在特定的调试分支中可用用于开发和测试云端功能')}
+                {t('在主分支中这些路由将不可访问')}
               </p>
             </div>
           </div>

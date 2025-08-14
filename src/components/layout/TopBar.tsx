@@ -42,10 +42,10 @@ const TopBar: React.FC<TopBarProps> = ({
           )}
           <div>
             <h2 className='text-xl font-semibold text-gray-800'>
-              {pageInfo.title}
+              {t(pageInfo.title)}
             </h2>
             <p className='text-gray-600 text-sm'>
-              {pageInfo.description}
+              {t(pageInfo.description)}
             </p>
           </div>
         </div>

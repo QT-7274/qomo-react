@@ -8,6 +8,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { LucideIcon } from 'lucide-react';
 import { cn } from '@/utils';
 import { COLOR_THEMES, ROUTES } from '@/config/constants';
+import { useI18n } from '@/i18n/hooks';
 import { COMPONENT_COLORS } from '@/config/theme';
 
 // 定义图标组件类型，支持 Lucide 图标和自定义组件
@@ -29,6 +30,7 @@ const NavLink: React.FC<NavLinkProps> = ({
   className
 }) => {
   const location = useLocation();
+  const { t } = useI18n();
   // 检查当前路径是否为活动状态，特殊处理编辑器路径
   const isActive = location.pathname === path || (location.pathname === ROUTES.HOME && path === ROUTES.EDITOR);
 
@@ -72,7 +74,7 @@ const NavLink: React.FC<NavLinkProps> = ({
       )}
     >
       <Icon className='w-5 h-5' />
-      <span className='font-medium'>{label}</span>
+      <span className='font-medium'>{t(label)}</span>
       {isActive && (
         <div className={cn('ml-auto w-2 h-2 rounded-full', getIndicatorStyles(color))} />
       )}
