@@ -408,6 +408,10 @@ const enUS: LanguagePackage = {
   '来自模板': 'From template',
   '的': "'s ",
   '[你的问题在这个位置]': '[Your question goes here]',
+  '提供背景信息，帮助AI理解问题的语境': 'Provide context to help AI understand the context of the question',
+  '指定期望的回答格式，确保输出符合预期': 'Specify the expected answer format to ensure the output meets your requirements',
+  '定义AI在对话中的角色身份，让回答更专业和聚焦': 'Define the role of AI in the conversation to make the answer more professional and focused',
+  '提供示例，帮助AI理解问题的语境': 'Provide examples to help AI understand the context of the question',
 };
 
 export default enUS;

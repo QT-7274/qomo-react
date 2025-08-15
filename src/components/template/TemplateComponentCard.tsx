@@ -6,8 +6,8 @@
 import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useDrag, useDrop } from 'react-dnd';
-import { Tooltip } from 'tea-component';
-import { GripVertical, Edit, Trash2, Check, X } from 'lucide-react';
+
+import { GripVertical, Trash2 } from 'lucide-react';
 import { TemplateComponent, ComponentType, DragItem } from '@/types';
 import { cn } from '@/utils';
 import { Card, CardContent } from '@/components/ui/Card';
@@ -148,11 +148,7 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
 
 
 
-  // 获取组件的tips提示
-  const getComponentTips = (type: ComponentType) => {
-    const config = COMPONENT_TYPES.find(c => c.type === type);
-    return config?.tips || '';
-  };
+
 
   // 获取组件图标颜色
   const getComponentIconColors = (type: ComponentType) => {
@@ -175,10 +171,7 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
     setIsEditing(false);
   };
 
-  const handleCancelEdit = () => {
-    setEditContent(component.content);
-    setIsEditing(false);
-  };
+
 
   const handleStartEdit = () => {
     setIsEditing(true);
@@ -262,14 +255,12 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
                 {/* Header */}
                 <div className='flex items-center justify-between'>
                   <div className='flex items-center gap-2'>
-                    <Tooltip title={getComponentTips(component.type)}>
-                      <Badge
-                        variant={getComponentColor(component.type)}
-                        size='sm'
-                      >
-                        {t(getComponentLabel(component.type))}
-                      </Badge>
-                    </Tooltip>
+                    <Badge
+                      variant={getComponentColor(component.type)}
+                      size='sm'
+                    >
+                      {t(getComponentLabel(component.type))}
+                    </Badge>
                     {component.isRequired && (
                       <Badge variant='danger' size='sm'>
                         {t('必需')}
@@ -277,18 +268,6 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
                     )}
                   </div>
                   <div className='flex items-center gap-1'>
-                    {/* 在使用模式下，question_slot组件不显示编辑按钮 */}
-                    {!(mode === 'use' && component.type === 'question_slot') && (
-                      <Button
-                        variant='ghost'
-                        size='sm'
-                        onClick={handleStartEdit}
-                        icon={<Edit className='w-4 h-4' />}
-                        className='p-2 hover:bg-blue-100 text-blue-600 hover:text-blue-700 border border-blue-200 hover:border-blue-300'
-                        title={BUTTON_TEXTS.EDIT}
-                      />
-                    )}
-                    {/* 根据删除逻辑显示删除按钮 */}
                     {canDelete() && (
                       <Button
                         variant='ghost'
@@ -305,38 +284,15 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
                 {/* Content Display/Edit */}
                 {isEditing ? (
                   <div className='space-y-2 p-4 bg-blue-50 border-2 border-blue-300 rounded-lg'>
-                    <div className='flex items-center justify-between'>
-                      <h4 className='font-medium text-blue-800'>
-                        ✏️ {t('编辑组件内容')}
-                      </h4>
-                      <div className='flex gap-1'>
-                        <Button
-                          variant='ghost'
-                          size='sm'
-                          onClick={handleSaveEdit}
-                          icon={<Check className='w-4 h-4' />}
-                          className='text-green-600 hover:bg-green-100 p-1.5'
-                          title={t('保存更改')}
-                        />
-                        <Button
-                          variant='ghost'
-                          size='sm'
-                          onClick={handleCancelEdit}
-                          icon={<X className='w-4 h-4' />}
-                          className='text-gray-600 hover:bg-gray-100 p-1.5'
-                          title={t('取消编辑')}
-                        />
-                      </div>
-                    </div>
-
                     <Textarea
                       ref={textareaRef}
                       value={editContent}
                       onChange={(value) => setEditContent(value)}
-                      placeholder={component.placeholder || t('输入内容...')}
+                      placeholder={component.placeholder ? t(component.placeholder) : t('输入内容...')}
                       rows={3}
                       className='resize-none border-blue-200 focus:border-blue-400'
                       onKeyDown={handleKeyDown}
+                      onBlur={handleSaveEdit}
                     />
 
                     <div className='flex items-center gap-2'>
@@ -364,6 +320,8 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
                           ? 'border-blue-300 bg-blue-50'
                           : 'border-gray-200 bg-gray-50'
                       )}
+                      onClick={() => { if (!(mode === 'use' && component.type === 'question_slot')) handleStartEdit(); }}
+                      role='button'
                     >
                       <p className='text-gray-800 text-sm leading-relaxed whitespace-pre-wrap'>
                         {/* 在使用模式下，question_slot组件显示特殊的placeholder */}
@@ -374,7 +332,7 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
                         ) : (
                           component.content || (
                             <span className='text-gray-400 italic'>
-                              {component.placeholder ? t(component.placeholder) : t('点击编辑添加内容...')}
+                              {component.placeholder ? t(component.placeholder) : t('点击添加内容...')}
                             </span>
                           )
                         )}

@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
+import { PopConfirm } from 'tea-component';
 import { Edit, Trash2, Download, Star, Users, Calendar, Tag } from 'lucide-react';
 import { Template } from '@/types';
 import { formatRelativeTime } from '@/utils';
@@ -114,17 +115,31 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
                 className="edit-template-btn"
                 title={t('编辑')}
               />
-              <Button
-                variant="text"
-                size="sm"
-                onClick={(e) => {
-                  e?.stopPropagation();
-                  onDelete(template.id);
-                }}
-                icon={<Trash2 className="w-3 h-3" />}
-                className="delete-btn"
-                title={t('删除')}
-              />
+              <PopConfirm
+                title={`${t('确定要删除模板')}`}
+                message={`${t('删除后无法恢复')}，${t('请谨慎操作')}`}
+                footer={(close) => (
+                  <div className="flex gap-2 justify-end">
+                    <Button variant="outline" onClick={close}>{t('取消')}</Button>
+                    <Button
+                      variant="primary"
+                      onClick={(e) => { e?.stopPropagation(); onDelete(template.id); close(); }}
+                      className="bg-red-600 text-white hover:bg-red-700 border-red-600"
+                    >
+                      {t('确认删除')}
+                    </Button>
+                  </div>
+                )}
+              >
+                <Button
+                  variant="text"
+                  size="sm"
+                  onClick={(e) => { e?.stopPropagation(); }}
+                  icon={<Trash2 className="w-3 h-3" />}
+                  className="delete-btn"
+                  title={t('删除')}
+                />
+              </PopConfirm>
             </div>
           </div>
 
