@@ -109,7 +109,7 @@ export const isActiveRoute = (currentPath: string, targetPath: string): boolean 
 // ==================== 应用元信息 ====================
 export const APP_METADATA = {
   name: 'Qomo',
-  description: 'AI模板系统',
+  description: 'AI提示词模板平台',
   version: '2.0.0',
   author: 'Qomo Team',
 };

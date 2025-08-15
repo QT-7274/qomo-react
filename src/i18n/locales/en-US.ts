@@ -6,7 +6,7 @@
 import { LanguagePackage } from '../index';
 
 const enUS: LanguagePackage = {
-  'AI模板系统': 'AI Prompt Template System',
+  'AI提示词模板平台': 'AI Prompt Template Platform',
   // 基本操作 - 中文到英文的直接映射
   '公开': 'Public',
   '私有': 'Private',
@@ -412,6 +412,7 @@ const enUS: LanguagePackage = {
   '指定期望的回答格式，确保输出符合预期': 'Specify the expected answer format to ensure the output meets your requirements',
   '定义AI在对话中的角色身份，让回答更专业和聚焦': 'Define the role of AI in the conversation to make the answer more professional and focused',
   '提供示例，帮助AI理解问题的语境': 'Provide examples to help AI understand the context of the question',
+  'GET /orders?status=pending&page=1 应返回 {orders: [...], total: 100, page: 1}': 'GET /orders?status=pending&page=1 should return {orders: [...], total: 100, page: 1}',
 };
 
 export default enUS;
