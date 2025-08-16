@@ -3,26 +3,18 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useSearchParams } from 'react-router-dom';
 import { PopConfirm, Tooltip } from 'tea-component';
 import {
-  Save,
-  Eye,
-  Settings,
   Wand2,
-  FileText,
-  MessageSquare,
-  Target,
-  BookOpen,
-  Lightbulb,
-  RotateCcw,
-  Play,
-  Copy,
-  Check
+  Check,
+  Save,
 } from 'lucide-react';
+import { getIcon } from '@/utils/iconMap';
 import { Template, TemplateComponent, ComponentType } from '@/types';
 import { useAppStore } from '@/store/useAppStore';
 import { generateId, cn } from '@/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import { Input, Textarea } from '@/components/ui/Input';
+import Label from '@/components/common/Label';
 import { Select } from '@/components/common/TeaSelect';
 import { TagSelect } from '@/components/common/TeaTagSelect';
 
@@ -295,20 +287,20 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
 
 
 
-  // 图标映射
+  // 图标映射（统一走 IconFont + 自定义 Logo）
   const iconMap = {
-    FileText,
-    BookOpen,
-    MessageSquare,
-    Target,
-    Lightbulb,
-  };
+    FileText: getIcon('FileText'),
+    BookOpen: getIcon('BookOpen'),
+    MessageSquare: getIcon('MessageSquare'),
+    Target: getIcon('Target'),
+    Lightbulb: getIcon('Lightbulb'),
+  } as const;
 
   // 从配置文件获取组件类型，并映射图标
   const componentTypes = COMPONENT_TYPES.map(config => ({
     type: config.type as ComponentType,
     label: config.label,
-    icon: iconMap[config.icon as keyof typeof iconMap] || FileText,
+    icon: (iconMap as any)[config.icon] || getIcon('FileText'),
   }));
 
   return (
@@ -321,7 +313,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
                 variant={mode === 'use' ? 'primary' : 'ghost'}
                 size="sm"
                 onClick={() => handleModeSwitch('use')}
-                icon={<Play className="w-4 h-4" />}
+                icon={React.createElement(getIcon('Play'), { className: cn('w-4 h-4', mode === 'use' ? 'text-white' : 'text-gray-700') })}
                 className={cn(
                   'transition-all duration-200',
                   mode === 'use'
@@ -352,7 +344,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
               <Button
                 variant="outline"
                 onClick={() => setShowPreview(!showPreview)}
-                icon={<Eye className="w-4 h-4" />}
+                icon={React.createElement(getIcon('Eye'), { className: 'w-4 h-4' })}
                 htmlType="button"
                 className="active:scale-95 transition-all duration-150"
               >
@@ -377,7 +369,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
             >
               <Button
                 variant="outline"
-                icon={<RotateCcw className="w-4 h-4" />}
+                icon={React.createElement(getIcon('RotateCcw'), { className: 'w-4 h-4' })}
                 htmlType="button"
                 className="text-orange-600 border-orange-200 hover:bg-orange-50 hover:border-orange-300 active:scale-95 transition-all duration-150"
                 title={t('重置到默认状态')}
@@ -408,12 +400,12 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
                   <div className="flex items-center gap-2">
                     {mode === 'create' ? (
                       <>
-                        <Settings className="w-5 h-5" />
+                        {React.createElement(getIcon('Settings'), { className: 'w-5 h-5' })}
                         {t(UI_TEXT.titles.basicInfo)}
                       </>
                     ) : (
                       <>
-                        <MessageSquare className="w-5 h-5" />
+                        {React.createElement(getIcon('MessageSquare'), { className: 'w-5 h-5' })}
                         {t('问题输入区域')}
                       </>
                     )}
@@ -440,57 +432,52 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
                 {mode === 'create' ? (
                   // 创建模板模式 - 显示基本信息表单
                   <>
-                    <Input
-                      label={t(UI_TEXT.labels.templateName)}
-                      placeholder={t(UI_TEXT.placeholders.templateName)}
-                      value={formData.name}
-                      onChange={(value) => updateEditorFormData({ name: value })}
-                    />
-
-                    <Textarea
-                      label={t(UI_TEXT.labels.templateDescription)}
-                      placeholder={t(UI_TEXT.placeholders.templateDescription)}
-                      value={formData.description}
-                      onChange={(value) => updateEditorFormData({ description: value })}
-                      rows={4}
-                      className="w-full min-h-[100px]"
-                    />
-
-                    {/* Category and Tags in one row */}
-                    <div className="flex gap-6 items-start">
-                      {/* Category */}
-                      <div className="space-y-2 w-[140px] flex-shrink-0">
-                        <Select
-                          label={t(UI_TEXT.labels.category)}
-                          value={formData.category}
-                          onChange={(value) => updateEditorFormData({
-                            category: value as Template['category']
-                          })}
-                          options={TEMPLATE_CATEGORIES.map(cat => ({
-                            value: cat.key,
-                            text: t(cat.label)
-                          }))}
-                          placeholder={t('请选择分类')}
-                          size="m"
-                          className="w-full"
+                    {/* 左列：名称/分类/标签；右列：描述（等高布局，更紧凑） */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
+                      {/* 左列 */}
+                      <div className="space-y-3">
+                        <Input
+                          label={t(UI_TEXT.labels.templateName)}
+                          placeholder={t(UI_TEXT.placeholders.templateName)}
+                          value={formData.name}
+                          onChange={(value) => updateEditorFormData({ name: value })}
                         />
+                        <div>
+                          <Select
+                            label={t(UI_TEXT.labels.category)}
+                            value={formData.category}
+                            onChange={(value) => updateEditorFormData({ category: value as Template['category'] })}
+                            options={TEMPLATE_CATEGORIES.map(cat => ({ value: cat.key, text: t(cat.label) }))}
+                            placeholder={t('请选择分类')}
+                            size="m"
+                            className="w-full"
+                          />
+                        </div>
+                        <div>
+                          <TagSelect
+                            label={t(UI_TEXT.labels.tags)}
+                            value={formData.tags}
+                            onChange={(tags) => updateEditorFormData({ tags })}
+                            placeholder={t(UI_TEXT.placeholders.addTag)}
+                            options={COMMON_TAGS.map(tag => ({ value: tag, text: t(tag) }))}
+                            optionsOnly={false}
+                          />
+                        </div>
                       </div>
-
-                      {/* Tags */}
-                      <div className="flex-1 space-y-3">
-                        <TagSelect
-                          label={t(UI_TEXT.labels.tags)}
-                          value={formData.tags}
-                          onChange={(tags) => updateEditorFormData({ tags })}
-                          placeholder={t(UI_TEXT.placeholders.addTag)}
-                          options={COMMON_TAGS.map(tag => ({
-                            value: tag,
-                            text: t(tag)
-                          }))}
-                          optionsOnly={false} // 允许用户输入自定义标签
+                      {/* 右列（自定义标签 + 文本域撑满高度） */}
+                      <div className="flex flex-col h-full min-h-[180px]">
+                        <Label>{t(UI_TEXT.labels.templateDescription)}</Label>
+                        <Textarea
+                          placeholder={t(UI_TEXT.placeholders.templateDescription)}
+                          value={formData.description}
+                          onChange={(value) => updateEditorFormData({ description: value })}
+                          rows={8}
+                          className="flex-1 h-full min-h-0 mt-2"
                         />
                       </div>
                     </div>
+
+
                   </>
                 ) : (
                   // 使用模板模式 - 显示问题输入
@@ -563,7 +550,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
                         animate={{ scale: 1, opacity: 1 }}
                         className="text-primary-400"
                       >
-                        <MessageSquare className="w-12 h-12 mx-auto mb-2" />
+                        {React.createElement(getIcon('MessageSquare'), { className: 'w-12 h-12 mx-auto mb-2' })}
                         <p className="text-lg font-medium">{t('释放以插入问题')}</p>
                       </motion.div>
                     </div>
@@ -628,14 +615,14 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-gray-800 flex items-center gap-2">
-                      <Play className="w-5 h-5" />
+                      {React.createElement(getIcon('Play'), { className: 'w-5 h-5' })}
                       {t('生成的提示词')}
                     </CardTitle>
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={handleCopyPrompt}
-                      icon={copySuccess ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                      icon={copySuccess ? <Check className="w-4 h-4" /> : React.createElement(getIcon('Copy'), { className: 'w-4 h-4' })}
                       disabled={!generatedPrompt}
                       htmlType="button"
                       className={cn(
@@ -660,7 +647,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({ template, className }) 
                     ) : (
                       <div className="flex items-center justify-center h-32 text-gray-500">
                         <div className="text-center">
-                          <Play className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                          {React.createElement(getIcon('Play'), { className: 'w-8 h-8 mx-auto mb-2 opacity-50' })}
                           <p>
                             {userQuestion ? t('请添加模板组件以生成提示词') : t('请先输入问题')}
                           </p>

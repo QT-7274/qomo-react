@@ -6,14 +6,14 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { PopConfirm } from 'tea-component';
-import { Edit, Trash2, Download, Star, Users, Calendar, Tag } from 'lucide-react';
+import { Edit, Trash2, Download, Calendar, Tag } from 'lucide-react';
 import { Template } from '@/types';
 import { formatRelativeTime } from '@/utils';
 import { Card, CardContent } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
 import { useI18n } from '@/i18n/hooks';
-import { COLOR_THEMES } from '@/config/constants';
+
 import { TEMPLATE_CATEGORIES } from '@/config/appConfig';
 
 interface TemplateCardProps {
@@ -58,6 +58,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
     };
     return icons[category as keyof typeof icons] || '📋';
   };
+
 
   return (
     <motion.div
@@ -144,12 +145,12 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
 
           {/* Content */}
           <div className="flex-1">
-            <h3 className="text-lg font-semibold text-gray-800 mb-2 line-clamp-2">
+            <h3 className="text-lg font-semibold mb-2 line-clamp-2 text-gray-800">
               {template.name}
             </h3>
             
             {template.description && (
-              <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+              <p className="text-sm mb-4 line-clamp-3 text-gray-600">
                 {template.description}
               </p>
             )}
@@ -190,12 +191,8 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
           </div>
 
           {/* Footer */}
-          <div className="border-t border-gray-200 pt-4 mt-4">
-            <div className="grid grid-cols-2 gap-4 text-xs text-gray-500">
-              <div className="flex items-center gap-2">
-                <Users className="w-3 h-3" />
-                <span>{template.usageCount}</span>
-              </div>
+          <div className="pt-4 mt-4 border-t border-gray-200">
+            <div className="grid grid-cols-1 gap-2 text-xs text-gray-500">
               <div className="flex items-center gap-2">
                 <Calendar className="w-3 h-3" />
                 <span>{formatRelativeTime(template.updatedAt)}</span>

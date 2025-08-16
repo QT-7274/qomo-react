@@ -10,6 +10,7 @@ import { Plus, Trash2, ShoppingCart, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '@/store/useAppStore';
 import { StoredComponent, ComponentType } from '@/types';
+import { cn } from '@/utils';
 import { generateId } from '@/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
@@ -188,8 +189,8 @@ const ComponentLibrary: React.FC = () => {
       {/* Filters */}
       <Card variant="default" padding="md">
         <CardContent>
-          <div className="flex flex-wrap gap-4 items-center">
-            <div className="flex-1 min-w-[200px]">
+          <div className="flex gap-3 items-center flex-nowrap overflow-x-auto w-full">
+            <div className="flex-1 min-w-[240px]">
               <Input
                 placeholder={t(PLACEHOLDERS.SEARCH_COMPONENTS)}
                 value={searchTerm}
@@ -200,7 +201,7 @@ const ComponentLibrary: React.FC = () => {
 
             {/* 已选组件显示区域 */}
             {selectedComponents.size > 0 && (
-              <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
+              <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg border border-blue-200 ml-auto flex-shrink-0">
                 <div className="flex items-center gap-2">
                   <ShoppingCart className="w-4 h-4 text-blue-600" />
                   <span className="text-sm font-medium text-blue-800">
@@ -230,8 +231,8 @@ const ComponentLibrary: React.FC = () => {
               </div>
             )}
 
-            <div className={selectedComponents.size > 0 ? 'w-full flex gap-2' : ''}>
-              <div>
+            <div className='flex gap-2 items-center flex-nowrap'>
+              <div className='shrink-0'>
                 <Select
                   options={typeOptions}
                   value={selectedType}
@@ -240,7 +241,7 @@ const ComponentLibrary: React.FC = () => {
                   placeholder={t('选择类型')}
                 />
               </div>
-              <div className={selectedComponents.size > 0 ? 'w-full' : ''}>
+              <div className='shrink-0'>
                 <Select
                   options={categoryOptions}
                   value={selectedCategory}
@@ -295,9 +296,8 @@ const ComponentLibrary: React.FC = () => {
                       </p>
                     </div>
 
-                    {/* Meta Info */}
-                    <div className="flex items-center justify-between text-xs text-gray-500">
-                      <span>{t('使用')} {component.usageCount} {t('次')}</span>
+                    {/* Meta Info（去除使用次数，仅显示分类） */}
+                    <div className="flex items-center justify-end text-xs text-gray-500">
                       <span>{t(CATEGORY_LABELS[component.category as keyof typeof CATEGORY_LABELS] || component.category)}</span>
                     </div>
 

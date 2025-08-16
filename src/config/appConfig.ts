@@ -290,28 +290,28 @@ export const COMPONENT_BUTTON_COLORS: Record<string, { bg: string; hover: string
 // 组件图标颜色配置（用于统一组件图标的渐变背景色）
 export const COMPONENT_ICON_COLORS: Record<string, { from: string; to: string }> = {
   prefix: {
-    from: 'from-blue-500',
-    to: 'to-blue-600'
+    from: 'from-blue-400',
+    to: 'to-blue-100'
   },
   question_slot: {
-    from: 'from-purple-500',
-    to: 'to-purple-600'
+    from: 'from-purple-400',
+    to: 'to-purple-100'
   },
   suffix: {
-    from: 'from-green-500',
-    to: 'to-green-600'
+    from: 'from-green-400',
+    to: 'to-green-100'
   },
   context: {
-    from: 'from-yellow-500',
-    to: 'to-yellow-600'
+    from: 'from-yellow-400',
+    to: 'to-yellow-100'
   },
   constraint: {
-    from: 'from-red-500',
-    to: 'to-red-600'
+    from: 'from-red-400',
+    to: 'to-red-100'
   },
   example: {
-    from: 'from-gray-500',
-    to: 'to-gray-600'
+    from: 'from-gray-400',
+    to: 'to-gray-100'
   },
 };
 

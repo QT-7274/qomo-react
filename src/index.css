@@ -18,6 +18,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 让自定义 IconFont 始终继承文本颜色（兼容填充与描边） */
+.iconfont, .iconfont * { fill: currentColor; stroke: currentColor; }
+
 /* CSS 自定义属性（CSS 变量）定义
    :root 选择器定义全局 CSS 变量 */
 :root {

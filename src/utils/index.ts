@@ -123,6 +123,7 @@ export function rgbToHex(r: number, g: number, b: number): string {
   }).join('');
 }
 
+
 // Local storage utilities
 export function getFromStorage<T>(key: string, defaultValue: T): T {
   try {

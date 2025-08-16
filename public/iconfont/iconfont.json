@@ -1,0 +1,121 @@
+{
+  "id": "4987001",
+  "name": "Qomo极简风图标",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "极简风图标一套",
+  "glyphs": [
+    {
+      "icon_id": "10885268",
+      "name": "保存",
+      "font_class": "baocun",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    },
+    {
+      "icon_id": "39142274",
+      "name": "示例",
+      "font_class": "a-tishi2",
+      "unicode": "e635",
+      "unicode_decimal": 58933
+    },
+    {
+      "icon_id": "19070810",
+      "name": "使用模板",
+      "font_class": "shiyongmoban1",
+      "unicode": "e63f",
+      "unicode_decimal": 58943
+    },
+    {
+      "icon_id": "25964417",
+      "name": "复制",
+      "font_class": "fuzhi",
+      "unicode": "e65f",
+      "unicode_decimal": 58975
+    },
+    {
+      "icon_id": "28427037",
+      "name": "隐藏预览",
+      "font_class": "yincang",
+      "unicode": "e611",
+      "unicode_decimal": 58897
+    },
+    {
+      "icon_id": "12331695",
+      "name": "重置",
+      "font_class": "zhongzhi",
+      "unicode": "e66c",
+      "unicode_decimal": 58988
+    },
+    {
+      "icon_id": "22418438",
+      "name": "组件",
+      "font_class": "zujian1",
+      "unicode": "e652",
+      "unicode_decimal": 58962
+    },
+    {
+      "icon_id": "43019030",
+      "name": "模板库",
+      "font_class": "mobanku",
+      "unicode": "e698",
+      "unicode_decimal": 59032
+    },
+    {
+      "icon_id": "34579044",
+      "name": "模板工作台",
+      "font_class": "wangguigongzuotai",
+      "unicode": "e664",
+      "unicode_decimal": 58980
+    },
+    {
+      "icon_id": "30592892",
+      "name": "问题",
+      "font_class": "a-yiwenwenti",
+      "unicode": "e631",
+      "unicode_decimal": 58929
+    },
+    {
+      "icon_id": "18334893",
+      "name": "后置要求",
+      "font_class": "ruxueyaoqiu-01",
+      "unicode": "e671",
+      "unicode_decimal": 58993
+    },
+    {
+      "icon_id": "43264475",
+      "name": "上下文",
+      "font_class": "shangxiawen",
+      "unicode": "e7d7",
+      "unicode_decimal": 59351
+    },
+    {
+      "icon_id": "3161597",
+      "name": "角色设定",
+      "font_class": "guanliyuan_jiaoseguanli",
+      "unicode": "e612",
+      "unicode_decimal": 58898
+    },
+    {
+      "icon_id": "3977273",
+      "name": "约束条件",
+      "font_class": "weibiaoti-_huabanfuben",
+      "unicode": "e627",
+      "unicode_decimal": 58919
+    },
+    {
+      "icon_id": "28509619",
+      "name": "前缀",
+      "font_class": "qianzhui",
+      "unicode": "e6dc",
+      "unicode_decimal": 59100
+    },
+    {
+      "icon_id": "45058277",
+      "name": "模板",
+      "font_class": "moban",
+      "unicode": "e625",
+      "unicode_decimal": 58917
+    }
+  ]
+}

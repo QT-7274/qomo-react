@@ -3,7 +3,7 @@
  * 显示和管理所有模板，支持搜索、筛选和排序功能，使用配置化的文本和路由
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Search, Filter, SortAsc } from 'lucide-react';
@@ -38,6 +38,11 @@ const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ className }) => {
   const [selectedCategory, setSelectedCategory] = useState<TemplateCategory | 'all'>('all');
   const [sortBy, setSortBy] = useState<'date' | 'name' | 'rating' | 'usage'>('date');
 
+  // 动态加载（懒加载）设置
+  const pageSize = 12;
+  const [visibleCount, setVisibleCount] = useState(pageSize);
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+
   // Filter and sort templates
   const filteredTemplates = React.useMemo(() => {
     const filtered = templates.filter(template => {
@@ -67,6 +72,22 @@ const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ className }) => {
 
     return filtered;
   }, [templates, searchTerm, selectedCategory, sortBy]);
+
+  // 条件变化时重置
+  useEffect(() => { setVisibleCount(pageSize); }, [templates, searchTerm, selectedCategory, sortBy]);
+
+  // 观察哨兵，进入视口时加载更多
+  useEffect(() => {
+    const el = sentinelRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        setVisibleCount((prev) => Math.min(prev + pageSize, filteredTemplates.length));
+      }
+    });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [filteredTemplates.length]);
 
   const handleEditTemplate = (template: Template) => {
     // 设置当前编辑的模板
@@ -231,7 +252,7 @@ const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ className }) => {
       {/* Templates Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <AnimatePresence>
-          {filteredTemplates.map((template) => (
+          {filteredTemplates.slice(0, visibleCount).map((template) => (
             <TemplateCard
               key={template.id}
               template={template}
@@ -241,6 +262,10 @@ const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ className }) => {
             />
           ))}
         </AnimatePresence>
+        {/* 哨兵：用于触发加载更多 */}
+        {visibleCount < filteredTemplates.length && (
+          <div ref={sentinelRef} className="h-8" />
+        )}
       </div>
 
       {/* Empty State */}

@@ -28,8 +28,13 @@ const TopBar: React.FC<TopBarProps> = ({
   const { t } = useI18n();
 
   return (
-    <div className={cn('bg-white border-b border-gray-200 px-6 py-4', className)}>
-      <div className='flex items-center justify-between'>
+    <div className={cn('relative bg-white border-b border-gray-200 px-6 py-4', className)}>
+      {/* 顶部 Banner 背景 */}
+      <div
+        className='pointer-events-none absolute inset-0 bg-[url(/banner.png)] bg-no-repeat bg-center bg-cover opacity-55'
+        style={{ backgroundPosition: 'center -80px' }}
+      />
+      <div className='relative flex items-center justify-between'>
         <div className='flex items-center gap-4'>
           {!sidebarOpen && (
             <TeaButton

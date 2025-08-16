@@ -82,7 +82,7 @@ function App() {
                 />
 
                 {/* 内容区域 */}
-                <div className='flex-1 overflow-auto p-3 bg-gray-50'> {/* 自适应布局，添加内边距和背景色 */}
+                <div className='flex-1 overflow-auto p-3 bg-[linear-gradient(to_bottom,#DFF2F7_0%,#ffffff_100%)]'> {/* 自适应布局，添加内边距和淡蓝渐变背景 */}
                   <div className='h-full'> {/* 设置高度为 100% */}
                     <Routes> {/* 路由配置 - 使用配置化的路由常量 */}
                       {/* 默认重定向到编辑器页面的使用模式 */}

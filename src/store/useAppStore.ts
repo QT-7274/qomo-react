@@ -97,6 +97,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
       id: generateId(), // 生成唯一 ID
       createdAt: new Date(), // 创建时间
       updatedAt: new Date(), // 更新时间
+      usageCount: template.usageCount || 0,
     };
     set((state) => ({
       templates: [...state.templates, newTemplate], // 将新模板添加到模板数组
@@ -260,6 +261,17 @@ export const useAppStore = create<AppStore>((set, get) => ({
     set((state) => ({
       editor: { ...state.editor, components }, // 更新组件数组
     })),
+
+  // 使用模板（从库应用到编辑器）时，增加模板与相关组件的使用次数
+  incrementUsageOnApply: (template: Template) => {
+    set((state) => ({
+      templates: state.templates.map(t => t.id === template.id ? { ...t, usageCount: (t.usageCount || 0) + 1 } : t)
+    }));
+    // 同步更新到 IndexedDB（模板）
+    storageManager.saveTemplate({ ...template, usageCount: (template.usageCount || 0) + 1 }).catch(console.error);
+
+    // 组件库的 usageCount 也可以在“添加到工作台”动作时累加；这里仅示例模板使用逻辑
+  },
 
   setShowPreview: (show) => // 设置是否显示预览
     set((state) => ({

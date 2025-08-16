@@ -213,11 +213,21 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
           variant='default'
           padding='none'
           className={cn(
-            'transition-all duration-200 p-0',
+            'transition-all duration-200 p-0 relative overflow-hidden',
             isDragging && 'opacity-50 rotate-1 scale-105 shadow-xl',
             'hover:shadow-lg'
           )}
         >
+          {/* 右下角淡色三角渐变（作用于整张可拖拽卡片） */}
+          <div
+            className={cn(
+              'pointer-events-none absolute inset-0 opacity-15',
+              'bg-gradient-to-tl',
+              getComponentIconColors(component.type).from,
+              'to-transparent',
+            )}
+            style={{ clipPath: 'polygon(60% 100%, 100% 100%, 100% 0%)' }}
+          />
           <CardContent className='p-4'>
             <div className='flex items-start gap-3'>
               {/* Drag Handle */}
@@ -247,7 +257,7 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
                   getComponentIconColors(component.type).to
                 )}
               >
-                <Icon className='w-4 h-4 text-white' />
+                <Icon className='w-4 h-4 text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.25)]' />
               </div>
 
               {/* Content */}
@@ -267,7 +277,7 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
                       </Badge>
                     )}
                   </div>
-                  <div className='flex items-center gap-1'>
+                  <div className='flex items-center gap-1 relative'>
                     {canDelete() && (
                       <Button
                         variant='ghost'
@@ -315,7 +325,7 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
                   <div className='space-y-2'>
                     <div
                       className={cn(
-                        'p-3 rounded-lg border transition-colors',
+                        'p-3 rounded-lg border transition-colors relative overflow-hidden',
                         component.type === 'question_slot'
                           ? 'border-blue-300 bg-blue-50'
                           : 'border-gray-200 bg-gray-50'
@@ -323,6 +333,9 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
                       onClick={() => { if (!(mode === 'use' && component.type === 'question_slot')) handleStartEdit(); }}
                       role='button'
                     >
+                      {/* 右下角淡色渐变装饰 */}
+                      <div
+                      />
                       <p className='text-gray-800 text-sm leading-relaxed whitespace-pre-wrap'>
                         {/* 在使用模式下，question_slot组件显示特殊的placeholder */}
                         {mode === 'use' && component.type === 'question_slot' ? (
