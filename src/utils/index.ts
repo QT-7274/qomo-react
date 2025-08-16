@@ -12,9 +12,11 @@ export function generateId(): string {
   return Math.random().toString(36).substr(2, 9);
 }
 
-// Format date
+// Format date (localized by current language)
 export function formatDate(date: Date): string {
-  return new Intl.DateTimeFormat('zh-CN', {
+  const { currentLanguage } = useI18n();
+  const locale = currentLanguage || 'zh-CN';
+  return new Intl.DateTimeFormat(locale as any, {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
@@ -23,7 +25,7 @@ export function formatDate(date: Date): string {
   }).format(date);
 }
 
-// Format relative time
+// Format relative time (translate only the suffix)
 export function formatRelativeTime(date: Date): string {
   const { t } = useI18n();
   const now = new Date();
@@ -33,9 +35,9 @@ export function formatRelativeTime(date: Date): string {
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
 
-  if (days > 0) return t(`${days}天前`);
-  if (hours > 0) return t(`${hours}小时前`);
-  if (minutes > 0) return t(`${minutes}分钟前`);
+  if (days > 0) return `${days}${t('天前')}`;
+  if (hours > 0) return `${hours}${t('小时前')}`;
+  if (minutes > 0) return `${minutes}${t('分钟前')}`;
   return t('刚刚');
 }
 
