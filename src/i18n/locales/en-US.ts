@@ -413,6 +413,9 @@ const enUS: LanguagePackage = {
   '定义AI在对话中的角色身份，让回答更专业和聚焦': 'Define the role of AI in the conversation to make the answer more professional and focused',
   '提供示例，帮助AI理解问题的语境': 'Provide examples to help AI understand the context of the question',
   'GET /orders?status=pending&page=1 应返回 {orders: [...], total: 100, page: 1}': 'GET /orders?status=pending&page=1 should return {orders: [...], total: 100, page: 1}',
+  '模板已加载到编辑器中': 'Template loaded into editor',
+  '已跳转到模板工作台': 'Redirected to template workspace',
+  '模板已加载': 'Template loaded',
 };
 
 export default enUS;

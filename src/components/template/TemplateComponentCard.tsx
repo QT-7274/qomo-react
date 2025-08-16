@@ -257,7 +257,7 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
                   getComponentIconColors(component.type).to
                 )}
               >
-                <Icon className='w-4 h-4 text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.25)]' />
+                <Icon className='w-4 h-4 text-[#e6e6e6] drop-shadow-[0_1px_1px_rgba(0,0,0,0.15)]' />
               </div>
 
               {/* Content */}

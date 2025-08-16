@@ -12,11 +12,11 @@ const IconFont: React.FC<IconFontProps> = ({ name, className, size, ...props }) 
   return (
     <svg
       aria-hidden="true"
-      className={cn('inline-block align-[-0.125em] fill-current stroke-current text-current', className)}
+      className={cn('iconfont inline-block align-[-0.125em] fill-current stroke-current text-current', className)}
       style={style}
       {...props}
     >
-      <use xlinkHref={`#icon-${name}`} />
+      <use xlinkHref={`#icon-${name}`} fill="currentColor" stroke="currentColor" />
     </svg>
   );
 };
