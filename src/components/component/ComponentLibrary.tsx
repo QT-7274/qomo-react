@@ -5,7 +5,7 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { PopConfirm } from 'tea-component';
+import { PopConfirm, Tooltip } from 'tea-component';
 import { Plus, Trash2, ShoppingCart, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '@/store/useAppStore';
@@ -119,7 +119,7 @@ const ComponentLibrary: React.FC = () => {
       showNotification({
         type: 'success',
         title: t('删除成功'),
-        message: `${t('组件')}"${component.name}"${t('已删除')}`,
+        message: `${t('组件')}"${getLocalizedDisplayName(component)}"${t('已删除')}`,
         duration: 2000,
       });
     } catch (error) {
@@ -136,6 +136,16 @@ const ComponentLibrary: React.FC = () => {
   // 获取组件类型信息
   const getComponentTypeInfo = (type: ComponentType) => {
     return COMPONENT_DISPLAY_CONFIG[type] || { label: type, variant: 'default' as const };
+  };
+
+  // 计算组件的本地化显示名称（使用翻译后的类型标签替换原始中文后缀）
+  const getLocalizedDisplayName = (component: StoredComponent) => {
+    const sep = ' - ';
+    const typeLabel = t(getComponentTypeInfo(component.type).label);
+    const baseName = component.name.includes(sep)
+      ? component.name.split(sep)[0]
+      : component.name;
+    return `${baseName} - ${typeLabel}`;
   };
 
   // 获取组件卡片背景颜色
@@ -220,23 +230,25 @@ const ComponentLibrary: React.FC = () => {
               </div>
             )}
 
-            <div>
-              <Select
-                options={typeOptions}
-                value={selectedType}
-                onChange={(value) => setSelectedType(value)}
-                size="m"
-                placeholder={t('选择类型')}
-              />
-            </div>
-            <div>
-              <Select
-                options={categoryOptions}
-                value={selectedCategory}
-                onChange={(value) => setSelectedCategory(value)}
-                size="m"
-                placeholder={t('选择分类')}
-              />
+            <div className={selectedComponents.size > 0 ? 'w-full flex gap-2' : ''}>
+              <div>
+                <Select
+                  options={typeOptions}
+                  value={selectedType}
+                  onChange={(value) => setSelectedType(value)}
+                  size="m"
+                  placeholder={t('选择类型')}
+                />
+              </div>
+              <div className={selectedComponents.size > 0 ? 'w-full' : ''}>
+                <Select
+                  options={categoryOptions}
+                  value={selectedCategory}
+                  onChange={(value) => setSelectedCategory(value)}
+                  size="m"
+                  placeholder={t('选择分类')}
+                />
+              </div>
             </div>
           </div>
         </CardContent>
@@ -257,7 +269,14 @@ const ComponentLibrary: React.FC = () => {
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-sm font-medium truncate">
-                      {(() => { const sep = ' - '; const typeLabel = t(getComponentTypeInfo(component.type).label); return component.name.includes(sep) ? `${component.name.split(sep)[0]} - ${typeLabel}` : component.name; })()}
+                      {(() => {
+                        const displayName = getLocalizedDisplayName(component);
+                        return (
+                          <Tooltip title={displayName}>
+                            <span className="truncate block">{displayName}</span>
+                          </Tooltip>
+                        );
+                      })()}
                     </CardTitle>
                     <Badge 
                       variant={getComponentTypeInfo(component.type).variant} 
@@ -297,7 +316,7 @@ const ComponentLibrary: React.FC = () => {
                         {selectedComponents.has(component.id) ? t('已选') : t('选择')}
                       </Button>
                       <PopConfirm
-                        title={`${t('确定要删除组件')}"${component.name}"${t('吗')}？`}
+                        title={`${t('确定要删除组件')} "${getLocalizedDisplayName(component)}"?`}
                         message={`${t('删除后无法恢复')}${t('请谨慎操作')}`}
                         footer={(close) => (
                           <div className="flex gap-2 justify-end">

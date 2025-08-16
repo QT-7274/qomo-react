@@ -14,6 +14,7 @@ import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
 import { useI18n } from '@/i18n/hooks';
 import { COLOR_THEMES } from '@/config/constants';
+import { TEMPLATE_CATEGORIES } from '@/config/appConfig';
 
 interface TemplateCardProps {
   template: Template;
@@ -79,12 +80,10 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
             <div className="flex items-center gap-2">
               <span className="text-lg">{getCategoryIcon(template.category)}</span>
               <Badge variant={getCategoryColor(template.category)} size="sm">
-                {t(template.category === 'productivity' ? t('效率工具') :
-                   template.category === 'creative' ? t('创意写作') :
-                   template.category === 'research' ? t('分析总结') :
-                   template.category === 'education' ? t('教育学习') :
-                   template.category === 'business' ? t('商务办公') :
-                   template.category === 'technical' ? t('技术开发') : t('效率工具'))}
+                {(() => {
+                  const cfg = TEMPLATE_CATEGORIES.find(c => c.key === template.category);
+                  return t(cfg?.label || template.category);
+                })()}
               </Badge>
               {template.isPublic && (
                 <Badge variant="outline" size="sm">

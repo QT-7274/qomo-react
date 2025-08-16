@@ -275,7 +275,7 @@ const TemplateComponentCard: React.FC<TemplateComponentCardProps> = ({
                         onClick={() => onRemove(component.id)}
                         icon={<Trash2 className='w-4 h-4' />}
                         className='p-2 hover:bg-red-100 text-red-600 hover:text-red-700 border border-red-200 hover:border-red-300'
-                        title={BUTTON_TEXTS.DELETE}
+                        title={t(BUTTON_TEXTS.DELETE)}
                       />
                     )}
                   </div>

@@ -28,7 +28,7 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, className }) => {
   const location = useLocation();
   const { t } = useI18n();
-  const { user, templates, setCurrentTemplate } = useAppStore();
+  const { user, templates, storedComponents, setCurrentTemplate } = useAppStore();
 
   if (!isOpen) return null;
 
@@ -91,7 +91,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, className }) => {
                 <span>
                   {stat.key === 'templates'
                     ? templates.length
-                    : stat.defaultValue}
+                    : stat.key === 'library'
+                      ? templates.length
+                      : stat.key === 'components'
+                        ? storedComponents.length
+                        : stat.defaultValue}
                 </span>
               </div>
             ))}
